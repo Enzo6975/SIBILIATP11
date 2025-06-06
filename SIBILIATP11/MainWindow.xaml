@@ -1,0 +1,112 @@
+﻿<Window
+    x:Class="SIBILIATP11.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:SIBILIATP11"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="MainWindow"
+    Width="800"
+    Height="450"
+    WindowStartupLocation="CenterScreen"
+    WindowState="Maximized"
+    mc:Ignorable="d">
+    <Grid x:Name="LaGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*" />
+            <RowDefinition Height="80*" />
+            <RowDefinition Height="10*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20*" />
+            <ColumnDefinition Width="80*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel
+            x:Name="StackPanelLogo"
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Margin="0,5,0,5">
+            <StackPanel.Background>
+                <ImageBrush ImageSource="/logo-sibilia.png" Stretch="Uniform" />
+            </StackPanel.Background>
+            <TextBlock
+                x:Name="TxtConnectee"
+                Width="{Binding ActualWidth, ElementName=StackPanelLogo, Mode=OneWay}"
+                Height="{Binding ActualHeight, ElementName=StackPanelLogo, Mode=OneWay}"
+                Text="Connecté en tant que - "
+                TextAlignment="Right" />
+        </StackPanel>
+        <StackPanel
+            x:Name="StackPanelFond"
+            Grid.Row="0"
+            Grid.Column="0"
+            Background="#FFE30613" />
+        <StackPanel
+            x:Name="StackPanelMenu"
+            Grid.Row="1"
+            Grid.Column="0"
+            Background="#FFE30613">
+            <TabControl
+                Width="{Binding ActualWidth, ElementName=LaGrid, Mode=OneWay}"
+                Height="391"
+                TabStripPlacement="Left">
+                <TabItem
+                    Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
+                    Height="70"
+                    Background="#FFE30613"
+                    BorderBrush="#FFE30613"
+                    FontWeight="Bold"
+                    Foreground="Black"
+                    Header="CRÉER UNE COMMANDE">
+                    <Grid />
+                </TabItem>
+                <TabItem
+                    Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
+                    Height="70"
+                    Background="#FFE30613"
+                    BorderBrush="#FFE30613"
+                    FontWeight="Bold"
+                    Foreground="Black"
+                    Header="VOIR LES COMMANDES">
+                    <Grid />
+                </TabItem>
+                <TabItem
+                    Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
+                    Height="70"
+                    Background="#FFE30613"
+                    BorderBrush="#FFE30613"
+                    FontWeight="Bold"
+                    Foreground="Black"
+                    Header="COMMANDE À RESTITUER">
+                    <Grid />
+                </TabItem>
+                <TabItem
+                    Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
+                    Height="70"
+                    Background="#FFE30613"
+                    BorderBrush="#FFE30613"
+                    FontWeight="Bold"
+                    Foreground="Black"
+                    Header="CLIENTS">
+                    <Grid />
+                </TabItem>
+            </TabControl>
+        </StackPanel>
+        <StackPanel
+            x:Name="StackPanelDeconnexion"
+            Grid.Row="2"
+            Grid.Column="0"
+            Margin="0,0,0,0"
+            Background="#FFE30613">
+            <Button
+                x:Name="ButDeconnexion"
+                Width="{Binding ActualWidth, ElementName=StackPanelDeconnexion, Mode=OneWay}"
+                Height="{Binding ActualHeight, ElementName=StackPanelDeconnexion, Mode=OneWay}"
+                Background="#FFE30613"
+                BorderBrush="#FFE30613"
+                Content="Déconnexion"
+                FontWeight="Bold" />
+        </StackPanel>
+    </Grid>
+</Window>
