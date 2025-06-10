@@ -9,7 +9,7 @@
 
     <Grid Background="White">
         <StackPanel>
-            <StackPanel Height="60" Width="700" VerticalAlignment="Top" HorizontalAlignment="Center">
+            <StackPanel Height="60" VerticalAlignment="Top" Margin="20,0,20,0">
                 <Label Width="150" Height="30" Content="Rechercher :" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                 <TextBox Height="30"></TextBox>
             </StackPanel>
@@ -22,7 +22,7 @@
                 <TextBox Width="50" Margin="5.5,0,0,0"/>
 
             </StackPanel>
-            <DataGrid Width="700" Margin="0,40,0,0"></DataGrid>
+            <DataGrid Margin="30,40,30,0"></DataGrid>
         </StackPanel>
     </Grid>
 </UserControl>
