@@ -15,6 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Npgsql" Version="9.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Img\logo-sibilia.png" />
     <Resource Include="logo-sibilia.png" />
     <Resource Include="Windows\logo-sibilia.png" />

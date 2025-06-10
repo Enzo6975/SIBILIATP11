@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:SIBILIATP11"
+    xmlns:uc="clr-namespace:SIBILIATP11.UserControl"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="MainWindow"
     Width="800"
@@ -50,40 +51,48 @@
             Grid.Column="0"
             Background="#FFE30613">
             <TabControl
-                Width="{Binding ActualWidth, ElementName=LaGrid, Mode=OneWay}"
-                Height="391"
-                TabStripPlacement="Left">
-                <TabItem
-                    Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
-                    Height="70"
-                    FontSize="12"
-                    FontWeight="Bold"
-                    Header="CRÉER UNE COMMANDE" />
-                <TabItem
-                    Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
-                    Height="70"
-                    FontSize="12"
-                    FontWeight="Bold"
-                    Header="VOIR LES COMMANDES">
-                    <Grid />
-                </TabItem>
-                <TabItem
-                    Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
-                    Height="70"
-                    FontSize="12"
-                    FontWeight="Bold"
-                    Header="COMMANDE À RESTITUER">
-                    <Grid />
-                </TabItem>
-                <TabItem
-                    Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
-                    Height="70"
-                    FontSize="12"
-                    FontWeight="Bold"
-                    Header="CLIENTS">
-                    <Grid />
-                </TabItem>
-            </TabControl>
+    Width="{Binding ActualWidth, ElementName=LaGrid, Mode=OneWay}"
+    Height="391"
+    TabStripPlacement="Left">
+
+    <TabItem
+        Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
+        Height="70"
+        FontSize="12"
+        FontWeight="Bold"
+        Header="CRÉER UNE COMMANDE">
+        <Grid> <uc:CreerCommande/>
+        </Grid>
+    </TabItem>
+
+    <TabItem
+        Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
+        Height="70"
+        FontSize="12"
+        FontWeight="Bold"
+        Header="VOIR LES COMMANDES">
+        <Grid />
+    </TabItem>
+
+    <TabItem
+        Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
+        Height="70"
+        FontSize="12"
+        FontWeight="Bold"
+        Header="COMMANDE À RESTITUER">
+        <Grid />
+    </TabItem>
+
+    <TabItem
+        Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
+        Height="70"
+        FontSize="12"
+        FontWeight="Bold"
+        Header="CLIENTS">
+        <Grid />
+    </TabItem>
+
+    </TabControl>
         </StackPanel>
         <StackPanel
             x:Name="StackPanelDeconnexion"
