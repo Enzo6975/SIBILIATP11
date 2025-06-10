@@ -18,7 +18,7 @@ namespace SIBILIATP11.UserControl
     /// <summary>
     /// Logique d'interaction pour CommandeARestituer.xaml
     /// </summary>
-    public partial class CommandeARestituer : UserControl
+    public partial class CommandeARestituer : System.Windows.Controls.UserControl
     {
         public CommandeARestituer()
         {
