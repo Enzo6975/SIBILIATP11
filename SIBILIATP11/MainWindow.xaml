@@ -56,19 +56,7 @@
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
-                    Header="CRÉER UNE COMMANDE">
-                    <StackPanel>
-                        <Button
-                            x:Name="luiolio"
-                            Width="40"
-                            Height="39"
-                            Background="#FFFF1313"
-                            Content="Button"
-                            FontFamily="Agency FB"
-                            FontSize="36"
-                            Foreground="#FF982D2D" />
-                    </StackPanel>
-                </TabItem>
+                    Header="CRÉER UNE COMMANDE" />
                 <TabItem
                     Height="70"
                     FontSize="12"
