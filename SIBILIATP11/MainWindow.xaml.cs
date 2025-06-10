@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -18,7 +19,12 @@ namespace SIBILIATP11
     {
         public MainWindow()
         {
+            ChargeData();
             InitializeComponent();
         }
+        public void ChargeData()
+        {
+        }
+
     }
 }
