@@ -4,8 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:SIBILIATP11"
-    xmlns:uc="clr-namespace:SIBILIATP11.UserControl"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uc="clr-namespace:SIBILIATP11.UserControl"
+    x:Name="window"
     Title="MainWindow"
     Width="800"
     Height="450"
@@ -49,8 +50,9 @@
             x:Name="StackPanelMenu"
             Grid.Row="1"
             Grid.ColumnSpan="2">
-            <TabControl Height="391" TabStripPlacement="Left">
+            <TabControl Height="{Binding ActualHeight, ElementName=window, Mode=OneWay}" TabStripPlacement="Left">
                 <TabItem
+                    Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
@@ -91,7 +93,7 @@
             <Button
                 x:Name="ButDeconnexion"
                 Width="{Binding ActualWidth, ElementName=StackPanelDeconnexion, Mode=OneWay}"
-                Height="44"
+                Height="32"
                 Background="#FFE30613"
                 BorderBrush="#FFE30613"
                 Content="Déconnexion"
