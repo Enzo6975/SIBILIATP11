@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace SIBILIATP11.UserControl
-{ }
+{ 
     public partial class VoirCommande : System.Windows.Controls.UserControl
     {
         public VoirCommande()
@@ -22,4 +22,4 @@ namespace SIBILIATP11.UserControl
             InitializeComponent();
         }
     }
-
+}
