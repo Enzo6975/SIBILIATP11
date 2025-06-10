@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace SIBILIATP11.UserControl
 {
     /// <summary>
-    /// Logique d'interaction pour VoirCommande.xaml
+    /// Logique d'interaction pour VoirCommandes.xaml
     /// </summary>
-    public partial class VoirCommande : System.Windows.Controls.UserControl
+    public partial class VoirCommandes : System.Windows.Controls.UserControl
     {
-        public VoirCommande()
+        public VoirCommandes()
         {
             InitializeComponent();
         }
