@@ -6,8 +6,25 @@
              xmlns:local="clr-namespace:SIBILIATP11.UserControl"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="White">
-        
-            
+    <Grid>
+        <Label Content="Créer un client" Background="#FFFD2828" FontSize="30" Foreground="White" FontWeight="Bold" VerticalAlignment="Top" />
+
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="395">
+            <Label Content="Nom"/>
+            <TextBox TextWrapping="Wrap"  Width="200"/>
+            <Label Content="Prénom"/>
+            <TextBox TextWrapping="Wrap"  Width="200"/>
+            <Label Content="Téléphone"/>
+            <TextBox TextWrapping="Wrap"  Width="200"/>
+            <Label Content="Adresse"/>
+            <TextBox TextWrapping="Wrap"  Width="200"/>
+            <Label Content="Code Postal"/>
+            <TextBox TextWrapping="Wrap"  Width="200"/>
+            <Label Content="Ville"/>
+            <TextBox TextWrapping="Wrap"  Width="200"/>
+            <Button Content="Validier" HorizontalAlignment="Center" Width="60" Margin="0,30,0,0" Background="#FFFD2828" Foreground="White"/>
+        </StackPanel>
+
+
     </Grid>
 </UserControl>
