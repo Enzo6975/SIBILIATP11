@@ -8,5 +8,51 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <StackPanel x:Name="panelUCFormCommande" />
+    <Grid x:Name="LaGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20*" />
+            <ColumnDefinition Width="80*" />
+        </Grid.ColumnDefinitions>
+        <TabControl
+            Grid.ColumnSpan="2"
+            Width="{Binding ActualWidth, ElementName=LaGrid, Mode=OneWay}"
+            Height="391"
+            Margin="0,30,0,30"
+            TabStripPlacement="Left">
+            <TabItem
+                Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
+                Height="70"
+                FontSize="12"
+                FontWeight="Bold"
+                Header="CRÉER UNE COMMANDE">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Button
+                        x:Name="luiolio"
+                        Background="#FFFF1313"
+                        Content="Button"
+                        FontFamily="Agency FB"
+                        FontSize="36"
+                        Foreground="#FF982D2D" />
+                </StackPanel>
+            </TabItem>
+            <TabItem
+                Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
+                Height="70"
+                FontSize="12"
+                FontWeight="Bold"
+                Header="VOIR LES COMMANDES" />
+            <TabItem
+                Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
+                Height="70"
+                FontSize="12"
+                FontWeight="Bold"
+                Header="COMMANDE À RESTITUER" />
+            <TabItem
+                Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
+                Height="70"
+                FontSize="12"
+                FontWeight="Bold"
+                Header="CLIENTS" />
+        </TabControl>
+    </Grid>
 </UserControl>

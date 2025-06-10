@@ -35,6 +35,7 @@
             Grid.Column="0"
             Background="#FFE30613">
             <TextBlock
+                x:Name="TxtBlockConnexion"
                 Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"
                 Height="{Binding ActualHeight, ElementName=StackPanelFond, Mode=OneWay}"
                 FontWeight="Bold"
@@ -43,53 +44,43 @@
                 TextAlignment="Center"
                 TextWrapping="Wrap" />
         </StackPanel>
-        <Grid
+        <StackPanel
             x:Name="StackPanelMenu"
             Grid.Row="1"
-            Grid.Column="0"
-            Background="#FFE30613">
-            <TabControl
-                Width="{Binding ActualWidth, ElementName=LaGrid, Mode=OneWay}"
-                Height="391"
-                TabStripPlacement="Left">
+            Grid.ColumnSpan="2">
+            <TabControl Height="391" TabStripPlacement="Left">
                 <TabItem
-                    Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
                     Header="CRÉER UNE COMMANDE">
-                    <StackPanel>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Button
-                            Margin="178,212,0,0"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Top"
-                            Content="Button" />
+                            x:Name="luiolio"
+                            Background="#FFFF1313"
+                            Content="Button"
+                            FontFamily="Agency FB"
+                            FontSize="36"
+                            Foreground="#FF982D2D" />
                     </StackPanel>
                 </TabItem>
                 <TabItem
-                    Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
                     Header="VOIR LES COMMANDES" />
                 <TabItem
-                    Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
-                    Header="COMMANDE À RESTITUER">
-                    <Grid />
-                </TabItem>
+                    Header="COMMANDE À RESTITUER" />
                 <TabItem
-                    Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
-                    Header="CLIENTS">
-                    <Grid />
-                </TabItem>
+                    Header="CLIENTS" />
             </TabControl>
-        </Grid>
+        </StackPanel>
         <StackPanel
             x:Name="StackPanelDeconnexion"
             Grid.Row="2"
