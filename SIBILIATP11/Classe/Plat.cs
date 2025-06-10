@@ -16,6 +16,9 @@ namespace SIBILIATP11.Classe
         private SousCategorie uneSousCategorie;
         private Periode unePeriode;
 
+        public Plat()
+        {}
+
         public Plat(int numPlat, string nomPlat, double prixUnitaire, int delaiPreparation, int nbPersonnes, SousCategorie uneSousCategorie, Periode unePeriode)
         {
             this.NumPlat = numPlat;
