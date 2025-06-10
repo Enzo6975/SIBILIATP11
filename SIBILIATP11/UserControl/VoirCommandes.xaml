@@ -20,14 +20,5 @@
             FontSize="20"
             FontWeight="Bold"
             Foreground="White" />
-        <DataGrid />
-        <TextBox
-            Width="269"
-            Margin="0,48,0,0"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Top"
-            Text="Rechercher par numéro de téléphone client"
-            TextChanged="TextBox_TextChanged"
-            TextWrapping="Wrap" />
     </Grid>
 </UserControl>
