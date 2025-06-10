@@ -18,7 +18,7 @@ namespace SIBILIATP11.UserControl
     /// <summary>
     /// Logique d'interaction pour CreerClient.xaml
     /// </summary>
-    public partial class CreerClient : UserControl
+    public partial class CreerClient : System.Windows.Controls.UserControl
     {
         public CreerClient()
         {
