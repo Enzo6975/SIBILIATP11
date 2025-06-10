@@ -1,13 +1,16 @@
-﻿using System;
+﻿using Npgsql;
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TD3_BindingBDPension.Model;
 
 namespace SIBILIATP11.Classe
 {
-    public class Commande
+    public class Commande : ICrud<Commande>, INotifyPropertyChanged
     {
         private int numCommande;
         private DateTime dateCommande;
@@ -18,9 +21,10 @@ namespace SIBILIATP11.Classe
         private Employe unEmploye;
         private Client unClient;
 
+        public Commande()
+        {
 
-
-
+        }
         public Commande(int numCommande, DateTime dateCommande, DateTime dateRetraitPrevue, bool payee, bool retiree, double prixTotal, Employe unEmploye, Client unClient)
         {
             this.NumCommande = numCommande;
@@ -135,6 +139,45 @@ namespace SIBILIATP11.Classe
             {
                 this.unClient = value;
             }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public int Create()
+        {
+            throw new NotImplementedException();
+        }
+
+        public int Delete()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Commande> FindAll()
+        {
+            List<Commande> lesCommandes = new List<Commande>();
+            using (NpgsqlCommand cmdSelect = new NpgsqlCommand("select * from commande ;"))
+            {
+                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
+                foreach (DataRow dr in dt.Rows)
+                    lesCommandes.Add(new Commande((Int32)dr["numcommande"], (DateTime)dr["datecommande"], (DateTime)dr["dateretraitprevue"], (Boolean)dr["payee"], (Boolean)dr["retiree"], (Double)dr["prixtotal"], (Employe)dr["numemploye"], (Client)dr["numclient"]));
+            }
+            return lesCommandes;
+        }
+
+        public List<Commande> FindBySelection(string criteres)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Read()
+        {
+            throw new NotImplementedException();
+        }
+
+        public int Update()
+        {
+            throw new NotImplementedException();
         }
     }
 }
