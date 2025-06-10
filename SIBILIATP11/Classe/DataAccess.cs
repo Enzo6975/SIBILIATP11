@@ -5,6 +5,7 @@ using System.Data;
 using System.Windows;
 using Microsoft.Extensions.Logging;
 using Npgsql;
+using SIBILIATP11.Classe;
 
 
 namespace TD3_BindingBDPension.Model
@@ -140,6 +141,32 @@ namespace TD3_BindingBDPension.Model
             if (connection.State == ConnectionState.Open)
             {
                 connection.Close();
+            }
+        }
+
+        public int AddClient(Client client)
+        {
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client), "Le client à ajouter ne peut pas être null.");
+            }
+
+            using (NpgsqlCommand cmd = new NpgsqlCommand())
+            {
+
+                cmd.CommandText = "INSERT INTO client (nomClient, prenomClient, tel, adresseRue, adresseCP, adresseVille) " +
+                                  "VALUES (@NomClient, @PrenomClient, @Tel, @AdresseRue, @AdresseCP, @AdresseVille) " +
+                                  "RETURNING numClient;"; 
+
+                cmd.Parameters.AddWithValue("@NomClient", client.NomClient ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@PrenomClient", client.PrenomClient ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@Tel", client.Tel ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@AdresseRue", client.AdresseRue ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@AdresseCP", client.AdresseCP ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@AdresseVille", client.AdresseVille ?? (object)DBNull.Value);
+
+
+                return ExecuteInsert(cmd);
             }
         }
     }

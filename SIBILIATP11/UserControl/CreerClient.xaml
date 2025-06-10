@@ -9,22 +9,21 @@
     <Grid>
         <Label Content="Créer un client" Background="#FFFD2828" FontSize="30" Foreground="White" FontWeight="Bold" VerticalAlignment="Top" />
 
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="395">
+        <StackPanel x:Name="StackPanelCreerClient" HorizontalAlignment="Center" VerticalAlignment="Center" Width="395">
             <Label Content="Nom"/>
-            <TextBox TextWrapping="Wrap"  Width="200"/>
+            <TextBox x:Name="txtBoxNomClient" TextWrapping="Wrap"  Width="200" Text="{Binding NomClient, UpdateSourceTrigger=PropertyChanged}"/>
             <Label Content="Prénom"/>
-            <TextBox TextWrapping="Wrap"  Width="200"/>
+            <TextBox x:Name="txtBoxPrenomClient" TextWrapping="Wrap"  Width="200" Text="{Binding PrenomClient, UpdateSourceTrigger=PropertyChanged}"/>
             <Label Content="Téléphone"/>
-            <TextBox TextWrapping="Wrap"  Width="200"/>
+            <TextBox x:Name="txtBoxTelClient" TextWrapping="Wrap"  Width="200" Text="{Binding Tel, UpdateSourceTrigger=PropertyChanged}"/>
             <Label Content="Adresse"/>
-            <TextBox TextWrapping="Wrap"  Width="200"/>
+            <TextBox x:Name="txtBoxAdresseClient" TextWrapping="Wrap"  Width="200" Text="{Binding AdresseRue, UpdateSourceTrigger=PropertyChanged}"/>
             <Label Content="Code Postal"/>
-            <TextBox TextWrapping="Wrap"  Width="200"/>
+            <TextBox x:Name="txtBoxCodePostalClient" TextWrapping="Wrap"  Width="200" Text="{Binding AdresseCP, UpdateSourceTrigger=PropertyChanged}"/>
             <Label Content="Ville"/>
-            <TextBox TextWrapping="Wrap"  Width="200"/>
-            <Button Content="Validier" HorizontalAlignment="Center" Width="60" Margin="0,30,0,0" Background="#FFFD2828" Foreground="White"/>
+            <TextBox x:Name="txtBoxVilleClient" TextWrapping="Wrap"  Width="200" Text="{Binding AdresseVille, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Button x:Name="butValiderClient" Content="Valider" HorizontalAlignment="Center" Width="60" Margin="0,30,0,0" Background="#FFFD2828" Foreground="White" Click="butValiderClient_Click"/>
         </StackPanel>
-
-
-    </Grid>
+   </Grid>
 </UserControl>

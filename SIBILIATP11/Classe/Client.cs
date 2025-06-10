@@ -8,15 +8,15 @@ namespace SIBILIATP11.Classe
 {
     public class Client
     {
-        private int numClient;
-        private string nomClient;
-        private string prenomClient;
-        private string tel;
-        private string adresseRue;
-        private double adresseCP;
-        private string adresseVille;
+        public int numClient { get; set; } 
+        public string nomClient { get; set; }
+        public string prenomClient { get; set; }
+        public string tel { get; set; }
+        public string adresseRue { get; set; }
+        public string adresseCP { get; set; }
+        public string adresseVille { get; set; }
 
-        public Client(int numClient, string nomClient, string prenomClient, string tel, string adresseRue, double adresseCP, string adresseVille)
+        public Client(int numClient, string nomClient, string prenomClient, string tel, string adresseRue, string adresseCP, string adresseVille)
         {
             this.NumClient = numClient;
             this.NomClient = nomClient;
@@ -26,6 +26,9 @@ namespace SIBILIATP11.Classe
             this.AdresseCP = adresseCP;
             this.AdresseVille = adresseVille;
         }
+
+        public Client()
+        { }
 
         public int NumClient
         {
@@ -92,7 +95,7 @@ namespace SIBILIATP11.Classe
             }
         }
 
-        public double AdresseCP
+        public string AdresseCP
         {
             get
             {
