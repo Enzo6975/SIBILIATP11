@@ -15,7 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using TD3_BindingBDPension.Model;
+using SIBILIATP11.Classe;
 
 namespace SIBILIATP11.UserControl
 {
@@ -24,34 +24,33 @@ namespace SIBILIATP11.UserControl
     /// </summary>
     public partial class CreerCommande : System.Windows.Controls.UserControl
     {
+        public Gestionplat gestionplat;
         public CreerCommande()
         {
             InitializeComponent();
+            gestionplat = new Gestionplat();
             this.Loaded += CreerCommande_Loaded;
         }
-        private void CreerCommande_Loaded(object sender, System.Windows.RoutedEventArgs e)
+
+        private void CreerCommande_Loaded(object sender, RoutedEventArgs e)
         {
-            LoadDataGrid(); // Appelez la méthode spécifique pour les plats
+            LoadPlatsIntoDataGrid();
         }
 
-        private void LoadDataGrid()
+        private void LoadPlatsIntoDataGrid()
         {
-            string tablePlat = "plat";
-
             try
             {
-                using (NpgsqlCommand cmd = new NpgsqlCommand($"SELECT NomPlat, PrixUnitaire, DelaiPreparation, NbPersonnes FROM {tablePlat}"))
+                List<Plat> lesPlats = gestionplat.FindAll();
+
+                if (plats != null) // Vérification de sécurité au cas où le DataGrid ne serait pas encore initialisé
                 {
-                    DataTable platsData = DataAccess.Instance.ExecuteSelect(cmd);
-                    if (plats != null)
-                    {
-                        plats.ItemsSource = platsData.DefaultView;
-                    }
+                    plats.ItemsSource = lesPlats;
                 }
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show($"Erreur lors du chargement des plats : {ex.Message}", "Erreur de base de données", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                MessageBox.Show($"Erreur lors du chargement des plats dans le DataGrid : {ex.Message}","Erreur de données", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
             }
         }
     }

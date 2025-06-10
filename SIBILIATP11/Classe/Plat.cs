@@ -8,16 +8,18 @@ namespace SIBILIATP11.Classe
 {
     public class Plat
     {
-        private int numPlat;
-        private string nomPlat;
-        private double prixUnitaire;
-        private int delaiPreparation;
-        private int nbPersonnes;
-        private SousCategorie uneSousCategorie;
-        private Periode unePeriode;
+        private int numPlat {  get; set; }
+        private string nomPlat { get; set; }
+        private double prixUnitaire { get; set; }
+        private int delaiPreparation { get; set; }
+        private int nbPersonnes { get; set; }
+        private SousCategorie uneSousCategorie { get; set; }
+        private Periode unePeriode { get; set; }
 
         public Plat()
-        {}
+        {
+
+        }
 
         public Plat(int numPlat, string nomPlat, double prixUnitaire, int delaiPreparation, int nbPersonnes, SousCategorie uneSousCategorie, Periode unePeriode)
         {
@@ -28,6 +30,14 @@ namespace SIBILIATP11.Classe
             this.NbPersonnes = nbPersonnes;
             this.UneSousCategorie = uneSousCategorie;
             this.UnePeriode = unePeriode;
+        }
+
+        public Plat(string nomPlat, double prixUnitaire, int delaiPreparation, int nbPersonnes)
+        {
+            this.NomPlat = nomPlat;
+            this.PrixUnitaire = prixUnitaire;
+            this.DelaiPreparation = delaiPreparation;
+            this.NbPersonnes = nbPersonnes;
         }
 
         public int NumPlat
