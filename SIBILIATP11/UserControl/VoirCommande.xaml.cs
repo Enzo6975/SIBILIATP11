@@ -18,7 +18,7 @@ namespace SIBILIATP11.UserControl
     /// <summary>
     /// Logique d'interaction pour VoirCommande.xaml
     /// </summary>
-    public partial class VoirCommande : System.Windows.Controls.UserControl
+    public partial class VoirCommande : UserControl
     {
         public VoirCommande()
         {
