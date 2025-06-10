@@ -6,11 +6,23 @@
              xmlns:local="clr-namespace:SIBILIATP11.UserControl"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    
-    <Grid Background="LightGray">
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBlock Text="Ceci est mon contrôle" FontSize="16" Margin="10"/>
-            <Button Content="Cliquer ici" Padding="10,5" />
+
+    <Grid Background="White">
+        <StackPanel>
+            <StackPanel Height="60" Width="700" VerticalAlignment="Top" HorizontalAlignment="Center">
+                <Label Width="150" Height="30" Content="Rechercher :" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBox Height="30"></TextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="30" VerticalAlignment="Top" Margin="0,10,0,0">
+                <ComboBox Width="150"/>
+                <DatePicker Margin="30,0,0,0"/>
+                <Label Content="De" Margin="30,0,0,0"/>
+                <TextBox Width="50" Margin="5,0,0,0"/>
+                <Label Content="à" Margin="5,0,0,0"/>
+                <TextBox Width="50" Margin="5.5,0,0,0"/>
+
+            </StackPanel>
+            <DataGrid Width="700" Margin="0,40,0,0"></DataGrid>
         </StackPanel>
     </Grid>
 </UserControl>
