@@ -19,29 +19,31 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20*" />
-            <ColumnDefinition Width="80*" />
+            <ColumnDefinition Width="60*" />
+            <ColumnDefinition Width="20*" />
         </Grid.ColumnDefinitions>
         <StackPanel
             x:Name="StackPanelLogo"
             Grid.Row="0"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
-            Margin="0,5,0,5">
+            Grid.Column="2">
             <StackPanel.Background>
                 <ImageBrush ImageSource="/logo-sibilia.png" Stretch="Uniform" />
             </StackPanel.Background>
-            <TextBlock
-                x:Name="TxtConnectee"
-                Width="{Binding ActualWidth, ElementName=StackPanelLogo, Mode=OneWay}"
-                Height="{Binding ActualHeight, ElementName=StackPanelLogo, Mode=OneWay}"
-                Text="Connecté en tant que - "
-                TextAlignment="Right" />
         </StackPanel>
         <StackPanel
             x:Name="StackPanelFond"
             Grid.Row="0"
             Grid.Column="0"
-            Background="#FFE30613" />
+            Background="#FFE30613">
+            <TextBlock
+                Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"
+                Height="{Binding ActualHeight, ElementName=StackPanelFond, Mode=OneWay}"
+                FontWeight="Bold"
+                Foreground="White"
+                Text="Connecté en tant que -&#x0a;Enzo Pagès"
+                TextAlignment="Center"
+                TextWrapping="Wrap" />
+        </StackPanel>
         <StackPanel
             x:Name="StackPanelMenu"
             Grid.Row="1"
@@ -54,40 +56,30 @@
                 <TabItem
                     Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
                     Height="70"
-                    Background="#FFE30613"
-                    BorderBrush="#FFE30613"
+                    FontSize="12"
                     FontWeight="Bold"
-                    Foreground="Black"
-                    Header="CRÉER UNE COMMANDE">
-                    <Grid />
-                </TabItem>
+                    Header="CRÉER UNE COMMANDE" />
                 <TabItem
                     Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
                     Height="70"
-                    Background="#FFE30613"
-                    BorderBrush="#FFE30613"
+                    FontSize="12"
                     FontWeight="Bold"
-                    Foreground="Black"
                     Header="VOIR LES COMMANDES">
                     <Grid />
                 </TabItem>
                 <TabItem
                     Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
                     Height="70"
-                    Background="#FFE30613"
-                    BorderBrush="#FFE30613"
+                    FontSize="12"
                     FontWeight="Bold"
-                    Foreground="Black"
                     Header="COMMANDE À RESTITUER">
                     <Grid />
                 </TabItem>
                 <TabItem
                     Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
                     Height="70"
-                    Background="#FFE30613"
-                    BorderBrush="#FFE30613"
+                    FontSize="12"
                     FontWeight="Bold"
-                    Foreground="Black"
                     Header="CLIENTS">
                     <Grid />
                 </TabItem>
@@ -106,7 +98,8 @@
                 Background="#FFE30613"
                 BorderBrush="#FFE30613"
                 Content="Déconnexion"
-                FontWeight="Bold" />
+                FontWeight="Bold"
+                Foreground="White" />
         </StackPanel>
     </Grid>
 </Window>
