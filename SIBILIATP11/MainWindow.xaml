@@ -4,8 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:SIBILIATP11"
-    xmlns:uc="clr-namespace:SIBILIATP11.UserControl"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uc="clr-namespace:SIBILIATP11.UserControl"
+    x:Name="window"
     Title="MainWindow"
     Width="800"
     Height="450"
@@ -20,8 +21,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20*" />
-            <ColumnDefinition Width="60*" />
-            <ColumnDefinition Width="20*" />
+            <ColumnDefinition Width="80*" />
         </Grid.ColumnDefinitions>
         <StackPanel
             x:Name="StackPanelLogo"
@@ -37,6 +37,7 @@
             Grid.Column="0"
             Background="#FFE30613">
             <TextBlock
+                x:Name="TxtBlockConnexion"
                 Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"
                 Height="{Binding ActualHeight, ElementName=StackPanelFond, Mode=OneWay}"
                 FontWeight="Bold"
@@ -48,51 +49,40 @@
         <StackPanel
             x:Name="StackPanelMenu"
             Grid.Row="1"
-            Grid.Column="0"
-            Background="#FFE30613">
-            <TabControl
-    Width="{Binding ActualWidth, ElementName=LaGrid, Mode=OneWay}"
-    Height="391"
-    TabStripPlacement="Left">
-
-    <TabItem
-        Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
-        Height="70"
-        FontSize="12"
-        FontWeight="Bold"
-        Header="CRÉER UNE COMMANDE">
-        <Grid> <uc:CreerCommande/>
-        </Grid>
-    </TabItem>
-
-    <TabItem
-        Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
-        Height="70"
-        FontSize="12"
-        FontWeight="Bold"
-        Header="VOIR LES COMMANDES">
-        <Grid />
-    </TabItem>
-
-    <TabItem
-        Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
-        Height="70"
-        FontSize="12"
-        FontWeight="Bold"
-        Header="COMMANDE À RESTITUER">
-        <Grid />
-    </TabItem>
-
-    <TabItem
-        Width="{Binding ActualWidth, ElementName=StackPanelMenu, Mode=OneWay}"
-        Height="70"
-        FontSize="12"
-        FontWeight="Bold"
-        Header="CLIENTS">
-        <Grid />
-    </TabItem>
-
-    </TabControl>
+            Grid.ColumnSpan="2">
+            <TabControl Height="{Binding ActualHeight, ElementName=window, Mode=OneWay}" TabStripPlacement="Left">
+                <TabItem
+                    Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"
+                    Height="70"
+                    FontSize="12"
+                    FontWeight="Bold"
+                    Header="CRÉER UNE COMMANDE">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Button
+                            x:Name="luiolio"
+                            Background="#FFFF1313"
+                            Content="Button"
+                            FontFamily="Agency FB"
+                            FontSize="36"
+                            Foreground="#FF982D2D" />
+                    </StackPanel>
+                </TabItem>
+                <TabItem
+                    Height="70"
+                    FontSize="12"
+                    FontWeight="Bold"
+                    Header="VOIR LES COMMANDES" />
+                <TabItem
+                    Height="70"
+                    FontSize="12"
+                    FontWeight="Bold"
+                    Header="COMMANDE À RESTITUER" />
+                <TabItem
+                    Height="70"
+                    FontSize="12"
+                    FontWeight="Bold"
+                    Header="CLIENTS" />
+            </TabControl>
         </StackPanel>
         <StackPanel
             x:Name="StackPanelDeconnexion"
@@ -103,12 +93,22 @@
             <Button
                 x:Name="ButDeconnexion"
                 Width="{Binding ActualWidth, ElementName=StackPanelDeconnexion, Mode=OneWay}"
-                Height="{Binding ActualHeight, ElementName=StackPanelDeconnexion, Mode=OneWay}"
+                Height="32"
                 Background="#FFE30613"
                 BorderBrush="#FFE30613"
                 Content="Déconnexion"
                 FontWeight="Bold"
-                Foreground="White" />
+                Foreground="White"
+                RenderTransformOrigin="0.5,0.5">
+                <Button.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform />
+                        <SkewTransform AngleX="0" />
+                        <RotateTransform />
+                        <TranslateTransform X="0" />
+                    </TransformGroup>
+                </Button.RenderTransform>
+            </Button>
         </StackPanel>
     </Grid>
 </Window>

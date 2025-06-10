@@ -12,7 +12,7 @@
             <Style.Triggers>
                 <Trigger Property="IsSelected" Value="True">
                     <Setter Property="Foreground" Value="#000000" />
-                    <Setter Property="Background" Value="White" />
+                    <Setter Property="Background" Value="#FFFD2828" />
                     <Setter Property="FontWeight" Value="Bold" />
                 </Trigger>
             </Style.Triggers>
