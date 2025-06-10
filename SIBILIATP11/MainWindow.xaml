@@ -63,9 +63,7 @@
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
-                    Header="VOIR LES COMMANDES">
-                    <uc:VoirCommande Width="{Binding ActualWidth, ElementName=StackPanelLogo, Mode=OneWay}" />
-                </TabItem>
+                    Header="VOIR LES COMMANDES" />
                 <TabItem
                     Height="70"
                     FontSize="12"

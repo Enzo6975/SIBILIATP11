@@ -1,0 +1,24 @@
+﻿<UserControl
+    x:Class="SIBILIATP11.UserControl.VoirCommandes"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:SIBILIATP11.UserControl"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Grid>
+        <Label
+            Width="800"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            HorizontalContentAlignment="Center"
+            Background="#FFE30613"
+            Content="Voir les Commandes"
+            FontFamily="Calibri"
+            FontSize="20"
+            FontWeight="Bold"
+            Foreground="White" />
+    </Grid>
+</UserControl>
