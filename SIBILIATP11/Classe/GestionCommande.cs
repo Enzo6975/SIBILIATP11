@@ -8,7 +8,7 @@ using System.Windows.Controls;
 
 namespace SIBILIATP11.Classe
 {
-    class GestionCommande
+    public class GestionCommande
     {
         private string nom;
         private ObservableCollection<Commande> lesCommandes;
@@ -62,7 +62,11 @@ namespace SIBILIATP11.Classe
                 contient.UneCommande = commande;
                 contient.UnPlat = plat;
             }
-            this.LesPlats = plats;
+            this.LesContients = contients;
+        }
+
+        public GestionCommande() : this("")
+        {
         }
 
         public string Nom

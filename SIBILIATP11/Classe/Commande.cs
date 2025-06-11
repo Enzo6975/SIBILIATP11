@@ -25,6 +25,12 @@ namespace SIBILIATP11.Classe
         {
 
         }
+
+        public Commande(int numCommande)
+        {
+            this.NumCommande = numCommande;
+        }
+
         public Commande(int numCommande, DateTime dateCommande, DateTime dateRetraitPrevue, bool payee, bool retiree, double prixTotal, Employe unEmploye, Client unClient)
         {
             this.NumCommande = numCommande;
@@ -160,7 +166,7 @@ namespace SIBILIATP11.Classe
             {
                 DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
                 foreach (DataRow dr in dt.Rows)
-                    lesCommandes.Add(new Commande((Int32)dr["numcommande"], (DateTime)dr["datecommande"], (DateTime)dr["dateretraitprevue"], (Boolean)dr["payee"], (Boolean)dr["retiree"], (Double)dr["prixtotal"], (Employe)dr["numemploye"], (Client)dr["numclient"]));
+                    lesCommandes.Add(new Commande((Int32)dr["numcommande"], (DateTime)dr["datecommande"], (DateTime)dr["dateretraitprevue"], (Boolean)dr["payee"], (Boolean)dr["retiree"], (Double)dr["prixtotal"], new Employe((Int32)dr["numemploye"]), new Client((Int32)dr["numclient"])));
             }
             return lesCommandes;
         }

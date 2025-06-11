@@ -47,7 +47,8 @@
             Width="252"
             Margin="0,307,0,0"
             HorizontalAlignment="Center"
-            VerticalAlignment="Top" />
+            VerticalAlignment="Top"
+            KeyUp="TxtPassword_KeyUp" />
         <Button
             x:Name="ButSeConnecter"
             Width="176"
@@ -77,12 +78,14 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Fill="#FFE30613" />
-        <Button x:Name="ButFermer"
+        <Button
+            x:Name="ButFermer"
             Margin="757,3,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Background="White"
             BorderBrush="White"
-            Content="Fermer" Click="ButFermer_Click" />
+            Click="ButFermer_Click"
+            Content="Fermer" />
     </Grid>
 </Window>

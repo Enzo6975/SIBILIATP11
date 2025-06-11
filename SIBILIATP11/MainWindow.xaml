@@ -47,11 +47,16 @@
                 TextWrapping="Wrap" />
         </StackPanel>
         <StackPanel
+            x:Name="TailleBonne"
+            Grid.Row="1"
+            Grid.RowSpan="2"
+            Grid.Column="0" />
+        <StackPanel
             x:Name="StackPanelMenu"
             Grid.Row="1"
             Grid.ColumnSpan="2">
             <TabControl
-                Height="{Binding ActualHeight, ElementName=window, Mode=OneWay}"
+                Height="{Binding ActualHeight, ElementName=TailleBonne, Mode=OneWay}"
                 Margin="-2,-2,0,0"
                 Background="{x:Null}"
                 BorderBrush="{x:Null}"
@@ -67,39 +72,35 @@
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
-                    Header="VOIR LES COMMANDES" >
-                    
-                </TabItem>
+                    Header="VOIR LES COMMANDES" />
                 <TabItem
                     Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
-                    Header="COMMANDE À RESTITUER" >
-                    <uc:SelectionnerClient/>
-                </TabItem>
+                    Header="COMMANDE À RESTITUER" />
                 <TabItem
                     Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
-                    Header="CLIENTS"
-                    
-                 />
+                    Header="CLIENTS">
+                    <uc:SelectionnerClient />
+                </TabItem>
             </TabControl>
         </StackPanel>
         <StackPanel
             x:Name="StackPanelDeconnexion"
             Grid.Row="2"
             Grid.Column="0"
-            Margin="0,0,0,0"
             Background="#FFE30613">
             <Button
                 x:Name="ButDeconnexion"
                 Width="{Binding ActualWidth, ElementName=StackPanelDeconnexion, Mode=OneWay}"
-                Height="32"
+                Height="{Binding ActualHeight, ElementName=StackPanelDeconnexion, Mode=OneWay}"
                 Background="#FFE30613"
                 BorderBrush="#FFE30613"
+                Click="ButDeconnexion_Click"
                 Content="Déconnexion"
                 FontWeight="Bold"
                 Foreground="White"

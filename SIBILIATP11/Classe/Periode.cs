@@ -16,6 +16,11 @@ namespace SIBILIATP11.Classe
 
         public Periode() { }
 
+        public Periode(int numPeriode)
+        {
+            this.NumPeriode = numPeriode;
+        }
+
         public Periode(int numPeriode, string libellePeriode)
         {
             this.NumPeriode = numPeriode;
