@@ -73,7 +73,9 @@
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
-                    Header="CLIENTS" />
+                    Header="CLIENTS"
+                    
+                 />
             </TabControl>
         </StackPanel>
         <StackPanel
