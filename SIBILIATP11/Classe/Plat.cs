@@ -142,7 +142,7 @@ namespace SIBILIATP11.Classe
         public List<Plat> FindAll()
         {
             List<Plat> lesPlats = new List<Plat>();
-            using (NpgsqlCommand cmdSelect = new NpgsqlCommand("select * from plat ;"))
+            using (NpgsqlCommand cmdSelect = new NpgsqlCommand("select * from plat where "))
             {
                 DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
                 foreach (DataRow dr in dt.Rows)
