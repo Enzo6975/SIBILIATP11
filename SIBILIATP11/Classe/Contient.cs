@@ -17,7 +17,11 @@ namespace SIBILIATP11.Classe
         private Commande uneCommande;
         private Plat unPlat;
 
-        public Contient() { }
+        public Contient()
+        {
+        
+        }
+
         public Contient(int quantite, double prix, Commande uneCommande, Plat unPlat)
         {
             this.Quantite = quantite;
@@ -85,7 +89,7 @@ namespace SIBILIATP11.Classe
             {
                 DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
                 foreach (DataRow dr in dt.Rows)
-                    lesContients.Add(new Contient((Int32)dr["quantite"], (Int32)dr["prix"], (Commande)dr["numcommande"], (Plat)dr["numplat"]));
+                    lesContients.Add(new Contient((Int32)dr["quantite"], (Int32)dr["prix"], new Commande((Int32)dr["numcommande"]), new Plat((Int32)dr["numplat"])));
             }
             return lesContients;
         }

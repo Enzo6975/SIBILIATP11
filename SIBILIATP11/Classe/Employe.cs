@@ -22,6 +22,12 @@ namespace SIBILIATP11.Classe
         {
 
         }
+
+        public Employe(int numEmploye)
+        {
+            this.NumEmploye = numEmploye;
+        }
+
         public Employe(int numEmploye, string nomEmploye, string prenomEmploye, string password, string login, Role unRole)
         {
             this.NumEmploye = numEmploye;

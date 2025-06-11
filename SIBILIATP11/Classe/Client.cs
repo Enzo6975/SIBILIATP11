@@ -20,6 +20,16 @@ namespace SIBILIATP11.Classe
         public string adresseCP;
         public string adresseVille;
 
+        public Client()
+        {
+
+        }
+
+        public Client(int numClient)
+        {
+            this.numClient = numClient; 
+        }
+
         public Client(int numClient, string nomClient,  string prenomClient, string tel)
         {
             this.NumClient = numClient;
@@ -37,11 +47,6 @@ namespace SIBILIATP11.Classe
             this.AdresseRue = adresseRue;
             this.AdresseCP = adresseCP;
             this.AdresseVille = adresseVille;
-        }
-
-        public Client()
-        { 
-
         }
 
         public int NumClient

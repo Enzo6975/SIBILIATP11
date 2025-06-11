@@ -15,7 +15,16 @@ namespace SIBILIATP11.Classe
         private string nomSousCategorie;
         private Categorie uneCategorie;
 
-        public SousCategorie() { }
+        public SousCategorie() 
+        { 
+        
+        }
+
+        public SousCategorie(int numSousCategorie)
+        {
+            this.NumSousCategorie = numSousCategorie;
+        }
+
         public SousCategorie(int numSousCategorie, string nomSousCategorie, Categorie uneCategorie)
         {
             this.NumSousCategorie = numSousCategorie;
@@ -69,7 +78,7 @@ namespace SIBILIATP11.Classe
             {
                 DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
                 foreach (DataRow dr in dt.Rows)
-                    lesSousCategories.Add(new SousCategorie((Int32)dr["numsouscategorie"], (String)dr["nomsouscategorie"], (Categorie)dr["numcategorie"]));
+                    lesSousCategories.Add(new SousCategorie((Int32)dr["numsouscategorie"], (String)dr["nomsouscategorie"], new Categorie((Int32)dr["numcategorie"])));
             }
             return lesSousCategories;
         }

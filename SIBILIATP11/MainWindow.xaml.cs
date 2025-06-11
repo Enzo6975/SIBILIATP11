@@ -19,9 +19,11 @@ namespace SIBILIATP11
     /// </summary>
     public partial class MainWindow : Window
     {
+        public GestionCommande LaGestion { get; set; }
         public MainWindow()
         {
             Window_Loaded();
+            ChargeData();
             InitializeComponent();
         }
 
@@ -38,5 +40,23 @@ namespace SIBILIATP11
             }
         }
 
+        public void ChargeData()
+        {
+            try
+            {
+                LaGestion = new GestionCommande("GestionCommande commande");
+                this.DataContext = LaGestion;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Problème lors de récupération des données veuillez consulter votre admin");
+                Application.Current.Shutdown();
+            }
+        }
+
+        private void ButDeconnexion_Click(object sender, RoutedEventArgs e)
+        {
+            Window_Loaded();
+        }
     }
 }

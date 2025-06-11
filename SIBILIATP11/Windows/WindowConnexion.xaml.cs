@@ -55,5 +55,13 @@ namespace SIBILIATP11.Windows
         {
             this.DialogResult = false;
         }
+
+        private void TxtPassword_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                ButSeConnecter_Click(ButSeConnecter, new RoutedEventArgs());
+            }
+        }
     }
 }

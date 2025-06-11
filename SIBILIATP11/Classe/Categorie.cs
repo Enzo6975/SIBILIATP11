@@ -14,6 +14,11 @@ namespace SIBILIATP11.Classe
         private int numCategorie; 
         private string nomCategorie;
         public Categorie() { }
+
+        public Categorie(int numCategorie)
+        {
+            this.NumCategorie = numCategorie;
+        }
         public Categorie(int numCategorie, string nomCategorie)
         {
             this.NumCategorie = numCategorie;
