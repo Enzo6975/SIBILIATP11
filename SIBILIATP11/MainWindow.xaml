@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:SIBILIATP11"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uc="clr-namespace:SIBILIATP11.UserControl"
-    x:Name="window"
+    x:Name="Sibilia"
     Title="MainWindow"
     Width="800"
     Height="450"
@@ -76,7 +76,9 @@
                     FontSize="12"
                     FontWeight="Bold"
                     Header="COMMANDE À RESTITUER" >
-                    <uc:SelectionnerClient/>
+                    <ContentControl x:Name="ContentControlCommandeARestituer">
+                        <uc:SelectionnerClient/>
+                    </ContentControl>
                 </TabItem>
                 <TabItem
                     Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"
@@ -84,8 +86,7 @@
                     FontSize="12"
                     FontWeight="Bold"
                     Header="CLIENTS"
-                    
-                 />
+                />
             </TabControl>
         </StackPanel>
         <StackPanel

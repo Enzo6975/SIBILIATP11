@@ -24,6 +24,9 @@
             <TextBox x:Name="txtBoxVilleClient" TextWrapping="Wrap"  Width="200" Text="{Binding AdresseVille, UpdateSourceTrigger=PropertyChanged}"/>
 
             <Button x:Name="butValiderClient" Content="Valider" HorizontalAlignment="Center" Width="60" Margin="0,30,0,0" Background="#FFFD2828" Foreground="White" Click="butValiderClient_Click"/>
+            <Button x:Name="butRetourClient" Content="Retour" HorizontalAlignment="Center" Width="60" Margin="0,30,0,0" Background="#FFFD2828" Foreground="White" Click="ButRetourClient_Click"/>
+
         </StackPanel>
+        
    </Grid>
 </UserControl>

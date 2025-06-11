@@ -139,7 +139,16 @@ namespace SIBILIATP11.Classe
 
         public int Create()
         {
-            throw new NotImplementedException();
+            
+            try
+            {
+                return DataAccess.Instance.AddClient(this);
+            }
+            catch (Exception ex)
+            {
+                
+                throw new Exception("Erreur lors de la création du client en base de données.", ex);
+            }
         }
 
         public int Delete()

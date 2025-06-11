@@ -1,33 +1,82 @@
-﻿<UserControl x:Class="SIBILIATP11.UserControl.SelectionnerClient"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:SIBILIATP11.UserControl"
-             xmlns:model="clr-namespace:SIBILIATP11.Classe"
-             mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="White">
-        <Label Content="Séléctionner un Client" Background="#FFFD2828" FontSize="30" Foreground="White" FontWeight="Bold" VerticalAlignment="Top" />
+﻿<UserControl
+    x:Class="SIBILIATP11.UserControl.SelectionnerClient"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:SIBILIATP11.UserControl"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="clr-namespace:SIBILIATP11.Classe"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Grid>
+        <Label
+            VerticalAlignment="Top"
+            Background="#FFFD2828"
+            Content="Séléctionner un Client"
+            FontSize="30"
+            FontWeight="Bold"
+            Foreground="White" />
         <StackPanel>
             <DataGrid
                 x:Name="clients"
-                Margin="30,67,22,0"
+                Height="400"
+                Margin="30,70,30,0"
                 HorizontalAlignment="Center"
-                IsReadOnly="True"
+                VerticalAlignment="Top"
                 AutoGenerateColumns="False"
-                ItemsSource="{Binding .}" VerticalAlignment="Top" Height="400">
+                IsReadOnly="True"
+                ItemsSource="{Binding .}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Width="50" Binding="{Binding NumClient, ValidatesOnExceptions=False}" Header="Num"/>
-                    <DataGridTextColumn Width="*" Binding="{Binding NomClient, ValidatesOnExceptions=True}" Header="Nom"/>
-                    <DataGridTextColumn Width="*" Binding="{Binding PrenomClient, ValidatesOnExceptions=True}" Header="Prenom"/>
-                    <DataGridTextColumn Width="*" Binding="{Binding Tel, ValidatesOnExceptions=True}" Header="Téléphone"/>
-                    <DataGridTextColumn Width="*" Binding="{Binding AdresseRue, ValidatesOnExceptions=True}" Header="Adresse"/>
-                    <DataGridTextColumn Width="*" Binding="{Binding AdresseCP, ValidatesOnExceptions=True}" Header="Code postal"/>
-                    <DataGridTextColumn Width="*" Binding="{Binding AdresseVille, ValidatesOnExceptions=True}" Header="Ville"/>
+                    <DataGridTextColumn
+                        Width="50"
+                        Binding="{Binding NumClient, ValidatesOnExceptions=False}"
+                        Header="Num" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding NomClient, ValidatesOnExceptions=True}"
+                        Header="Nom" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding PrenomClient, ValidatesOnExceptions=True}"
+                        Header="Prenom" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Tel, ValidatesOnExceptions=True}"
+                        Header="Téléphone" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding AdresseRue, ValidatesOnExceptions=True}"
+                        Header="Adresse" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding AdresseCP, ValidatesOnExceptions=True}"
+                        Header="Code postal" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding AdresseVille, ValidatesOnExceptions=True}"
+                        Header="Ville" />
                 </DataGrid.Columns>
             </DataGrid>
-            <Button x:Name="butCreerClient" Content="Creer un client" Margin="0,24,0,0" HorizontalAlignment="Center" Background="#FFFD2828" Foreground="White" FontSize="16" FontWeight="Bold"/>
+            <Button
+                x:Name="butCreerClient"
+                Margin="0,24,0,0"
+                HorizontalAlignment="Center"
+                Background="#FFFD2828"
+                Click="butCreerClient_Click"
+                Content="Creer un client"
+                FontSize="16"
+                FontWeight="Bold"
+                Foreground="White" />
+            <Button
+                x:Name="butSelectClient"
+                Margin="0,24,0,0"
+                HorizontalAlignment="Center"
+                Background="#FFFD2828"
+                Content="Selectionner client"
+                FontSize="16"
+                FontWeight="Bold"
+                Foreground="White" />
         </StackPanel>
     </Grid>
 </UserControl>

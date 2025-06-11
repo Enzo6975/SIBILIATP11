@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TD3_BindingBDPension.Model;
 
 namespace SIBILIATP11.UserControl
 {
@@ -34,16 +35,16 @@ namespace SIBILIATP11.UserControl
         private void butValiderClient_Click(object sender, RoutedEventArgs e)
         {
 
-            foreach (UIElement child in StackPanelCreerClient.Children) 
+            foreach (UIElement child in StackPanelCreerClient.Children)
             {
                 if (child is TextBox textBox)
                 {
                     BindingExpression bindingExpression = textBox.GetBindingExpression(TextBox.TextProperty);
-                    bindingExpression?.UpdateSource(); 
+                    bindingExpression?.UpdateSource();
                 }
-
             }
 
+            // Validation des champs (vérifie si les propriétés de ClientEnEdition sont remplies)
             if (string.IsNullOrWhiteSpace(ClientEnEdition.NomClient) ||
                 string.IsNullOrWhiteSpace(ClientEnEdition.PrenomClient) ||
                 string.IsNullOrWhiteSpace(ClientEnEdition.Tel) ||
@@ -51,11 +52,43 @@ namespace SIBILIATP11.UserControl
                 string.IsNullOrWhiteSpace(ClientEnEdition.AdresseCP) ||
                 string.IsNullOrWhiteSpace(ClientEnEdition.AdresseVille))
             {
-                MessageBox.Show(" Veuillez remplir tous les champs requis.", "Erreur de saisie", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return; 
+                MessageBox.Show("Veuillez remplir tous les champs requis.", "Erreur de saisie", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
 
+            // Si la validation passe, tenter de créer le client
+            try
+            {
+                int newNumClient = ClientEnEdition.Create(); // Appelle la méthode Create de l'objet ClientEnEdition
+                ClientEnEdition.NumClient = newNumClient; // Met à jour le NumClient de l'objet ClientEnEdition
 
+                MessageBox.Show($"Client '{ClientEnEdition.NomClient} {ClientEnEdition.PrenomClient}' créé avec succès ! Numéro : {ClientEnEdition.NumClient}", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                // Après la création, revenir à la page de sélection des clients
+                RetourToSelectionnerClient();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erreur lors de la création du client : " + ex.Message, "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void ButRetourClient_Click(object sender, RoutedEventArgs e)
+        {
+            RetourToSelectionnerClient();
+        }
+
+        private void RetourToSelectionnerClient()
+        {
+            Window parentWindow = Window.GetWindow(this);
+            if (parentWindow is MainWindow mainWindow) // Assurez-vous que votre fenêtre principale est bien nommée MainWindow
+            {
+                mainWindow.Sibilia.Content = new SelectionnerClient();
+            }
+            else
+            {
+                MessageBox.Show("Impossible de trouver la fenêtre principale pour la navigation.");
+            }
         }
     }
 }

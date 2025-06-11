@@ -57,14 +57,29 @@ namespace SIBILIATP11.UserControl
             catch (Exception ex)
             {
                 MessageBox.Show("Erreur lors du chargement des clients : " + ex.Message, "Erreur de base de données", MessageBoxButton.OK, MessageBoxImage.Error);
-                // Optionnel : gérer l'erreur, par exemple, afficher un message à l'utilisateur
+
             }
         }
 
-        // Vous pouvez ajouter ici des gestionnaires d'événements pour vos boutons, par exemple :
-        // private void butCreerClient_Click(object sender, RoutedEventArgs e)
-        // {
-        //     // Logique pour créer un nouveau client
-        // }
+        private void butCreerClient_Click(object sender, RoutedEventArgs e)
+        {
+            // Trouver la fenêtre parente qui contient le ContentControl
+            Window parentWindow = Window.GetWindow(this);
+
+            if (parentWindow is MainWindow mainWindow)
+            {
+
+                CreerClient creerClientUserControl = new CreerClient();
+
+
+                mainWindow.Sibilia.Content = creerClientUserControl;
+            }
+            else
+            {
+                MessageBox.Show("Impossible de trouver la fenêtre principale ou le conteneur de contenu.");
+            }
+        }
+
+
     }
 }
