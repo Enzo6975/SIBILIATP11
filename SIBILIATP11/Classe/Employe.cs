@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Npgsql;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TD3_BindingBDPension.Model;
 
 namespace SIBILIATP11.Classe
 {
@@ -15,6 +18,10 @@ namespace SIBILIATP11.Classe
         private string login;
         private Role unRole;
 
+        public Employe()
+        {
+
+        }
         public Employe(int numEmploye, string nomEmploye, string prenomEmploye, string password, string login, Role unRole)
         {
             this.NumEmploye = numEmploye;
@@ -101,6 +108,18 @@ namespace SIBILIATP11.Classe
             {
                 this.unRole = value;
             }
+        }
+
+        public List<Employe> FindAll()
+        {
+            List<Employe> lesEmployes = new List<Employe>();
+            using (NpgsqlCommand cmdSelect = new NpgsqlCommand("select * from employe ;"))
+            {
+                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
+                foreach (DataRow dr in dt.Rows)
+                    lesEmployes.Add(new Employe((Int32)dr["numemploye"], (String)dr["nomemploye"], (String)dr["prenomemploye"], (String)dr["password"], (String)dr["login"], (Role)dr["role"]));
+            }
+            return lesEmployes;
         }
     }
 }

@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Npgsql;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TD3_BindingBDPension.Model;
 
 namespace SIBILIATP11.Classe
 {
@@ -12,6 +15,7 @@ namespace SIBILIATP11.Classe
         private string nomSousCategorie;
         private Categorie uneCategorie;
 
+        public SousCategorie() { }
         public SousCategorie(int numSousCategorie, string nomSousCategorie, Categorie uneCategorie)
         {
             this.NumSousCategorie = numSousCategorie;
@@ -56,6 +60,18 @@ namespace SIBILIATP11.Classe
             {
                 this.uneCategorie = value;
             }
+        }
+
+        public List<SousCategorie> FindAll()
+        {
+            List<SousCategorie> lesSousCategories = new List<SousCategorie>();
+            using (NpgsqlCommand cmdSelect = new NpgsqlCommand("select * from sousCategorie ;"))
+            {
+                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
+                foreach (DataRow dr in dt.Rows)
+                    lesSousCategories.Add(new SousCategorie((Int32)dr["numsouscategorie"], (String)dr["nomsouscategorie"], (Categorie)dr["numcategorie"]));
+            }
+            return lesSousCategories;
         }
     }
 }

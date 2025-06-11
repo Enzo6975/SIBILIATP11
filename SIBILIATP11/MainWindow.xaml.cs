@@ -19,11 +19,7 @@ namespace SIBILIATP11
     {
         public MainWindow()
         {
-            ChargeData();
             InitializeComponent();
-        }
-        public void ChargeData()
-        {
         }
 
     }

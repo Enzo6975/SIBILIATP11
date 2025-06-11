@@ -12,18 +12,22 @@ namespace SIBILIATP11.Classe
 {
     public class Client: ICrud<Client>, INotifyPropertyChanged
     {
-        public int numClient { get; set; } 
-        public string nomClient { get; set; }
-        public string prenomClient { get; set; }
-        public string tel { get; set; }
-        public string adresseRue { get; set; }
-        public string adresseCP { get; set; }
-        public string adresseVille { get; set; }
+        public int numClient;
+        public string nomClient;
+        public string prenomClient;
+        public string tel;
+        public string adresseRue;
+        public string adresseCP;
+        public string adresseVille;
 
-        public Client(int numClient, string nomClient, string prenomClient, string tel, string adresseRue, string adresseCP, string adresseVille)
+        public Client(int numClient, string nomClient,  string prenomClient, string tel)
         {
-
+            this.NumClient = numClient;
+            this.NomClient = nomClient;
+            this.PrenomClient = prenomClient;
+            this.Tel = tel;
         }
+
         public Client(int numClient, string nomClient, string prenomClient, string tel, string adresseRue, string adresseCP, string adresseVille)
         {
             this.NumClient = numClient;
@@ -36,7 +40,9 @@ namespace SIBILIATP11.Classe
         }
 
         public Client()
-        { }
+        { 
+
+        }
 
         public int NumClient
         {
