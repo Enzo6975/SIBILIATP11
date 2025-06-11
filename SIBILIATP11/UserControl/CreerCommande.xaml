@@ -44,7 +44,6 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"
                 IsReadOnly="True" />
-
         </StackPanel>
     </Grid>
 </UserControl>
