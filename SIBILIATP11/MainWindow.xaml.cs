@@ -22,9 +22,9 @@ namespace SIBILIATP11
         public GestionCommande LaGestion { get; set; }
         public MainWindow()
         {
+            InitializeComponent();
             Window_Loaded();
             ChargeData();
-            InitializeComponent();
         }
 
         public void Window_Loaded()
@@ -44,13 +44,11 @@ namespace SIBILIATP11
         {
             try
             {
-                LaGestion = new GestionCommande("GestionCommande commande");
+                LaGestion = new GestionCommande();
                 this.DataContext = LaGestion;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Problème lors de récupération des données veuillez consulter votre admin");
-                Application.Current.Shutdown();
             }
         }
 
