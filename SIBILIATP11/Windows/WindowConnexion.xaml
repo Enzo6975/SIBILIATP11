@@ -9,53 +9,80 @@
     Width="800"
     Height="450"
     ResizeMode="NoResize"
-    WindowStartupLocation="CenterScreen"
+    WindowStartupLocation="CenterOwner"
+    WindowStyle="None"
     mc:Ignorable="d">
     <Grid>
-        <StackPanel x:Name="StackPanelDebutLogo" Margin="150,20,150,320">
+        <StackPanel x:Name="StackPanelDebutLogo" Margin="150,43,150,297">
             <StackPanel.Background>
                 <ImageBrush ImageSource="/Windows/logo-sibilia.png" Stretch="Uniform" />
             </StackPanel.Background>
         </StackPanel>
         <TextBlock
             x:Name="Identifiant"
-            Margin="0,150,0,0"
-            HorizontalAlignment="Center"
+            Margin="274,234,0,0"
+            HorizontalAlignment="Left"
             VerticalAlignment="Top"
             FontWeight="Bold"
-            Text="Login"
+            Text="Identifiant"
             TextWrapping="Wrap" />
         <TextBox
             x:Name="TxtLogin"
             Width="252"
-            Margin="0,173,0,0"
+            Margin="0,255,0,0"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Text=""
             TextWrapping="Wrap" />
         <TextBlock
             x:Name="MotDePasse"
-            Margin="0,196,0,0"
-            HorizontalAlignment="Center"
+            Margin="274,286,0,0"
+            HorizontalAlignment="Left"
             VerticalAlignment="Top"
             FontWeight="Bold"
             Text="Mot de Passe"
             TextWrapping="Wrap" />
-        <TextBox
+        <PasswordBox
             x:Name="TxtPassword"
             Width="252"
-            Margin="0,217,0,0"
+            Margin="0,307,0,0"
             HorizontalAlignment="Center"
-            VerticalAlignment="Top"
-            Text=""
-            TextWrapping="Wrap" />
+            VerticalAlignment="Top" />
         <Button
             x:Name="ButSeConnecter"
-            Width="112"
-            Margin="0,264,0,0"
+            Width="176"
+            Height="32"
+            Margin="0,360,0,0"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
+            Background="#FFE30613"
+            BorderBrush="Red"
+            Click="ButSeConnecter_Click"
             Content="Se Connecter"
-            FontWeight="Bold" />
+            FontWeight="Bold"
+            Foreground="White" />
+        <TextBlock
+            x:Name="ConnexionTxt"
+            Margin="0,189,0,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            FontSize="16"
+            FontWeight="Bold"
+            Foreground="#FFE30613"
+            Text="Connexion"
+            TextWrapping="Wrap" />
+        <Rectangle
+            Width="800"
+            Height="26"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Fill="#FFE30613" />
+        <Button x:Name="ButFermer"
+            Margin="757,3,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Background="White"
+            BorderBrush="White"
+            Content="Fermer" Click="ButFermer_Click" />
     </Grid>
 </Window>

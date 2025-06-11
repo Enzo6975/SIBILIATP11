@@ -15,6 +15,11 @@ namespace SIBILIATP11.Classe
         private string nomRole;
 
         public Role() { }
+
+        public Role(int numRole)
+        {
+            this.numRole = numRole;
+        }
         public Role(int numRole, string nomRole)
         {
             this.NumRole = numRole;
