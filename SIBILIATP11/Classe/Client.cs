@@ -20,10 +20,7 @@ namespace SIBILIATP11.Classe
         public string adresseCP { get; set; }
         public string adresseVille { get; set; }
 
-        public Client(int numClient, string nomClient, string prenomClient, string tel, string adresseRue, string adresseCP, string adresseVille)
-        {
 
-        }
         public Client(int numClient, string nomClient, string prenomClient, string tel, string adresseRue, string adresseCP, string adresseVille)
         {
             this.NumClient = numClient;
