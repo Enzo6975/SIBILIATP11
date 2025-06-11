@@ -63,17 +63,24 @@
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
-                    Header="VOIR LES COMMANDES" />
+                    Header="VOIR LES COMMANDES" >
+                    
+                </TabItem>
                 <TabItem
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
-                    Header="COMMANDE À RESTITUER" />
+                    Header="COMMANDE À RESTITUER" >
+                    <uc:SelectionnerClient/>
+                </TabItem>
                 <TabItem
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
-                    Header="CLIENTS" />
+                    Header="CLIENTS" >
+                    
+                </TabItem>
+                />
             </TabControl>
         </StackPanel>
         <StackPanel
