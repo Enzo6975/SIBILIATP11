@@ -4,31 +4,48 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SIBILIATP11.UserControl"
+             xmlns:model="clr-namespace:SIBILIATP11.Classe" d:DataContext="{d:DesignInstance Type=model:Client}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="White">
-        <Label Content="Créer un client" Background="#FFFD2828" FontSize="30" Foreground="White" FontWeight="Bold" VerticalAlignment="Top" />
+        <Label Content="Séléctionner un Client" Background="#FFFD2828" FontSize="30" Foreground="White" FontWeight="Bold" VerticalAlignment="Top" />
         <StackPanel>
             <DataGrid
                 x:Name="clients"
                 Height="300"
-                Margin="30,30,30,0"
+                Margin="30,67,22,0"
                 HorizontalAlignment="Center"
                 IsReadOnly="True" 
-            ItemsSource="{Binding Client}">
+            ItemsSource="{Binding Client}" VerticalAlignment="Center">
                 <DataGrid.Columns>
                     <DataGridTextColumn
-                        Width="*"
+                        Width="50"
                         Binding="{Binding NumClient, ValidatesOnExceptions=False}"
-                        Header="numClient"/>
+                        Header="Num"/>
                     <DataGridTextColumn
                         Width="*"
-                        Binding="{Binding nomClient, ValidatesOnExceptions=True}"
+                        Binding="{Binding NomClient, ValidatesOnExceptions=True}"
                         Header="Nom"/>
                     <DataGridTextColumn
                         Width="*"
-                        Binding="{Binding prenomClient, ValidatesOnExceptions=True}"
+                        Binding="{Binding PrenomClient, ValidatesOnExceptions=True}"
                         Header="Prenom"/>
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Tel, ValidatesOnExceptions=True}"
+                        Header="Téléphone"/>
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding AdresseRue, ValidatesOnExceptions=True}"
+                        Header="Adresse"/>
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding AdresseCP, ValidatesOnExceptions=True}"
+                        Header="Code postal"/>
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding AdresseVille, ValidatesOnExceptions=True}"
+                        Header="Ville"/>
                 </DataGrid.Columns>
             </DataGrid>
             <Button x:Name="butCreerClient" Content="Creer un client" Margin="0,24,0,0" HorizontalAlignment="Center" Background="#FFFD2828" Foreground="White" FontSize="16" FontWeight="Bold"/>

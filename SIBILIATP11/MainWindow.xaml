@@ -67,19 +67,25 @@
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
-                    Header="VOIR LES COMMANDES" />
+                    Header="VOIR LES COMMANDES" >
+                    
+                </TabItem>
                 <TabItem
                     Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
-                    Header="COMMANDE À RESTITUER" />
+                    Header="COMMANDE À RESTITUER" >
+                    <uc:SelectionnerClient/>
+                </TabItem>
                 <TabItem
                     Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
-                    Header="CLIENTS" />
+                    Header="CLIENTS"
+                    
+                 />
             </TabControl>
         </StackPanel>
         <StackPanel
