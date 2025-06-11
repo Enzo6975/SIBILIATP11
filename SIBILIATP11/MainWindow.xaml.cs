@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SIBILIATP11.Classe;
+using SIBILIATP11.Windows;
+using System;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,7 +21,21 @@ namespace SIBILIATP11
     {
         public MainWindow()
         {
+            Window_Loaded();
             InitializeComponent();
+        }
+
+        public void Window_Loaded()
+        {
+            this.Hide();
+            WindowConnexion dialogwindowmc = new WindowConnexion();
+            bool? resultmc = dialogwindowmc.ShowDialog();
+            if (resultmc == true)
+                this.Show();
+            else if (resultmc == false)
+            {
+                Application.Current.Shutdown();
+            }
         }
 
     }

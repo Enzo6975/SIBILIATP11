@@ -117,7 +117,7 @@ namespace SIBILIATP11.Classe
             {
                 DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
                 foreach (DataRow dr in dt.Rows)
-                    lesEmployes.Add(new Employe((Int32)dr["numemploye"], (String)dr["nomemploye"], (String)dr["prenomemploye"], (String)dr["password"], (String)dr["login"], (Role)dr["role"]));
+                    lesEmployes.Add(new Employe((Int32)dr["numemploye"], (String)dr["nomemploye"], (String)dr["prenomemploye"], (String)dr["password"], (String)dr["login"], new Role((Int32)dr["numrole"])));
             }
             return lesEmployes;
         }

@@ -34,12 +34,12 @@
         <StackPanel
             x:Name="StackPanelFond"
             Grid.Row="0"
+            Grid.RowSpan="3"
             Grid.Column="0"
             Background="#FFE30613">
             <TextBlock
                 x:Name="TxtBlockConnexion"
                 Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"
-                Height="{Binding ActualHeight, ElementName=StackPanelFond, Mode=OneWay}"
                 FontWeight="Bold"
                 Foreground="White"
                 Text="Connecté en tant que -&#x0a;Enzo Pagès"
@@ -50,16 +50,20 @@
             x:Name="StackPanelMenu"
             Grid.Row="1"
             Grid.ColumnSpan="2">
-            <TabControl Height="{Binding ActualHeight, ElementName=window, Mode=OneWay}" TabStripPlacement="Left">
+            <TabControl
+                Height="{Binding ActualHeight, ElementName=window, Mode=OneWay}"
+                Margin="-2,-2,0,0"
+                Background="{x:Null}"
+                BorderBrush="{x:Null}"
+                TabStripPlacement="Left">
                 <TabItem
                     Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
-                    Header="CRÉER UNE COMMANDE">
-                    <uc:CreerCommande/>
-                </TabItem>
+                    Header="CRÉER UNE COMMANDE" />
                 <TabItem
+                    Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
@@ -67,6 +71,7 @@
                     
                 </TabItem>
                 <TabItem
+                    Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
@@ -74,6 +79,7 @@
                     <uc:SelectionnerClient/>
                 </TabItem>
                 <TabItem
+                    Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
