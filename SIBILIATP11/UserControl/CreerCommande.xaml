@@ -39,12 +39,20 @@
                 <TextBox Width="50" Margin="5.5,0,0,0" />
 
             </StackPanel>
-                <DataGrid
+            <DataGrid
                 x:Name="plats"
                 Height="300"
                 Margin="30,30,30,0"
                 VerticalAlignment="Top"
-                IsReadOnly="True" HorizontalAlignment="Center" />
+                ItemsSource="{Binding lesChiens}"
+                IsReadOnly="True" HorizontalAlignment="Center" >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="*" Binding="{Binding numplat, ValidatesOnExceptions=True}" Header="Numéro"/>
+                    <DataGridTextColumn Width="*" Binding="{Binding nomplat, ValidatesOnExceptions=True}" Header="Plat"/>
+                    <DataGridTextColumn Width="*" Binding="{Binding numplat, ValidatesOnExceptions=True}" Header="h"/>
+                    <DataGridTextColumn Width="*" Binding="{Binding numplat, ValidatesOnExceptions=True}" Header="Numéro"/>
+                </DataGrid.Columns>
+            </DataGrid>
 
 
         </StackPanel>
