@@ -176,12 +176,27 @@ namespace SIBILIATP11.Classe
             throw new NotImplementedException();
         }
 
-        public void Read()
+        public int Update()
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (NpgsqlCommand cmdUpdate = new NpgsqlCommand(
+                    "UPDATE commande SET retiree = @retiree, payee = @payee WHERE numcommande = @numcommande"))
+                {
+                    cmdUpdate.Parameters.AddWithValue("@retiree", this.Retiree);
+                    cmdUpdate.Parameters.AddWithValue("@payee", this.Payee);
+                    cmdUpdate.Parameters.AddWithValue("@numcommande", this.NumCommande);
+
+                    return DataAccess.Instance.ExecuteSet(cmdUpdate);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erreur lors de la mise à jour de la commande en base de données.", ex);
+            }
         }
 
-        public int Update()
+        public void Read()
         {
             throw new NotImplementedException();
         }

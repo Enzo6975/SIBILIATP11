@@ -152,7 +152,7 @@ namespace SIBILIATP11.Classe
             {
                 DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
                 foreach (DataRow dr in dt.Rows)
-                    lesPlats.Add(new Plat((Int32)dr["numplat"], (String)dr["nomplat"], (Double)dr["prixunitaire"], (Int32)dr["delaipreparation"], (Int32)dr["nbpersonnes"], new SousCategorie((Int32)dr["numsouscategorie"]), new Periode((Int32)dr["numperiode"])));
+                    lesPlats.Add(new Plat((Int32)dr["numplat"], (String)dr["nomplat"], Double.Parse(dr["prixunitaire"].ToString()), (Int32)dr["delaipreparation"], (Int32)dr["nbpersonnes"], new SousCategorie((Int32)dr["numsouscategorie"]), new Periode((Int32)dr["numperiode"])));
             }
             return lesPlats;
         }

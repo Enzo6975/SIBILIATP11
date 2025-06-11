@@ -66,23 +66,23 @@
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
-                    Header="CRÉER UNE COMMANDE" >
-                    <uc:CreerCommande/>
-                </TabItem>
-                    <TabItem
-                    Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"
-                    Height="70"
-                    FontSize="12"
-                    FontWeight="Bold"
-                    Header="VOIR LES COMMANDES" />
+                    Header="CRÉER UNE COMMANDE" />
                 <TabItem
                     Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
-                    Header="COMMANDE À RESTITUER" >
+                    Header="VOIR LES COMMANDES">
+                    <uc:VoirCommandes />
+                </TabItem>
+                <TabItem
+                    Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"
+                    Height="70"
+                    FontSize="12"
+                    FontWeight="Bold"
+                    Header="COMMANDE À RESTITUER">
                     <ContentControl x:Name="ContentControlCommandeARestituer">
-                        <uc:SelectionnerClient/>
+                        <uc:SelectionnerClient />
                     </ContentControl>
                 </TabItem>
                 <TabItem
@@ -90,8 +90,7 @@
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
-                    Header="CLIENTS"
-                />
+                    Header="CLIENTS" />
             </TabControl>
         </StackPanel>
         <StackPanel

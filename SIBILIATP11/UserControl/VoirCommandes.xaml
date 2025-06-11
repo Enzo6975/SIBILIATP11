@@ -3,22 +3,166 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:SIBILIATP11.UserControl"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
+    d:DesignHeight="600"
+    d:DesignWidth="1000"
     mc:Ignorable="d">
-    <Grid Background="White">
-        <Label
-            Width="800"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Top"
-            HorizontalContentAlignment="Center"
-            Background="#FFE30613"
-            Content="Voir les Commandes"
-            FontFamily="Calibri"
-            FontSize="20"
-            FontWeight="Bold"
-            Foreground="White" />
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="200" />
+        </Grid.RowDefinitions>
+
+        <!--  Zone de filtres  -->
+        <Border
+            Grid.Row="0"
+            Margin="5"
+            Padding="10"
+            Background="#F5F5F5">
+            <StackPanel>
+                <TextBlock
+                    Margin="0,0,0,10"
+                    FontSize="14"
+                    FontWeight="Bold"
+                    Text="Filtres de recherche" />
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  Filtre par client  -->
+                    <TextBlock
+                        Grid.Column="0"
+                        Margin="0,0,10,0"
+                        VerticalAlignment="Center"
+                        Text="Client :" />
+                    <TextBox
+                        Grid.Column="1"
+                        Margin="0,0,10,0"
+                        VerticalAlignment="Center"
+                        Text="{Binding FiltreClient, UpdateSourceTrigger=PropertyChanged}" />
+
+                    <!--  Bouton effacer filtres  -->
+                    <Button
+                        Grid.Column="2"
+                        Margin="10,0,0,0"
+                        Padding="10,5"
+                        Command="{Binding EffacerFiltresCommand}"
+                        Content="Effacer filtres" />
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <!--  DataGrid des commandes  -->
+        <DataGrid
+            Grid.Row="1"
+            Margin="5"
+            AutoGenerateColumns="False"
+            GridLinesVisibility="All"
+            HeadersVisibility="Column"
+            IsReadOnly="False"
+            ItemsSource="{Binding CommandesFiltrees}"
+            SelectedItem="{Binding CommandeSelectionnee}">
+
+            <DataGrid.Columns>
+                <!--  Numéro de commande  -->
+                <DataGridTextColumn
+                    Width="100"
+                    Binding="{Binding NumCommande}"
+                    Header="N° Commande"
+                    IsReadOnly="True" />
+
+                <!--  Date de commande  -->
+                <DataGridTextColumn
+                    Width="100"
+                    Binding="{Binding DateCommande, StringFormat=dd/MM/yyyy}"
+                    Header="Date"
+                    IsReadOnly="True" />
+
+                <!--  Client  -->
+                <DataGridTextColumn
+                    Width="150"
+                    Binding="{Binding UnClient.NomClient}"
+                    Header="Client"
+                    IsReadOnly="True" />
+
+                <!--  Montant total  -->
+                <DataGridTextColumn
+                    Width="100"
+                    Binding="{Binding PrixTotal, StringFormat=F2}"
+                    Header="Montant (€)"
+                    IsReadOnly="True" />
+
+                <!--  Statut (simplifié)  -->
+                <DataGridTextColumn
+                    Width="80"
+                    Binding="{Binding Payee}"
+                    Header="Payée"
+                    IsReadOnly="True" />
+
+                <!--  Case à cocher "Commande retirée"  -->
+                <DataGridTemplateColumn Width="120" Header="Commande retirée">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                IsChecked="{Binding Retiree, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!--  Détails de la commande sélectionnée  -->
+        <Border
+            Grid.Row="2"
+            Margin="5"
+            Padding="10"
+            Background="#F9F9F9">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock
+                    Grid.Row="0"
+                    Margin="0,0,0,10"
+                    FontSize="14"
+                    FontWeight="Bold"
+                    Text="{Binding CommandeSelectionnee.NumCommande, StringFormat='Détails de la commande #{0}'}" />
+
+                <DataGrid
+                    Grid.Row="1"
+                    AutoGenerateColumns="False"
+                    GridLinesVisibility="All"
+                    HeadersVisibility="Column"
+                    IsReadOnly="True"
+                    ItemsSource="{Binding PlatsCommandeSelectionnee}">
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn
+                            Width="120"
+                            Binding="{Binding UnPlat.NumPlat}"
+                            Header="Numéro Plat" />
+                        <DataGridTextColumn
+                            Width="80"
+                            Binding="{Binding Quantite}"
+                            Header="Quantité" />
+                        <DataGridTextColumn
+                            Width="120"
+                            Binding="{Binding Prix, StringFormat=F2}"
+                            Header="Prix unitaire (€)" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>
