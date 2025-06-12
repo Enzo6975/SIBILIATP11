@@ -64,31 +64,38 @@
             SelectionChanged="dgCommandes_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTextColumn
-                    Width="100"
+                    Width="*"
                     Binding="{Binding NumCommande}"
                     Header="N° Commande"
                     IsReadOnly="True" />
                 <DataGridTextColumn
-                    Width="100"
+                    Width="*"
                     Binding="{Binding DateCommande, StringFormat=dd/MM/yyyy}"
                     Header="Date"
                     IsReadOnly="True" />
                 <DataGridTextColumn
-                    Width="150"
+                    Width="*"
                     Binding="{Binding UnClient.NomClient}"
                     Header="Client"
                     IsReadOnly="True" />
                 <DataGridTextColumn
-                    Width="100"
+                    Width="*"
                     Binding="{Binding PrixTotal, StringFormat=F2}"
                     Header="Montant (€)"
                     IsReadOnly="True" />
-                <DataGridTextColumn
-                    Width="80"
-                    Binding="{Binding Payee}"
-                    Header="Payée"
-                    IsReadOnly="True" />
-                <DataGridTemplateColumn Width="120" Header="Commande retirée">
+                <DataGridTemplateColumn Width="*" Header="Payée">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Checked="OnPayeeChanged"
+                                IsChecked="{Binding Payee, UpdateSourceTrigger=PropertyChanged}"
+                                Unchecked="OnPayeeChanged" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="*" Header="Commande retirée">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <CheckBox
@@ -152,23 +159,23 @@
                     IsReadOnly="True">
                     <DataGrid.Columns>
                         <DataGridTextColumn
-                            Width="120"
+                            Width="*"
                             Binding="{Binding UnPlat.NumPlat}"
                             Header="Numéro Plat" />
                         <DataGridTextColumn
-                            Width="200"
+                            Width="*"
                             Binding="{Binding UnPlat.NomPlat}"
                             Header="Nom du Plat" />
                         <DataGridTextColumn
-                            Width="80"
+                            Width="*"
                             Binding="{Binding Quantite}"
                             Header="Quantité" />
                         <DataGridTextColumn
-                            Width="120"
+                            Width="*"
                             Binding="{Binding Prix, StringFormat=F2}"
                             Header="Prix unitaire (€)" />
                         <DataGridTextColumn
-                            Width="120"
+                            Width="*"
                             Binding="{Binding CalculerTotal, StringFormat=F2}"
                             Header="Total (€)" />
                     </DataGrid.Columns>

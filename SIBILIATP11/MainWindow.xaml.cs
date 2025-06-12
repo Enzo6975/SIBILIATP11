@@ -48,11 +48,36 @@ namespace SIBILIATP11
         {
             if (EmployeConnecte != null)
             {
-                TxtBlockConnexion.Text = $"Connecté en tant que -\n{EmployeConnecte.PrenomEmploye} {EmployeConnecte.NomEmploye}";
+                string nomRole = ObtenirNomRole(EmployeConnecte.UnRole.NumRole);
+                TxtBlockConnexion.Text = $"Connecté en tant que -\n{EmployeConnecte.PrenomEmploye} {EmployeConnecte.NomEmploye}\n({nomRole})";
+
+                GererVisibiliteTabItems();
             }
             else
             {
                 TxtBlockConnexion.Text = "Connecté en tant que -\nUtilisateur inconnu";
+                GererVisibiliteTabItems();
+            }
+        }
+
+        private string ObtenirNomRole(int numRole)
+        {
+            return numRole switch
+            {
+                1 => "Responsable des Ventes",
+                2 => "Vendeur"
+            };
+        }
+
+        private void GererVisibiliteTabItems()
+        {
+            if (EmployeConnecte != null && EmployeConnecte.UnRole.NumRole == 1)
+            {
+                TabItemCreerPlat.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                TabItemCreerPlat.Visibility = Visibility.Collapsed;
             }
         }
 

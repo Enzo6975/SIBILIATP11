@@ -259,5 +259,22 @@ namespace SIBILIATP11.UserControl
                 }
             }
         }
+
+        private void OnPayeeChanged(object sender, RoutedEventArgs e)
+        {
+            if (sender is CheckBox checkBox && checkBox.DataContext is Commande commande)
+            {
+                try
+                {
+                    commande.Update();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Erreur lors de la mise à jour: {ex.Message}",
+                        "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                    commande.Payee = !commande.Payee;
+                }
+            }
+        }
     }
 }
