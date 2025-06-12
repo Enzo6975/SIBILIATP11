@@ -6,20 +6,21 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TD3_BindingBDPension.Model;
+using SIBILIATP11.Model;
+using System.ComponentModel;
 
 namespace SIBILIATP11.Classe
 {
-    public class Contient
+    public class Contient : ICrud<Contient>, INotifyPropertyChanged
     {
         private int quantite;
-        private double prix; 
+        private double prix;
         private Commande uneCommande;
         private Plat unPlat;
 
         public Contient()
         {
-        
+
         }
 
         public Contient(int quantite, double prix, Commande uneCommande, Plat unPlat)
@@ -36,10 +37,10 @@ namespace SIBILIATP11.Classe
             {
                 return this.quantite;
             }
-
             set
             {
                 this.quantite = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Quantite)));
             }
         }
 
@@ -49,10 +50,10 @@ namespace SIBILIATP11.Classe
             {
                 return this.prix;
             }
-
             set
             {
                 this.prix = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Prix)));
             }
         }
 
@@ -62,10 +63,10 @@ namespace SIBILIATP11.Classe
             {
                 return this.uneCommande;
             }
-
             set
             {
                 this.uneCommande = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(UneCommande)));
             }
         }
 
@@ -75,23 +76,115 @@ namespace SIBILIATP11.Classe
             {
                 return this.unPlat;
             }
-
             set
             {
                 this.unPlat = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(UnPlat)));
+            }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public int Create()
+        {
+            using (var cmdInsert = new NpgsqlCommand("INSERT INTO platcommande (quantite, prix, numcommande, numplat) VALUES (@quantite, @prix, @numCommande, @numPlat)"))
+            {
+                cmdInsert.Parameters.AddWithValue("@quantite", this.Quantite);
+                cmdInsert.Parameters.AddWithValue("@prix", this.Prix);
+                cmdInsert.Parameters.AddWithValue("@numCommande", this.UneCommande.NumCommande);
+                cmdInsert.Parameters.AddWithValue("@numPlat", this.UnPlat.NumPlat);
+                return DataAccess.Instance.ExecuteSet(cmdInsert);
+            }
+        }
+
+        public void Read()
+        {
+            using (var cmdSelect = new NpgsqlCommand("SELECT * FROM platcommande WHERE numcommande = @numCommande AND numplat = @numPlat"))
+            {
+                cmdSelect.Parameters.AddWithValue("@numCommande", this.UneCommande.NumCommande);
+                cmdSelect.Parameters.AddWithValue("@numPlat", this.UnPlat.NumPlat);
+
+                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
+                if (dt.Rows.Count > 0)
+                {
+                    this.Quantite = (Int32)dt.Rows[0]["quantite"];
+                    this.Prix = Convert.ToDouble(dt.Rows[0]["prix"]);
+                    this.UneCommande.Read();
+                    this.UnPlat.Read();
+                }
+            }
+        }
+
+        public int Update()
+        {
+            using (var cmdUpdate = new NpgsqlCommand("UPDATE platcommande SET quantite = @quantite, prix = @prix WHERE numcommande = @numCommande AND numplat = @numPlat"))
+            {
+                cmdUpdate.Parameters.AddWithValue("@quantite", this.Quantite);
+                cmdUpdate.Parameters.AddWithValue("@prix", this.Prix);
+                cmdUpdate.Parameters.AddWithValue("@numCommande", this.UneCommande.NumCommande);
+                cmdUpdate.Parameters.AddWithValue("@numPlat", this.UnPlat.NumPlat);
+                return DataAccess.Instance.ExecuteSet(cmdUpdate);
+            }
+        }
+
+        public int Delete()
+        {
+            using (var cmdDelete = new NpgsqlCommand("DELETE FROM platcommande WHERE numcommande = @numCommande AND numplat = @numPlat"))
+            {
+                cmdDelete.Parameters.AddWithValue("@numCommande", this.UneCommande.NumCommande);
+                cmdDelete.Parameters.AddWithValue("@numPlat", this.UnPlat.NumPlat);
+                return DataAccess.Instance.ExecuteSet(cmdDelete);
             }
         }
 
         public List<Contient> FindAll()
         {
             List<Contient> lesContients = new List<Contient>();
-            using (NpgsqlCommand cmdSelect = new NpgsqlCommand("select * from platcommande ;"))
+            using (NpgsqlCommand cmdSelect = new NpgsqlCommand("SELECT * FROM platcommande"))
             {
                 DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
                 foreach (DataRow dr in dt.Rows)
-                    lesContients.Add(new Contient((Int32)dr["quantite"], (Int32)dr["prix"], new Commande((Int32)dr["numcommande"]), new Plat((Int32)dr["numplat"])));
+                {
+                    lesContients.Add(new Contient(
+                        (Int32)dr["quantite"],
+                        Convert.ToDouble(dr["prix"]),
+                        new Commande((Int32)dr["numcommande"]),
+                        new Plat((Int32)dr["numplat"])
+                    ));
+                }
             }
             return lesContients;
+        }
+
+        public List<Contient> FindBySelection(string criteres)
+        {
+            List<Contient> lesContients = new List<Contient>();
+            using (NpgsqlCommand cmdSelect = new NpgsqlCommand($"SELECT * FROM platcommande WHERE {criteres}"))
+            {
+                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
+                foreach (DataRow dr in dt.Rows)
+                {
+                    lesContients.Add(new Contient(
+                        (Int32)dr["quantite"],
+                        Convert.ToDouble(dr["prix"]),
+                        new Commande((Int32)dr["numcommande"]),
+                        new Plat((Int32)dr["numplat"])
+                    ));
+                }
+            }
+            return lesContients;
+        }
+        public List<Contient> FindByCommande(int numCommande)
+        {
+            return FindBySelection($"numcommande = {numCommande}");
+        }
+        public List<Contient> FindByPlat(int numPlat)
+        {
+            return FindBySelection($"numplat = {numPlat}");
+        }
+        public double CalculerTotal()
+        {
+            return this.Quantite * this.Prix;
         }
     }
 }

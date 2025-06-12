@@ -18,156 +18,234 @@ using System.Windows.Shapes;
 
 namespace SIBILIATP11.UserControl
 {
-    public partial class VoirCommandes : System.Windows.Controls.UserControl, INotifyPropertyChanged
+    public partial class VoirCommandes : System.Windows.Controls.UserControl
     {
-        private Commande commandeSelectionnee;
+        private GestionCommande LaGestionCommande { get; set; }
         private ObservableCollection<Contient> platsCommandeSelectionnee;
-        private ObservableCollection<Commande> commandesOriginales;
-        private ObservableCollection<Commande> commandesFiltrees;
-        private string filtreClient;
 
         public VoirCommandes()
         {
             InitializeComponent();
-            this.DataContext = this;
+
+            // Récupérer la gestion depuis le DataContext de la MainWindow (similaire à l'exemple)
+            LaGestionCommande = ((GestionCommande)App.Current.MainWindow.DataContext);
+
+            // Initialiser les collections
             PlatsCommandeSelectionnee = new ObservableCollection<Contient>();
-            CommandesFiltrees = new ObservableCollection<Commande>();
-            CommandesOriginales = new ObservableCollection<Commande>();
 
-            // Charger les données au démarrage
-            //ChargerCommandes();
-        }
+            // Configurer le DataGrid avec les commandes de la gestion
+            dgCommandes.ItemsSource = LaGestionCommande.LesCommandes;
 
-        // Propriété pour la commande sélectionnée
-        public Commande CommandeSelectionnee
-        {
-            get { return commandeSelectionnee; }
-            set
-            {
-                commandeSelectionnee = value;
-                OnPropertyChanged(nameof(CommandeSelectionnee));
-                ChargerPlatsCommande();
-            }
+            // Configurer le filtre
+            dgCommandes.Items.Filter = RechercheMotClefCommande;
         }
 
         // Propriété pour les plats de la commande sélectionnée
         public ObservableCollection<Contient> PlatsCommandeSelectionnee
         {
             get { return platsCommandeSelectionnee; }
-            set
-            {
-                platsCommandeSelectionnee = value;
-                OnPropertyChanged(nameof(PlatsCommandeSelectionnee));
-            }
+            set { platsCommandeSelectionnee = value; }
         }
 
-        // Propriété pour les commandes filtrées (affichées dans le DataGrid)
-        public ObservableCollection<Commande> CommandesFiltrees
+        // Méthode de filtrage (similaire à RechercheMotClefChien)
+        private bool RechercheMotClefCommande(object obj)
         {
-            get { return commandesFiltrees; }
-            set
-            {
-                commandesFiltrees = value;
-                OnPropertyChanged(nameof(CommandesFiltrees));
-            }
+            if (String.IsNullOrEmpty(inputClient.Text))
+                return true;
+
+            Commande uneCommande = obj as Commande;
+
+            if (uneCommande?.UnClient == null)
+                return false;
+
+            return (uneCommande.UnClient.NomClient.StartsWith(inputClient.Text, StringComparison.OrdinalIgnoreCase)
+                || uneCommande.UnClient.PrenomClient.StartsWith(inputClient.Text, StringComparison.OrdinalIgnoreCase));
         }
 
-        public ObservableCollection<Commande> CommandesOriginales { get; private set; }
-
-        // Propriété pour le filtre par client
-        public string FiltreClient
+        // Event handler pour le changement de texte dans le filtre
+        private void inputClient_TextChanged(object sender, TextChangedEventArgs e)
         {
-            get { return filtreClient; }
-            set
-            {
-                filtreClient = value;
-                OnPropertyChanged(nameof(FiltreClient));
-                AppliquerFiltres();
-            }
-        }
-
-        // Méthode pour charger toutes les commandes
-        public void ChargerCommandes()
-        {
-            try
-            {
-                CommandesOriginales.Clear();
-
-                // Charger directement depuis la base de données
-                Commande commandeTemp = new Commande();
-                List<Commande> toutesLesCommandes = commandeTemp.FindAll();
-
-                // Charger les données complètes des clients pour chaque commande
-                Client clientTemp = new Client();
-                List<Client> tousLesClients = clientTemp.FindAll();
-
-                foreach (var commande in toutesLesCommandes)
-                {
-                    // Associer le client complet à la commande
-                    var clientComplet = tousLesClients.FirstOrDefault(c => c.NumClient == commande.UnClient.NumClient);
-                    if (clientComplet != null)
-                    {
-                        commande.UnClient = clientComplet;
-                    }
-
-                    CommandesOriginales.Add(commande);
-                }
-
-                AppliquerFiltres();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erreur lors du chargement des commandes: {ex.Message}");
-            }
-        }
-
-        // Méthode pour appliquer les filtres
-        private void AppliquerFiltres()
-        {
-            CommandesFiltrees.Clear();
-
-            var commandesFiltrees = CommandesOriginales.AsEnumerable();
-
-            // Filtre par client
-            if (!string.IsNullOrWhiteSpace(FiltreClient))
-            {
-                commandesFiltrees = commandesFiltrees.Where(c =>
-                    c.UnClient != null &&
-                    (c.UnClient.NomClient.ToLower().Contains(FiltreClient.ToLower()) ||
-                     c.UnClient.PrenomClient.ToLower().Contains(FiltreClient.ToLower())));
-            }
-
-            foreach (var commande in commandesFiltrees)
-            {
-                CommandesFiltrees.Add(commande);
-            }
+            CollectionViewSource.GetDefaultView(dgCommandes.ItemsSource).Refresh();
         }
 
         // Méthode pour charger les plats de la commande sélectionnée
         private void ChargerPlatsCommande()
         {
             PlatsCommandeSelectionnee.Clear();
-            if (CommandeSelectionnee != null)
+
+            if (dgCommandes.SelectedItem != null)
             {
+                Commande commandeSelectionnee = (Commande)dgCommandes.SelectedItem;
+
                 try
                 {
-                    // Charger directement depuis la base de données
-                    Contient contientTemp = new Contient();
-                    List<Contient> tousLesContients = contientTemp.FindAll();
-
-                    // Filtrer pour la commande sélectionnée
-                    var platsCommande = tousLesContients
-                        .Where(c => c.UneCommande.NumCommande == CommandeSelectionnee.NumCommande)
+                    // Utiliser la collection déjà chargée dans GestionCommande
+                    var platsCommande = LaGestionCommande.LesContients
+                        .Where(c => c.UneCommande.NumCommande == commandeSelectionnee.NumCommande)
                         .ToList();
 
                     foreach (var contient in platsCommande)
                     {
                         PlatsCommandeSelectionnee.Add(contient);
                     }
+
+                    // Mettre à jour le DataGrid des plats si vous en avez un
+                    if (dgPlatsCommande != null)
+                        dgPlatsCommande.ItemsSource = PlatsCommandeSelectionnee;
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Erreur lors du chargement des plats: {ex.Message}");
+                    Window parent = Window.GetWindow(this);
+                    MessageBox.Show(parent, $"Erreur lors du chargement des plats: {ex.Message}",
+                        "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        // Event handler pour la sélection d'une commande
+        private void dgCommandes_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ChargerPlatsCommande();
+        }
+
+        // Bouton Modifier (similaire à btnEdit_Click)
+        private void btnEdit_Click(object sender, RoutedEventArgs e)
+        {
+            Window parent = Window.GetWindow(this);
+
+            if (dgCommandes.SelectedItem == null)
+            {
+                MessageBox.Show(parent, "Veuillez sélectionner une commande", "Attention",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                Commande commandeSelectionnee = (Commande)dgCommandes.SelectedItem;
+
+                // Créer une copie pour l'édition
+                Commande copie = new Commande(commandeSelectionnee.NumCommande,
+                    commandeSelectionnee.DateCommande,
+                    commandeSelectionnee.DateRetraitPrevue,
+                    commandeSelectionnee.Payee,
+                    commandeSelectionnee.Retiree,
+                    commandeSelectionnee.PrixTotal,
+                    commandeSelectionnee.UnEmploye,
+                    commandeSelectionnee.UnClient);
+
+                // TODO: Créer WindowCommande similaire à WindowChien
+                // WindowCommande wCommande = new WindowCommande(copie, Action.Modifier);
+                // bool? result = wCommande.ShowDialog();
+
+                // Pour l'instant, simuler avec une MessageBox
+                MessageBoxResult result = MessageBox.Show(parent,
+                    $"Modifier la commande #{commandeSelectionnee.NumCommande} ?\n" +
+                    $"Client: {commandeSelectionnee.UnClient?.NomClient} {commandeSelectionnee.UnClient?.PrenomClient}\n" +
+                    $"Date: {commandeSelectionnee.DateCommande:dd/MM/yyyy}",
+                    "Modifier commande", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    try
+                    {
+                        // Appliquer les modifications (à adapter selon votre fenêtre d'édition)
+                        // commandeSelectionnee.DateRetraitPrevue = copie.DateRetraitPrevue;
+                        // commandeSelectionnee.Payee = copie.Payee;
+                        // commandeSelectionnee.Retiree = copie.Retiree;
+                        commandeSelectionnee.Update();
+
+                        MessageBox.Show(parent, "Commande modifiée avec succès", "Succès",
+                            MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(parent, "La commande n'a pas pu être modifiée.", "Attention",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+        }
+
+        // Bouton Supprimer (similaire à btnDel_Click)
+        private void btnDel_Click(object sender, RoutedEventArgs e)
+        {
+            Window parent = Window.GetWindow(this);
+
+            if (dgCommandes.SelectedItem == null)
+            {
+                MessageBox.Show(parent, "Veuillez sélectionner une commande", "Attention",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            Commande commande = dgCommandes.SelectedItem as Commande;
+
+            // Vérifier s'il y a des plats dans cette commande
+            int nbPlatsCommande = LaGestionCommande.LesContients
+                .Count(c => c.UneCommande.NumCommande == commande.NumCommande);
+
+            if (nbPlatsCommande > 0)
+            {
+                MessageBoxResult result = MessageBox.Show(parent,
+                    "Attention, des plats seront supprimés aussi.", "Attention",
+                    MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                if (result == MessageBoxResult.Cancel)
+                    return;
+            }
+
+            try
+            {
+                commande.Delete();
+                LaGestionCommande.LesCommandes.Remove(commande);
+
+                MessageBox.Show(parent, "Commande supprimée avec succès", "Succès",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(parent, "La commande n'a pas pu être supprimée.", "Attention",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        // Bouton Ajouter (similaire à btnAdd_Click)
+        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            Commande uneCommande = new Commande();
+
+            // TODO: Créer WindowCommande
+            // WindowCommande wCommande = new WindowCommande(uneCommande, Action.Ajouter);
+            // bool? result = wCommande.ShowDialog();
+
+            Window parent = Window.GetWindow(this);
+
+            // Pour l'instant, simuler
+            MessageBoxResult result = MessageBox.Show(parent,
+                "Ajouter une nouvelle commande ?", "Nouvelle commande",
+                MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    // TODO: Configurer les propriétés de la commande via la fenêtre d'édition
+                    uneCommande.DateCommande = DateTime.Now;
+                    uneCommande.DateRetraitPrevue = DateTime.Now.AddDays(1);
+                    uneCommande.Payee = false;
+                    uneCommande.Retiree = false;
+                    uneCommande.PrixTotal = 0;
+                    // uneCommande.UnEmploye = ...; // À définir
+                    // uneCommande.UnClient = ...; // À définir
+
+                    uneCommande.NumCommande = uneCommande.Create();
+                    LaGestionCommande.LesCommandes.Add(uneCommande);
+
+                    MessageBox.Show(parent, "Commande créée avec succès", "Succès",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(parent, "La commande n'a pas pu être créée.", "Attention",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
@@ -179,58 +257,28 @@ namespace SIBILIATP11.UserControl
             {
                 try
                 {
-                    // Ici vous pouvez ajouter la logique pour sauvegarder en base
-                    // Par exemple, appeler une méthode Update() si elle est implémentée
-                    // commande.Update();
+                    commande.Update();
 
-                    // Optionnel : afficher un message de confirmation
                     string status = commande.Retiree ? "retirée" : "en attente";
-                    MessageBox.Show($"Commande #{commande.NumCommande} marquée comme {status}");
+                    Window parent = Window.GetWindow(this);
+                    MessageBox.Show(parent, $"Commande #{commande.NumCommande} marquée comme {status}",
+                        "Mise à jour", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Erreur lors de la mise à jour: {ex.Message}");
+                    Window parent = Window.GetWindow(this);
+                    MessageBox.Show(parent, $"Erreur lors de la mise à jour: {ex.Message}",
+                        "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
                     // Annuler le changement en cas d'erreur
                     commande.Retiree = !commande.Retiree;
                 }
             }
         }
 
-        // Command pour effacer les filtres
-        public ICommand EffacerFiltresCommand => new RelayCommand(EffacerFiltres);
-
-        private void EffacerFiltres()
+        // Méthode pour effacer le filtre
+        private void btnClearFilter_Click(object sender, RoutedEventArgs e)
         {
-            FiltreClient = string.Empty;
+            inputClient.Text = string.Empty;
         }
-
-        // Implémentation INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
-
-    // Classe helper pour les commandes
-    public class RelayCommand : ICommand
-    {
-        private readonly Action execute;
-        private readonly Func<bool> canExecute;
-
-        public RelayCommand(Action execute, Func<bool> canExecute = null)
-        {
-            this.execute = execute ?? throw new ArgumentNullException(nameof(execute));
-            this.canExecute = canExecute;
-        }
-
-        public event EventHandler CanExecuteChanged
-        {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
-        }
-
-        public bool CanExecute(object parameter) => canExecute?.Invoke() ?? true;
-        public void Execute(object parameter) => execute();
     }
 }

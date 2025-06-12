@@ -67,7 +67,9 @@
                 Content="Creer un client"
                 FontSize="16"
                 FontWeight="Bold"
-                Foreground="White" />
+                Foreground="White" 
+
+                />
             <Button
                 x:Name="butSelectClient"
                 Margin="0,24,0,0"
