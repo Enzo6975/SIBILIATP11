@@ -96,8 +96,6 @@ namespace SIBILIATP11.Classe
             }
         }
 
-        
-
         public Periode UnePeriode
         {
             get { return this.unePeriode; }
@@ -107,8 +105,6 @@ namespace SIBILIATP11.Classe
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(UnePeriode)));
             }
         }
-
-        
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -127,27 +123,6 @@ namespace SIBILIATP11.Classe
             }
             this.NumPlat = nb;
             return nb;
-        }
-
-        public void Read()
-        {
-            using (var cmdSelect = new NpgsqlCommand("SELECT * FROM plat WHERE numplat = @numPlat"))
-            {
-                cmdSelect.Parameters.AddWithValue("@numPlat", this.NumPlat);
-
-                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
-                if (dt.Rows.Count > 0)
-                {
-                    this.NomPlat = (String)dt.Rows[0]["nomplat"];
-                    this.PrixUnitaire = Double.Parse(dt.Rows[0]["prixunitaire"].ToString());
-                    this.DelaiPreparation = (Int32)dt.Rows[0]["delaipreparation"];
-                    this.NbPersonnes = (Int32)dt.Rows[0]["nbpersonnes"];
-                    this.UneSousCategorie = new SousCategorie((Int32)dt.Rows[0]["numsouscategorie"]);
-                    this.UnePeriode = new Periode((Int32)dt.Rows[0]["numperiode"]);
-                    this.UneSousCategorie.Read();
-                    this.UnePeriode.Read();
-                }
-            }
         }
 
         public int Update()
@@ -181,16 +156,40 @@ namespace SIBILIATP11.Classe
             {
                 DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
                 foreach (DataRow dr in dt.Rows)
+                {
                     lesPlats.Add(new Plat(
-                        (Int32)dr["numplat"], 
-                        (String)dr["nomplat"], 
-                        Double.Parse(dr["prixunitaire"].ToString()), 
-                        (Int32)dr["delaipreparation"], 
-                        (Int32)dr["nbpersonnes"], 
-                        new SousCategorie((Int32)dr["numsouscategorie"]), 
-                        new Periode((Int32)dr["numperiode"])));
+                        (Int32)dr["numplat"],
+                        (String)dr["nomplat"],
+                        Convert.ToDouble(dr["prixunitaire"]),
+                        (Int32)dr["delaipreparation"],
+                        (Int32)dr["nbpersonnes"],
+                        new SousCategorie((Int32)dr["numsouscategorie"]),
+                        new Periode((Int32)dr["numperiode"])
+                    ));
+                }
             }
             return lesPlats;
+        }
+
+        public void Read()
+        {
+            using (var cmdSelect = new NpgsqlCommand("SELECT * FROM plat WHERE numplat = @numPlat"))
+            {
+                cmdSelect.Parameters.AddWithValue("@numPlat", this.NumPlat);
+
+                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
+                if (dt.Rows.Count > 0)
+                {
+                    this.NomPlat = (String)dt.Rows[0]["nomplat"];
+                    this.PrixUnitaire = Convert.ToDouble(dt.Rows[0]["prixunitaire"]);
+                    this.DelaiPreparation = (Int32)dt.Rows[0]["delaipreparation"];
+                    this.NbPersonnes = (Int32)dt.Rows[0]["nbpersonnes"];
+                    this.UneSousCategorie = new SousCategorie((Int32)dt.Rows[0]["numsouscategorie"]);
+                    this.UnePeriode = new Periode((Int32)dt.Rows[0]["numperiode"]);
+                    this.UneSousCategorie.Read();
+                    this.UnePeriode.Read();
+                }
+            }
         }
 
         public List<Plat> FindBySelection(string criteres)
