@@ -30,40 +30,22 @@ namespace SIBILIATP11.Classe
 
         public int NumPeriode
         {
-            get
-            {
-                return this.numPeriode;
-            }
-
+            get { return this.numPeriode; }
             set
             {
                 this.numPeriode = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(NumPeriode)));
             }
         }
 
         public string LibellePeriode
         {
-            get
-            {
-                return this.libellePeriode;
-            }
-
+            get { return this.libellePeriode; }
             set
             {
                 this.libellePeriode = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LibellePeriode)));
             }
-        }
-
-        public List<Periode> FindAll()
-        {
-            List<Periode> lesPeriodes = new List<Periode>();
-            using (NpgsqlCommand cmdSelect = new NpgsqlCommand("select * from periode ;"))
-            {
-                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
-                foreach (DataRow dr in dt.Rows)
-                    lesPeriodes.Add(new Periode((Int32)dr["numperiode"], (String)dr["libelleperiode"]));
-            }
-            return lesPeriodes;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -88,7 +70,7 @@ namespace SIBILIATP11.Classe
                 DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
                 if (dt.Rows.Count > 0)
                 {
-                    this.LibellePeriode = (String)dt.Rows[0]["libelleperiode"];
+                    this.LibellePeriode = dt.Rows[0]["libelleperiode"]?.ToString() ?? "";
                 }
             }
         }
@@ -105,11 +87,28 @@ namespace SIBILIATP11.Classe
 
         public int Delete()
         {
-            using (var cmdDelete = new NpgsqlCommand("DELETE FROM periode WHERE numPeriode = @numPeriode"))
+            using (var cmdDelete = new NpgsqlCommand("DELETE FROM periode WHERE numperiode = @numPeriode"))
             {
                 cmdDelete.Parameters.AddWithValue("@numPeriode", this.NumPeriode);
                 return DataAccess.Instance.ExecuteSet(cmdDelete);
             }
+        }
+
+        public List<Periode> FindAll()
+        {
+            List<Periode> lesPeriodes = new List<Periode>();
+            using (NpgsqlCommand cmdSelect = new NpgsqlCommand("SELECT * FROM periode"))
+            {
+                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
+                foreach (DataRow dr in dt.Rows)
+                {
+                    lesPeriodes.Add(new Periode(
+                        (Int32)dr["numperiode"],
+                        dr["libelleperiode"]?.ToString() ?? ""
+                    ));
+                }
+            }
+            return lesPeriodes;
         }
 
         public List<Periode> FindBySelection(string criteres)
@@ -119,7 +118,12 @@ namespace SIBILIATP11.Classe
             {
                 DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
                 foreach (DataRow dr in dt.Rows)
-                    lesPeriodes.Add(new Periode((Int32)dr["numperiode"], (String)dr["libelleperiode"]));
+                {
+                    lesPeriodes.Add(new Periode(
+                        (Int32)dr["numperiode"],
+                        dr["libelleperiode"]?.ToString() ?? ""
+                    ));
+                }
             }
             return lesPeriodes;
         }

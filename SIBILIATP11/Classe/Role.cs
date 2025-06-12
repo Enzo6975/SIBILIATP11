@@ -21,6 +21,7 @@ namespace SIBILIATP11.Classe
         {
             this.numRole = numRole;
         }
+
         public Role(int numRole, string nomRole)
         {
             this.NumRole = numRole;
@@ -29,40 +30,22 @@ namespace SIBILIATP11.Classe
 
         public int NumRole
         {
-            get
-            {
-                return this.numRole;
-            }
-
+            get { return this.numRole; }
             set
             {
                 this.numRole = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(NumRole)));
             }
         }
 
         public string NomRole
         {
-            get
-            {
-                return this.nomRole;
-            }
-
+            get { return this.nomRole; }
             set
             {
                 this.nomRole = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(NomRole)));
             }
-        }
-
-        public List<Role> FindAll()
-        {
-            List<Role> lesRoles = new List<Role>();
-            using (NpgsqlCommand cmdSelect = new NpgsqlCommand("select * from role ;"))
-            {
-                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
-                foreach (DataRow dr in dt.Rows)
-                    lesRoles.Add(new Role((Int32)dr["numrole"], (String)dr["nomrole"]));
-            }
-            return lesRoles;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -87,7 +70,7 @@ namespace SIBILIATP11.Classe
                 DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
                 if (dt.Rows.Count > 0)
                 {
-                    this.NomRole = (String)dt.Rows[0]["nomrole"];
+                    this.NomRole = dt.Rows[0]["nomrole"]?.ToString() ?? "";
                 }
             }
         }
@@ -111,6 +94,23 @@ namespace SIBILIATP11.Classe
             }
         }
 
+        public List<Role> FindAll()
+        {
+            List<Role> lesRoles = new List<Role>();
+            using (NpgsqlCommand cmdSelect = new NpgsqlCommand("SELECT * FROM role"))
+            {
+                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
+                foreach (DataRow dr in dt.Rows)
+                {
+                    lesRoles.Add(new Role(
+                        (Int32)dr["numrole"],
+                        dr["nomrole"]?.ToString() ?? ""
+                    ));
+                }
+            }
+            return lesRoles;
+        }
+
         public List<Role> FindBySelection(string criteres)
         {
             List<Role> lesRoles = new List<Role>();
@@ -118,7 +118,12 @@ namespace SIBILIATP11.Classe
             {
                 DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
                 foreach (DataRow dr in dt.Rows)
-                    lesRoles.Add(new Role((Int32)dr["numrole"], (String)dr["nomrole"]));
+                {
+                    lesRoles.Add(new Role(
+                        (Int32)dr["numrole"],
+                        dr["nomrole"]?.ToString() ?? ""
+                    ));
+                }
             }
             return lesRoles;
         }
