@@ -48,6 +48,7 @@ namespace SIBILIATP11.Classe
 
             set
             {
+                value = char.ToUpper(value[0]) + value.Substring(1).ToLower();
                 this.nomCategorie = value;
             }
         }
