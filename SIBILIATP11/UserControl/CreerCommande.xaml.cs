@@ -1,8 +1,7 @@
-﻿using Npgsql;
-using SIBILIATP11.Classe;
+﻿using SIBILIATP11.Classe;
 using System;
 using System.Collections.Generic;
-using System.Data;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using SIBILIATP11.Classe;
+using SIBILIATP11.Model;
 
 namespace SIBILIATP11.UserControl
 {
@@ -24,34 +23,18 @@ namespace SIBILIATP11.UserControl
     /// </summary>
     public partial class CreerCommande : System.Windows.Controls.UserControl
     {
-        public Gestionplat gestionplat;
         public CreerCommande()
         {
             InitializeComponent();
-            gestionplat = new Gestionplat();
-            this.Loaded += CreerCommande_Loaded;
+            plats.Items.Filter = RechercheMotClefPlat;
         }
 
-        private void CreerCommande_Loaded(object sender, RoutedEventArgs e)
+        private bool RechercheMotClefPlat(object obj)
         {
-            LoadPlatsIntoDataGrid();
-        }
-
-        private void LoadPlatsIntoDataGrid()
-        {
-            try
-            {
-                List<Plat> lesPlats = gestionplat.FindAll();
-
-                if (plats != null) // Vérification de sécurité au cas où le DataGrid ne serait pas encore initialisé
-                {
-                    plats.ItemsSource = lesPlats;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erreur lors du chargement des plats dans le DataGrid : {ex.Message}","Erreur de données", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
-            }
+            if (String.IsNullOrEmpty(recherche.Text))
+                return true;
+            Plat unPlat = obj as Plat;
+            return (unPlat.NomPlat.StartsWith(recherche.Text, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

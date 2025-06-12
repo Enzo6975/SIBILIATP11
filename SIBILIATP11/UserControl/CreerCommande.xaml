@@ -1,37 +1,34 @@
-﻿<UserControl
-    x:Class="SIBILIATP11.UserControl.CreerCommande"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:SIBILIATP11.UserControl"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
-    mc:Ignorable="d">
-
-    <Grid x:Name="grid" Background="White">
+﻿<UserControl x:Class="SIBILIATP11.UserControl.CreerCommande"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SIBILIATP11.UserControl"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid x:Name="grid">
         <StackPanel x:Name="stackPanel">
             <StackPanel
-                x:Name="stackPanel1"
-                Height="60"
-                Margin="20,0,20,0"
-                VerticalAlignment="Top">
+    x:Name="stackPanel1"
+    Height="60"
+    Margin="20,0,20,0"
+    VerticalAlignment="Top">
                 <Label
-                    Width="150"
-                    Height="30"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Content="Rechercher :" />
-                <TextBox Height="30" />
+        Width="150"
+        Height="30"
+        HorizontalAlignment="Left"
+        VerticalAlignment="Top"
+        Content="Rechercher :" />
+                <TextBox x:Name="recherche" Height="30" />
             </StackPanel>
             <StackPanel
-                x:Name="stackPanel2"
-                Height="30"
-                Margin="0,10,0,0"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Top"
-                Orientation="Horizontal">
-                <ComboBox Width="150" />
+    x:Name="stackPanel2"
+    Height="30"
+    Margin="0,10,0,0"
+    HorizontalAlignment="Center"
+    VerticalAlignment="Top"
+    Orientation="Horizontal">
+                <ComboBox x:Name="cbCategorie" Width="150" />
                 <DatePicker Margin="30,0,0,0" />
                 <Label Margin="30,0,0,0" Content="De" />
                 <TextBox Width="50" Margin="5,0,0,0" TextAlignment="Center" />
@@ -40,21 +37,21 @@
 
             </StackPanel>
             <DataGrid
-                x:Name="plats"
-                Height="300"
-                Margin="30,30,30,0"
-                VerticalAlignment="Top"
-                ItemsSource="{Binding lesChiens}"
-                IsReadOnly="True" HorizontalAlignment="Center" >
+            x:Name="plats"
+            Height="300"
+            Margin="30,30,30,0"
+            VerticalAlignment="Top"
+            AutoGenerateColumns="False"
+            IsReadOnly="True" HorizontalAlignment="Center"
+            ItemsSource="{Binding LesPlats}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Width="*" Binding="{Binding numplat, ValidatesOnExceptions=True}" Header="Numéro"/>
-                    <DataGridTextColumn Width="*" Binding="{Binding nomplat, ValidatesOnExceptions=True}" Header="Plat"/>
-                    <DataGridTextColumn Width="*" Binding="{Binding numplat, ValidatesOnExceptions=True}" Header="h"/>
-                    <DataGridTextColumn Width="*" Binding="{Binding numplat, ValidatesOnExceptions=True}" Header="Numéro"/>
+                    <DataGridTextColumn Width="*" Binding="{Binding Numplat, ValidatesOnExceptions=True}" Header="Numéro"/>
+                    <DataGridTextColumn Width="*" Binding="{Binding Nomplat, ValidatesOnExceptions=True}" Header="Plat"/>
+                    <DataGridTextColumn Width="*" Binding="{Binding Prixunitaire, ValidatesOnExceptions=True}" Header="prix"/>
+                    <DataGridTextColumn Width="*" Binding="{Binding Delaipreparation, ValidatesOnExceptions=True}" Header="delai de preparation"/>
+                    <DataGridTextColumn Width="*" Binding="{Binding Nbpersonnes, ValidatesOnExceptions=True}" Header="personne"/>
                 </DataGrid.Columns>
             </DataGrid>
-
-
         </StackPanel>
     </Grid>
 </UserControl>

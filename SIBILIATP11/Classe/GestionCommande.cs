@@ -30,6 +30,7 @@ namespace SIBILIATP11.Classe
             this.LesPeriodes = new List<Periode>(new Periode().FindAll());
             this.LesRoles = new List<Role>(new Role().FindAll());
             this.LesSousCategories = new List<SousCategorie>(new SousCategorie().FindAll());
+            this.LesPlats = new ObservableCollection<Plat>(new Plat().FindAll());
 
             ObservableCollection<Commande> commandes = new ObservableCollection<Commande>(new Commande().FindAll());
             foreach (Commande commande in commandes)
