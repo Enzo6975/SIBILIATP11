@@ -35,7 +35,7 @@ namespace SIBILIATP11.UserControl
             CommandesOriginales = new ObservableCollection<Commande>();
 
             // Charger les données au démarrage
-            ChargerCommandes();
+            //ChargerCommandes();
         }
 
         // Propriété pour la commande sélectionnée

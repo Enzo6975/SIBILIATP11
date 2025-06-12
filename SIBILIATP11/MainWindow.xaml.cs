@@ -22,9 +22,9 @@ namespace SIBILIATP11
         public GestionCommande LaGestion { get; set; }
         public MainWindow()
         {
+            ChargeData();
             InitializeComponent();
             Window_Loaded();
-            ChargeData();
         }
 
         public void Window_Loaded()

@@ -66,7 +66,9 @@
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
-                    Header="CRÉER UNE COMMANDE" />
+                    Header="CRÉER UNE COMMANDE" >
+                    <uc:CreerCommande/>
+                </TabItem>
                 <TabItem
                     Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"
                     Height="70"
