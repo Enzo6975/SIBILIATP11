@@ -17,20 +17,11 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!--  En-tête  -->
         <StackPanel Grid.Row="0" Margin="20,20,20,10">
-            <Label
-                HorizontalAlignment="Center"
-                Content="Détail de la commande"
-                FontSize="18"
-                FontWeight="Bold" />
+            <Label HorizontalAlignment="Center" Content="Détail de la commande" FontSize="18" FontWeight="Bold" />
         </StackPanel>
 
-        <!--  Informations de la commande  -->
-        <StackPanel
-            Grid.Row="1"
-            Margin="20,0,20,20"
-            Orientation="Vertical">
+        <StackPanel Grid.Row="1" Margin="20,0,20,20" Orientation="Vertical">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -41,97 +32,53 @@
                     <Label Content="Date de commande :" FontWeight="Bold" />
                     <Label x:Name="lblDateCommande" Content="{Binding CommandeEnCours.DateCommande, StringFormat=dd/MM/yyyy}" />
 
-                    <Label
-                        Margin="0,10,0,0"
-                        Content="Client :"
-                        FontWeight="Bold" />
-                    <ComboBox
-                        x:Name="cbClient"
-                        Width="200"
-                        HorizontalAlignment="Left"
-                        DisplayMemberPath="NomComplet"
-                        ItemsSource="{Binding LaGestionCommande.LesClients}"
-                        SelectedItem="{Binding CommandeEnCours.UnClient}" />
+                    <Label Margin="0,10,0,0" Content="Client :" FontWeight="Bold" />
+                    <ComboBox x:Name="cbClient" Width="200" HorizontalAlignment="Left" DisplayMemberPath="NomComplet" 
+                              ItemsSource="{Binding LaGestionCommande.LesClients}" 
+                              SelectedItem="{Binding CommandeEnCours.UnClient}" />
                 </StackPanel>
 
                 <StackPanel Grid.Column="1">
                     <Label Content="Date de retrait prévue :" FontWeight="Bold" />
-                    <DatePicker
-                        x:Name="dpDateRetrait"
-                        Width="150"
-                        HorizontalAlignment="Left"
-                        SelectedDate="{Binding CommandeEnCours.DateRetraitPrevue}" />
+                    <DatePicker x:Name="dpDateRetrait" Width="150" HorizontalAlignment="Left" 
+                                SelectedDate="{Binding CommandeEnCours.DateRetraitPrevue}" />
 
-                    <Label
-                        Margin="0,10,0,0"
-                        Content="Employé :"
-                        FontWeight="Bold" />
-                    <ComboBox
-                        x:Name="cbEmploye"
-                        Width="200"
-                        HorizontalAlignment="Left"
-                        DisplayMemberPath="NomComplet"
-                        ItemsSource="{Binding LaGestionCommande.LesEmploye}"
-                        SelectedItem="{Binding CommandeEnCours.UnEmploye}" />
+                    <Label Margin="0,10,0,0" Content="Employé :" FontWeight="Bold" />
+                    <ComboBox x:Name="cbEmploye" Width="200" HorizontalAlignment="Left" DisplayMemberPath="NomComplet" 
+                              ItemsSource="{Binding LaGestionCommande.LesEmploye}" 
+                              SelectedItem="{Binding CommandeEnCours.UnEmploye}" />
                 </StackPanel>
             </Grid>
         </StackPanel>
 
-        <!--  Liste des plats dans la commande  -->
-        <GroupBox
-            Grid.Row="2"
-            Margin="20,0,20,20"
-            Header="Plats commandés">
-            <DataGrid
-                x:Name="dgLignesCommande"
-                AlternatingRowBackground="LightGray"
-                AutoGenerateColumns="False"
-                CanUserAddRows="False"
-                GridLinesVisibility="Horizontal"
-                ItemsSource="{Binding LignesDeLaCommande}">
+        <GroupBox Grid.Row="2" Margin="20,0,20,20" Header="Plats commandés">
+            <DataGrid x:Name="dgLignesCommande" AlternatingRowBackground="LightGray" AutoGenerateColumns="False" 
+                      CanUserAddRows="False" GridLinesVisibility="Horizontal" 
+                      ItemsSource="{Binding LignesDeLaCommande}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding UnPlat.NomPlat}"
-                        Header="Plat"
-                        IsReadOnly="True" />
-                    <DataGridTextColumn
-                        Width="100"
-                        Binding="{Binding UnPlat.PrixUnitaire, StringFormat=F2}"
-                        Header="Prix unitaire"
-                        IsReadOnly="True" />
-                    <DataGridTextColumn
-                        Width="80"
-                        Binding="{Binding Quantite}"
-                        Header="Quantité" />
-                    <DataGridTextColumn
-                        Width="100"
-                        Binding="{Binding CalculerTotal, StringFormat=F2}"
-                        Header="Total ligne"
-                        IsReadOnly="True" />
+                    <DataGridTextColumn Width="*" Binding="{Binding UnPlat.NomPlat}" Header="Plat" IsReadOnly="True" />
+                    <DataGridTextColumn Width="100" Binding="{Binding UnPlat.PrixUnitaire, StringFormat=F2}" 
+                                        Header="Prix unitaire" IsReadOnly="True" />
+                    <DataGridTextColumn Width="80" Binding="{Binding Quantite}" Header="Quantité" />
+                    <DataGridTextColumn Width="100" Header="Total ligne" IsReadOnly="True">
+                        <DataGridTextColumn.Binding>
+                            <MultiBinding StringFormat="{}{0:F2}">
+                                <MultiBinding.Converter>
+                                    <local:MultiplicationConverter />
+                                </MultiBinding.Converter>
+                                <Binding Path="UnPlat.PrixUnitaire" />
+                                <Binding Path="Quantite" />
+                            </MultiBinding>
+                        </DataGridTextColumn.Binding>
+                    </DataGridTextColumn>
                     <DataGridTemplateColumn Width="120" Header="Actions">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button
-                                        Width="25"
-                                        Height="25"
-                                        Margin="2"
-                                        Click="AugmenterQuantite_Click"
-                                        Content="+" />
-                                    <Button
-                                        Width="25"
-                                        Height="25"
-                                        Margin="2"
-                                        Click="DiminuerQuantite_Click"
-                                        Content="-" />
-                                    <Button
-                                        Width="25"
-                                        Height="25"
-                                        Margin="2"
-                                        Background="LightCoral"
-                                        Click="SupprimerLigne_Click"
-                                        Content="X" />
+                                    <Button Width="25" Height="25" Margin="2" Click="AugmenterQuantite_Click" Content="+" />
+                                    <Button Width="25" Height="25" Margin="2" Click="DiminuerQuantite_Click" Content="-" />
+                                    <Button Width="25" Height="25" Margin="2" Background="LightCoral" 
+                                            Click="SupprimerLigne_Click" Content="X" />
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -140,11 +87,7 @@
             </DataGrid>
         </GroupBox>
 
-        <!--  Résumé et total  -->
-        <StackPanel
-            Grid.Row="3"
-            Margin="20,0,20,20"
-            HorizontalAlignment="Right">
+        <StackPanel Grid.Row="3" Margin="20,0,20,20" HorizontalAlignment="Right">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -156,79 +99,28 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Label
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Content="Nombre d'articles :"
-                    FontWeight="Bold" />
-                <Label
-                    x:Name="lblNbArticles"
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    HorizontalAlignment="Right"
-                    Content="{Binding NombreArticles}" />
+                <Label Grid.Row="0" Grid.Column="0" Content="Nombre d'articles :" FontWeight="Bold" />
+                <Label x:Name="lblNbArticles" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" 
+                       Content="{Binding NombreArticles}" />
 
-                <Label
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Content="Total HT :"
-                    FontWeight="Bold" />
-                <Label
-                    x:Name="lblTotalHT"
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    HorizontalAlignment="Right"
-                    Content="{Binding CommandeEnCours.PrixTotal, StringFormat=F2}" />
+                <Label Grid.Row="1" Grid.Column="0" Content="Total HT :" FontWeight="Bold" />
+                <Label x:Name="lblTotalHT" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" 
+                       Content="{Binding CommandeEnCours.PrixTotal, StringFormat=F2}" />
 
-                <Label
-                    Grid.Row="2"
-                    Grid.Column="0"
-                    Content="TOTAL TTC :"
-                    FontSize="16"
-                    FontWeight="Bold"
-                    Foreground="DarkBlue" />
-                <Label
-                    x:Name="lblTotalTTC"
-                    Grid.Row="2"
-                    Grid.Column="1"
-                    HorizontalAlignment="Right"
-                    Content="{Binding CommandeEnCours.PrixTotal, StringFormat=F2}"
-                    FontSize="16"
-                    FontWeight="Bold"
-                    Foreground="DarkBlue" />
+                <Label Grid.Row="2" Grid.Column="0" Content="TOTAL TTC :" FontSize="16" FontWeight="Bold" 
+                       Foreground="DarkBlue" />
+                <Label x:Name="lblTotalTTC" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" 
+                       Content="{Binding CommandeEnCours.PrixTotal, StringFormat=F2}" FontSize="16" 
+                       FontWeight="Bold" Foreground="DarkBlue" />
             </Grid>
         </StackPanel>
 
-        <!--  Boutons d'action  -->
-        <StackPanel
-            Grid.Row="4"
-            Margin="20"
-            HorizontalAlignment="Center"
-            Orientation="Horizontal">
-            <Button
-                x:Name="btnViderPanier"
-                Width="120"
-                Height="35"
-                Margin="10,0"
-                Background="LightCoral"
-                Click="ViderPanier_Click"
-                Content="Vider le panier" />
-            <Button
-                x:Name="btnAnnuler"
-                Width="120"
-                Height="35"
-                Margin="10,0"
-                Click="Annuler_Click"
-                Content="Annuler" />
-            <Button
-                x:Name="btnValider"
-                Width="150"
-                Height="35"
-                Margin="10,0"
-                Background="LightGreen"
-                Click="ValiderCommande_Click"
-                Content="Valider la commande"
-                FontWeight="Bold" />
+        <StackPanel Grid.Row="4" Margin="20" HorizontalAlignment="Center" Orientation="Horizontal">
+            <Button x:Name="btnViderPanier" Width="120" Height="35" Margin="10,0" Background="LightCoral" 
+                    Click="ViderPanier_Click" Content="Vider le panier" />
+            <Button x:Name="btnAnnuler" Width="120" Height="35" Margin="10,0" Click="Annuler_Click" Content="Annuler" />
+            <Button x:Name="btnValider" Width="150" Height="35" Margin="10,0" Background="LightGreen" 
+                    Click="ValiderCommande_Click" Content="Valider la commande" FontWeight="Bold" />
         </StackPanel>
     </Grid>
 </UserControl>

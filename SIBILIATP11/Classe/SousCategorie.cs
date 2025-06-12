@@ -18,7 +18,6 @@ namespace SIBILIATP11.Classe
 
         public SousCategorie()
         {
-
         }
 
         public SousCategorie(int numSousCategorie)

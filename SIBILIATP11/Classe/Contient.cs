@@ -20,7 +20,6 @@ namespace SIBILIATP11.Classe
 
         public Contient()
         {
-
         }
 
         public Contient(int quantite, double prix, Commande uneCommande, Plat unPlat)

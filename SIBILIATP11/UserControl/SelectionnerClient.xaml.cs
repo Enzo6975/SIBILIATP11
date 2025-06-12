@@ -18,36 +18,23 @@ using SIBILIATP11.Model;
 
 namespace SIBILIATP11.UserControl
 {
-    /// <summary>
-    /// Logique d'interaction pour SelectionnerClient.xaml
-    /// </summary>
     public partial class SelectionnerClient : System.Windows.Controls.UserControl
-    { 
-
+    {
         public ObservableCollection<Client> ClientsList { get; set; }
 
         public SelectionnerClient()
         {
             InitializeComponent();
-
-            // Initialisez votre ObservableCollection
             ClientsList = new ObservableCollection<Client>();
-
-            // Chargez les clients depuis la base de données
             LoadClients();
-
-            // Définissez le DataContext de ce UserControl à votre collection de clients
             this.DataContext = ClientsList;
         }
 
-        // Méthode pour charger les clients
         private void LoadClients()
         {
             try
             {
                 List<SIBILIATP11.Classe.Client> clientsFromDb = new SIBILIATP11.Classe.Client().FindAll();
-
-                // Efface la liste actuelle pour éviter les doublons lors du rechargement
                 ClientsList.Clear();
 
                 foreach (var client in clientsFromDb)
@@ -63,15 +50,11 @@ namespace SIBILIATP11.UserControl
 
         private void butCreerClient_Click(object sender, RoutedEventArgs e)
         {
-            // Trouver la fenêtre parente qui contient le ContentControl
             Window parentWindow = Window.GetWindow(this);
 
             if (parentWindow is MainWindow mainWindow)
             {
-
                 CreerClient creerClientUserControl = new CreerClient();
-
-
                 mainWindow.Sibilia.Content = creerClientUserControl;
             }
             else
@@ -79,7 +62,5 @@ namespace SIBILIATP11.UserControl
                 MessageBox.Show("Impossible de trouver la fenêtre principale ou le conteneur de contenu.");
             }
         }
-
-
     }
 }

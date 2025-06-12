@@ -64,40 +64,6 @@ namespace SIBILIATP11.UserControl
             }
         }
 
-        private void btnCreerPlat_Click(object sender, RoutedEventArgs e)
-        {
-            if (ValiderSaisie())
-            {
-                try
-                {
-                    Plat nouveauPlat = new Plat();
-                    nouveauPlat.NomPlat = txtNomPlat.Text;
-                    nouveauPlat.PrixUnitaire = double.Parse(txtPrixUnitaire.Text);
-                    nouveauPlat.DelaiPreparation = int.Parse(txtDelaiPreparation.Text);
-                    nouveauPlat.NbPersonnes = int.Parse(txtNbPersonnes.Text);
-
-                    SousCategorie sousCategorie = (SousCategorie)cbSousCategorie.SelectedItem;
-                    Periode periode = (Periode)cbPeriode.SelectedItem;
-
-                    nouveauPlat.UneSousCategorie = sousCategorie;
-                    nouveauPlat.UnePeriode = periode;
-
-                    nouveauPlat.NumPlat = nouveauPlat.Create();
-                    LaGestionCommande.LesPlats.Add(nouveauPlat);
-
-                    MessageBox.Show("Plat créé avec succès !", "Succès",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
-
-                    ViderChamps();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Erreur lors de la création du plat : {ex.Message}",
-                        "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-        }
-
         private bool ValiderSaisie()
         {
             if (string.IsNullOrWhiteSpace(txtNomPlat.Text))
@@ -153,6 +119,40 @@ namespace SIBILIATP11.UserControl
             txtNbPersonnes.Text = "";
             cbSousCategorie.SelectedIndex = -1;
             cbPeriode.SelectedIndex = -1;
+        }
+
+        private void btnCreerPlat_Click(object sender, RoutedEventArgs e)
+        {
+            if (ValiderSaisie())
+            {
+                try
+                {
+                    Plat nouveauPlat = new Plat();
+                    nouveauPlat.NomPlat = txtNomPlat.Text;
+                    nouveauPlat.PrixUnitaire = double.Parse(txtPrixUnitaire.Text);
+                    nouveauPlat.DelaiPreparation = int.Parse(txtDelaiPreparation.Text);
+                    nouveauPlat.NbPersonnes = int.Parse(txtNbPersonnes.Text);
+
+                    SousCategorie sousCategorie = (SousCategorie)cbSousCategorie.SelectedItem;
+                    Periode periode = (Periode)cbPeriode.SelectedItem;
+
+                    nouveauPlat.UneSousCategorie = sousCategorie;
+                    nouveauPlat.UnePeriode = periode;
+
+                    nouveauPlat.NumPlat = nouveauPlat.Create();
+                    LaGestionCommande.LesPlats.Add(nouveauPlat);
+
+                    MessageBox.Show("Plat créé avec succès !", "Succès",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    ViderChamps();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Erreur lors de la création du plat : {ex.Message}",
+                        "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
 
         private void btnAnnuler_Click(object sender, RoutedEventArgs e)

@@ -1,5 +1,3 @@
-
-
 using System.Collections.Generic;
 using System.Data;
 using System.Windows;
@@ -7,11 +5,9 @@ using Microsoft.Extensions.Logging;
 using Npgsql;
 using SIBILIATP11.Classe;
 
-
 namespace SIBILIATP11.Model
 {
-
-    public  class DataAccess
+    public class DataAccess
     {
         private static readonly DataAccess instance = new DataAccess();
         private readonly string connectionString = "Host=srv-peda-new;Port=5433;Username=renauale;Password=rMD0EE;Database=SAE201_sibilia;Options='-c search_path=sibilia'";
@@ -25,10 +21,8 @@ namespace SIBILIATP11.Model
             }
         }
 
-        //  Constructeur privé pour empêcher l'instanciation multiple
         private DataAccess()
         {
-            
             try
             {
                 connection = new NpgsqlConnection(connectionString);
@@ -40,8 +34,6 @@ namespace SIBILIATP11.Model
             }
         }
 
-
-        // pour récupérer la connexion (et l'ouvrir si nécessaire)
         public NpgsqlConnection GetConnection()
         {
             if (connection.State == ConnectionState.Closed || connection.State == ConnectionState.Broken)
@@ -53,15 +45,13 @@ namespace SIBILIATP11.Model
                 catch (Exception ex)
                 {
                     LogError.Log(ex, "Pb de connexion GetConnection \n" + connectionString);
-                    throw;                
+                    throw;
                 }
             }
 
-        
             return connection;
         }
 
-        //  pour requêtes SELECT et retourne un DataTable ( table de données en mémoire)
         public DataTable ExecuteSelect(NpgsqlCommand cmd)
         {
             DataTable dataTable = new DataTable();
@@ -81,8 +71,6 @@ namespace SIBILIATP11.Model
             return dataTable;
         }
 
-        //   pour requêtes INSERT et renvoie l'ID généré
-
         public int ExecuteInsert(NpgsqlCommand cmd)
         {
             int nb = 0;
@@ -90,18 +78,15 @@ namespace SIBILIATP11.Model
             {
                 cmd.Connection = GetConnection();
                 nb = (int)cmd.ExecuteScalar();
-
             }
-            catch (Exception ex) { 
+            catch (Exception ex)
+            {
                 LogError.Log(ex, "Pb avec une requete insert " + cmd.CommandText);
-                throw; }
+                throw;
+            }
             return nb;
         }
 
-
-
-
-        //  pour requêtes UPDATE, DELETE
         public int ExecuteSet(NpgsqlCommand cmd)
         {
             int nb = 0;
@@ -110,15 +95,14 @@ namespace SIBILIATP11.Model
                 cmd.Connection = GetConnection();
                 nb = cmd.ExecuteNonQuery();
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 LogError.Log(ex, "Pb avec une requete set " + cmd.CommandText);
                 throw;
             }
             return nb;
-
         }
 
-        // pour requêtes avec une seule valeur retour  (ex : COUNT, SUM) 
         public object ExecuteSelectUneValeur(NpgsqlCommand cmd)
         {
             object res = null;
@@ -127,15 +111,14 @@ namespace SIBILIATP11.Model
                 cmd.Connection = GetConnection();
                 res = cmd.ExecuteScalar();
             }
-            catch (Exception ex) { 
+            catch (Exception ex)
+            {
                 LogError.Log(ex, "Pb avec une requete select " + cmd.CommandText);
                 throw;
             }
             return res;
-
         }
 
-        //  Fermer la connexion 
         public void CloseConnection()
         {
             if (connection.State == ConnectionState.Open)
@@ -153,10 +136,9 @@ namespace SIBILIATP11.Model
 
             using (NpgsqlCommand cmd = new NpgsqlCommand())
             {
-
                 cmd.CommandText = "INSERT INTO client (nomClient, prenomClient, tel, adresseRue, adresseCP, adresseVille) " +
                                   "VALUES (@NomClient, @PrenomClient, @Tel, @AdresseRue, @AdresseCP, @AdresseVille) " +
-                                  "RETURNING numClient;"; 
+                                  "RETURNING numClient;";
 
                 cmd.Parameters.AddWithValue("@NomClient", client.NomClient ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@PrenomClient", client.PrenomClient ?? (object)DBNull.Value);
@@ -165,14 +147,8 @@ namespace SIBILIATP11.Model
                 cmd.Parameters.AddWithValue("@AdresseCP", client.AdresseCP ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@AdresseVille", client.AdresseVille ?? (object)DBNull.Value);
 
-
                 return ExecuteInsert(cmd);
             }
         }
-        
-
     }
 }
-
-
-

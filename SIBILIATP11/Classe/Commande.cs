@@ -93,7 +93,7 @@ namespace SIBILIATP11.Classe
             get { return this.prixTotal; }
             set
             {
-                if (value < 0) 
+                if (value < 0)
                     throw new ArgumentOutOfRangeException("prix ne peu pas être négatif ");
                 this.prixTotal = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PrixTotal)));
@@ -138,6 +138,28 @@ namespace SIBILIATP11.Classe
             }
             this.NumCommande = nb;
             return nb;
+        }
+
+        public void Read()
+        {
+            using (var cmdSelect = new NpgsqlCommand("SELECT * FROM commande WHERE numcommande = @numCommande"))
+            {
+                cmdSelect.Parameters.AddWithValue("@numCommande", this.NumCommande);
+
+                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
+                if (dt.Rows.Count > 0)
+                {
+                    this.DateCommande = (DateTime)dt.Rows[0]["datecommande"];
+                    this.DateRetraitPrevue = (DateTime)dt.Rows[0]["dateretraitprevue"];
+                    this.Payee = (Boolean)dt.Rows[0]["payee"];
+                    this.Retiree = (Boolean)dt.Rows[0]["retiree"];
+                    this.PrixTotal = Convert.ToDouble(dt.Rows[0]["prixtotal"]);
+                    this.UnEmploye = new Employe((Int32)dt.Rows[0]["numemploye"]);
+                    this.UnClient = new Client((Int32)dt.Rows[0]["numclient"]);
+                    this.UnEmploye.Read();
+                    this.UnClient.Read();
+                }
+            }
         }
 
         public int Update()
@@ -218,28 +240,6 @@ namespace SIBILIATP11.Classe
                 }
             }
             return lesCommandes;
-        }
-
-        public void Read()
-        {
-            using (var cmdSelect = new NpgsqlCommand("SELECT * FROM commande WHERE numcommande = @numCommande"))
-            {
-                cmdSelect.Parameters.AddWithValue("@numCommande", this.NumCommande);
-
-                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
-                if (dt.Rows.Count > 0)
-                {
-                    this.DateCommande = (DateTime)dt.Rows[0]["datecommande"];
-                    this.DateRetraitPrevue = (DateTime)dt.Rows[0]["dateretraitprevue"];
-                    this.Payee = (Boolean)dt.Rows[0]["payee"];
-                    this.Retiree = (Boolean)dt.Rows[0]["retiree"];
-                    this.PrixTotal = Convert.ToDouble(dt.Rows[0]["prixtotal"]);
-                    this.UnEmploye = new Employe((Int32)dt.Rows[0]["numemploye"]);
-                    this.UnClient = new Client((Int32)dt.Rows[0]["numclient"]);
-                    this.UnEmploye.Read();
-                    this.UnClient.Read();
-                }
-            }
         }
     }
 }

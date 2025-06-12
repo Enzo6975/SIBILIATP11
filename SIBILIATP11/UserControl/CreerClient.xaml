@@ -9,25 +9,22 @@
     <Grid>
         <Label Content="Créer un client" Background="#FFFD2828" FontSize="30" Foreground="White" FontWeight="Bold" VerticalAlignment="Top" />
 
-        <StackPanel x:Name="StackPanelCreerClient" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200
-                    ">
+        <StackPanel x:Name="StackPanelCreerClient" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200">
             <Label Content="Nom" HorizontalAlignment="Left"/>
-            <TextBox x:Name="txtBoxNomClient" TextWrapping="Wrap"  Width="200" Text="{Binding NomClient, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox x:Name="txtBoxNomClient" TextWrapping="Wrap" Width="200" Text="{Binding NomClient, UpdateSourceTrigger=PropertyChanged}"/>
             <Label Content="Prénom"/>
-            <TextBox x:Name="txtBoxPrenomClient" TextWrapping="Wrap"  Width="200" Text="{Binding PrenomClient, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox x:Name="txtBoxPrenomClient" TextWrapping="Wrap" Width="200" Text="{Binding PrenomClient, UpdateSourceTrigger=PropertyChanged}"/>
             <Label Content="Téléphone"/>
-            <TextBox x:Name="txtBoxTelClient" TextWrapping="Wrap"  Width="200" Text="{Binding Tel, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox x:Name="txtBoxTelClient" TextWrapping="Wrap" Width="200" Text="{Binding Tel, UpdateSourceTrigger=PropertyChanged}"/>
             <Label Content="Adresse"/>
-            <TextBox x:Name="txtBoxAdresseClient" TextWrapping="Wrap"  Width="200" Text="{Binding AdresseRue, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox x:Name="txtBoxAdresseClient" TextWrapping="Wrap" Width="200" Text="{Binding AdresseRue, UpdateSourceTrigger=PropertyChanged}"/>
             <Label Content="Code Postal"/>
-            <TextBox x:Name="txtBoxCodePostalClient" TextWrapping="Wrap"  Width="200" Text="{Binding AdresseCP, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox x:Name="txtBoxCodePostalClient" TextWrapping="Wrap" Width="200" Text="{Binding AdresseCP, UpdateSourceTrigger=PropertyChanged}"/>
             <Label Content="Ville"/>
-            <TextBox x:Name="txtBoxVilleClient" TextWrapping="Wrap"  Width="200" Text="{Binding AdresseVille, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox x:Name="txtBoxVilleClient" TextWrapping="Wrap" Width="200" Text="{Binding AdresseVille, UpdateSourceTrigger=PropertyChanged}"/>
 
             <Button x:Name="butValiderClient" Content="Valider" HorizontalAlignment="Center" Width="60" Margin="0,30,0,0" Background="#FFFD2828" Foreground="White" Click="butValiderClient_Click"/>
             <Button x:Name="butRetourClient" Content="Retour" HorizontalAlignment="Center" Width="60" Margin="0,30,0,0" Background="#FFFD2828" Foreground="White" Click="ButRetourClient_Click"/>
-
         </StackPanel>
-        
-   </Grid>
+    </Grid>
 </UserControl>

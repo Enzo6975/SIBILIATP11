@@ -17,32 +17,23 @@ using System.Windows.Shapes;
 
 namespace SIBILIATP11.UserControl
 {
-    /// <summary>
-    /// Logique d'interaction pour VoirClient.xaml
-    /// </summary>
     public partial class VoirClient : System.Windows.Controls.UserControl
     {
         public ObservableCollection<Client> ClientsList { get; set; }
 
         public VoirClient()
         {
-            // Initialisez votre ObservableCollection
             ClientsList = new ObservableCollection<Client>();
             InitializeComponent();
-            // Chargez les clients depuis la base de données
             LoadClients();
-
-            // Définissez le DataContext de ce UserControl à votre collection de clients
             this.DataContext = ClientsList;
         }
-        // Méthode pour charger les clients
+
         private void LoadClients()
         {
             try
             {
                 List<SIBILIATP11.Classe.Client> clientsFromDb = new SIBILIATP11.Classe.Client().FindAll();
-
-                // Efface la liste actuelle pour éviter les doublons lors du rechargement
                 ClientsList.Clear();
 
                 foreach (var client in clientsFromDb)

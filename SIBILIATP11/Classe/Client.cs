@@ -23,7 +23,6 @@ namespace SIBILIATP11.Classe
 
         public Client()
         {
-
         }
 
         public Client(int numClient)
@@ -118,6 +117,66 @@ namespace SIBILIATP11.Classe
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        public int Create()
+        {
+            int nb = 0;
+            using (var cmdInsert = new NpgsqlCommand("INSERT INTO client (nomclient, prenomclient, tel, adresserue, adressecp, adresseville) VALUES (@nomClient, @prenomClient, @tel, @adresserue, @adressecp, @adresseville) RETURNING numclient"))
+            {
+                cmdInsert.Parameters.AddWithValue("@nomClient", this.NomClient ?? "");
+                cmdInsert.Parameters.AddWithValue("@prenomClient", this.PrenomClient ?? "");
+                cmdInsert.Parameters.AddWithValue("@tel", this.Tel ?? "");
+                cmdInsert.Parameters.AddWithValue("@adresserue", this.AdresseRue ?? "");
+                cmdInsert.Parameters.AddWithValue("@adressecp", this.AdresseCP ?? "");
+                cmdInsert.Parameters.AddWithValue("@adresseville", this.AdresseVille ?? "");
+                nb = DataAccess.Instance.ExecuteInsert(cmdInsert);
+            }
+            this.NumClient = nb;
+            return nb;
+        }
+
+        public void Read()
+        {
+            using (var cmdSelect = new NpgsqlCommand("SELECT * FROM client WHERE numclient = @numClient"))
+            {
+                cmdSelect.Parameters.AddWithValue("@numClient", this.NumClient);
+
+                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
+                if (dt.Rows.Count > 0)
+                {
+                    this.NomClient = dt.Rows[0]["nomclient"]?.ToString() ?? "";
+                    this.PrenomClient = dt.Rows[0]["prenomclient"]?.ToString() ?? "";
+                    this.Tel = dt.Rows[0]["tel"]?.ToString() ?? "";
+                    this.AdresseRue = dt.Rows[0]["adresserue"]?.ToString() ?? "";
+                    this.AdresseCP = dt.Rows[0]["adressecp"]?.ToString() ?? "";
+                    this.AdresseVille = dt.Rows[0]["adresseville"]?.ToString() ?? "";
+                }
+            }
+        }
+
+        public int Update()
+        {
+            using (var cmdUpdate = new NpgsqlCommand("UPDATE client SET nomclient = @nomClient, prenomclient = @prenomClient, tel = @tel, adresserue = @adresseRue, adressecp = @adresseCP, adresseville = @adresseVille WHERE numclient = @numClient"))
+            {
+                cmdUpdate.Parameters.AddWithValue("@nomClient", this.NomClient ?? "");
+                cmdUpdate.Parameters.AddWithValue("@prenomClient", this.PrenomClient ?? "");
+                cmdUpdate.Parameters.AddWithValue("@tel", this.Tel ?? "");
+                cmdUpdate.Parameters.AddWithValue("@adresseRue", this.AdresseRue ?? "");
+                cmdUpdate.Parameters.AddWithValue("@adresseCP", this.AdresseCP ?? "");
+                cmdUpdate.Parameters.AddWithValue("@adresseVille", this.AdresseVille ?? "");
+                cmdUpdate.Parameters.AddWithValue("@numClient", this.NumClient);
+                return DataAccess.Instance.ExecuteSet(cmdUpdate);
+            }
+        }
+
+        public int Delete()
+        {
+            using (var cmdUpdate = new NpgsqlCommand("DELETE FROM client WHERE numclient = @numClient"))
+            {
+                cmdUpdate.Parameters.AddWithValue("@numClient", this.NumClient);
+                return DataAccess.Instance.ExecuteSet(cmdUpdate);
+            }
+        }
+
         public List<Client> FindAll()
         {
             List<Client> lesClients = new List<Client>();
@@ -160,66 +219,6 @@ namespace SIBILIATP11.Classe
                 }
             }
             return lesClients;
-        }
-
-        public int Create()
-        {
-            int nb = 0;
-            using (var cmdInsert = new NpgsqlCommand("INSERT INTO client (nomclient, prenomclient, tel, adresserue, adressecp, adresseville) VALUES (@nomClient, @prenomClient, @tel, @adresserue, @adressecp, @adresseville) RETURNING numclient"))
-            {
-                cmdInsert.Parameters.AddWithValue("@nomClient", this.NomClient ?? "");
-                cmdInsert.Parameters.AddWithValue("@prenomClient", this.PrenomClient ?? "");
-                cmdInsert.Parameters.AddWithValue("@tel", this.Tel ?? "");
-                cmdInsert.Parameters.AddWithValue("@adresserue", this.AdresseRue ?? "");
-                cmdInsert.Parameters.AddWithValue("@adressecp", this.AdresseCP ?? "");
-                cmdInsert.Parameters.AddWithValue("@adresseville", this.AdresseVille ?? "");
-                nb = DataAccess.Instance.ExecuteInsert(cmdInsert);
-            }
-            this.NumClient = nb;
-            return nb;
-        }
-
-        public int Update()
-        {
-            using (var cmdUpdate = new NpgsqlCommand("UPDATE client SET nomclient = @nomClient, prenomclient = @prenomClient, tel = @tel, adresserue = @adresseRue, adressecp = @adresseCP, adresseville = @adresseVille WHERE numclient = @numClient"))
-            {
-                cmdUpdate.Parameters.AddWithValue("@nomClient", this.NomClient ?? "");
-                cmdUpdate.Parameters.AddWithValue("@prenomClient", this.PrenomClient ?? "");
-                cmdUpdate.Parameters.AddWithValue("@tel", this.Tel ?? "");
-                cmdUpdate.Parameters.AddWithValue("@adresseRue", this.AdresseRue ?? "");
-                cmdUpdate.Parameters.AddWithValue("@adresseCP", this.AdresseCP ?? "");
-                cmdUpdate.Parameters.AddWithValue("@adresseVille", this.AdresseVille ?? "");
-                cmdUpdate.Parameters.AddWithValue("@numClient", this.NumClient);
-                return DataAccess.Instance.ExecuteSet(cmdUpdate);
-            }
-        }
-
-        public int Delete()
-        {
-            using (var cmdUpdate = new NpgsqlCommand("DELETE FROM client WHERE numclient = @numClient"))
-            {
-                cmdUpdate.Parameters.AddWithValue("@numClient", this.NumClient);
-                return DataAccess.Instance.ExecuteSet(cmdUpdate);
-            }
-        }
-
-        public void Read()
-        {
-            using (var cmdSelect = new NpgsqlCommand("SELECT * FROM client WHERE numclient = @numClient"))
-            {
-                cmdSelect.Parameters.AddWithValue("@numClient", this.NumClient);
-
-                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
-                if (dt.Rows.Count > 0)
-                {
-                    this.NomClient = dt.Rows[0]["nomclient"]?.ToString() ?? "";
-                    this.PrenomClient = dt.Rows[0]["prenomclient"]?.ToString() ?? "";
-                    this.Tel = dt.Rows[0]["tel"]?.ToString() ?? "";
-                    this.AdresseRue = dt.Rows[0]["adresserue"]?.ToString() ?? "";
-                    this.AdresseCP = dt.Rows[0]["adressecp"]?.ToString() ?? "";
-                    this.AdresseVille = dt.Rows[0]["adresseville"]?.ToString() ?? "";
-                }
-            }
         }
     }
 }

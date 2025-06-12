@@ -17,11 +17,7 @@
 
     <Border Background="White" CornerRadius="20">
         <Border.Effect>
-            <DropShadowEffect
-                BlurRadius="20"
-                Opacity="0.3"
-                ShadowDepth="0"
-                Color="Black" />
+            <DropShadowEffect BlurRadius="20" Opacity="0.3" ShadowDepth="0" Color="Black" />
         </Border.Effect>
 
         <Grid>
@@ -30,11 +26,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <!--  Panneau gauche avec image/branding  -->
-            <Border
-                Grid.Column="0"
-                Background="#E30613"
-                CornerRadius="20,0,0,20">
+            <Border Grid.Column="0" Background="#E30613" CornerRadius="20,0,0,20">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
@@ -42,43 +34,21 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <!--  Logo  -->
-                    <Border
-                        Grid.Row="1"
-                        Margin="40"
-                        Background="White"
-                        CornerRadius="15">
-                        <Image
-                            Margin="30"
-                            RenderOptions.BitmapScalingMode="HighQuality"
-                            Source="/logo-sibilia.png"
-                            Stretch="Uniform" />
+                    <Border Grid.Row="1" Margin="40" Background="White" CornerRadius="15">
+                        <Image Margin="30" RenderOptions.BitmapScalingMode="HighQuality" 
+                               Source="/logo-sibilia.png" Stretch="Uniform" />
                     </Border>
 
-                    <!--  Texte de bienvenue  -->
-                    <StackPanel
-                        Grid.Row="2"
-                        Margin="40,0"
-                        VerticalAlignment="Top">
-                        <TextBlock
-                            Margin="0,0,0,10"
-                            HorizontalAlignment="Center"
-                            FontSize="28"
-                            FontWeight="Bold"
-                            Foreground="White"
-                            Text="BIENVENUE" />
-                        <TextBlock
-                            FontSize="14"
-                            Foreground="White"
-                            Opacity="0.9"
-                            Text="Connectez-vous pour accéder à votre espace de gestion des commandes"
-                            TextAlignment="Center"
-                            TextWrapping="Wrap" />
+                    <StackPanel Grid.Row="2" Margin="40,0" VerticalAlignment="Top">
+                        <TextBlock Margin="0,0,0,10" HorizontalAlignment="Center" FontSize="28" 
+                                   FontWeight="Bold" Foreground="White" Text="BIENVENUE" />
+                        <TextBlock FontSize="14" Foreground="White" Opacity="0.9" 
+                                   Text="Connectez-vous pour accéder à votre espace de gestion des commandes" 
+                                   TextAlignment="Center" TextWrapping="Wrap" />
                     </StackPanel>
                 </Grid>
             </Border>
 
-            <!--  Panneau droit avec formulaire  -->
             <Grid Grid.Column="1" Margin="40">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -86,22 +56,10 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <!--  Bouton fermer  -->
-                <Button
-                    x:Name="BtnFermer"
-                    Grid.Row="0"
-                    Width="30"
-                    Height="30"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Top"
-                    Background="Transparent"
-                    BorderBrush="Transparent"
-                    Click="BtnFermer_Click"
-                    Content="✕"
-                    Cursor="Hand"
-                    FontSize="16"
-                    FontWeight="Bold"
-                    Foreground="#CCCCCC">
+                <Button x:Name="BtnFermer" Grid.Row="0" Width="30" Height="30" 
+                        HorizontalAlignment="Right" VerticalAlignment="Top" Background="Transparent" 
+                        BorderBrush="Transparent" Click="BtnFermer_Click" Content="✕" Cursor="Hand" 
+                        FontSize="16" FontWeight="Bold" Foreground="#CCCCCC">
                     <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="Template">
@@ -123,128 +81,62 @@
                     </Button.Style>
                 </Button>
 
-                <!--  Formulaire de connexion  -->
-                <StackPanel
-                    Grid.Row="1"
-                    Margin="0,20"
-                    VerticalAlignment="Center">
+                <StackPanel Grid.Row="1" Margin="0,20" VerticalAlignment="Center">
+                    <TextBlock Margin="0,0,0,40" HorizontalAlignment="Center" FontSize="32" 
+                               FontWeight="Bold" Foreground="#333333" Text="CONNEXION" />
 
-                    <!--  Titre  -->
-                    <TextBlock
-                        Margin="0,0,0,40"
-                        HorizontalAlignment="Center"
-                        FontSize="32"
-                        FontWeight="Bold"
-                        Foreground="#333333"
-                        Text="CONNEXION" />
-
-                    <!--  Champ Identifiant  -->
                     <Grid Margin="0,0,0,25">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <TextBlock
-                            Grid.Row="0"
-                            Margin="5,0,0,8"
-                            FontSize="14"
-                            FontWeight="SemiBold"
-                            Foreground="#666666"
-                            Text="👤 Identifiant" />
+                        <TextBlock Grid.Row="0" Margin="5,0,0,8" FontSize="14" FontWeight="SemiBold" 
+                                   Foreground="#666666" Text="👤 Identifiant" />
 
-                        <Border
-                            Grid.Row="1"
-                            Background="White"
-                            BorderBrush="#E0E0E0"
-                            BorderThickness="2"
-                            CornerRadius="8">
-                            <TextBox
-                                x:Name="TxtLogin"
-                                Padding="15,12"
-                                Background="Transparent"
-                                BorderThickness="0"
-                                FontSize="14"
-                                Foreground="#333333"
-                                TextChanged="TxtLogin_TextChanged" />
+                        <Border Grid.Row="1" Background="White" BorderBrush="#E0E0E0" 
+                                BorderThickness="2" CornerRadius="8">
+                            <TextBox x:Name="TxtLogin" Padding="15,12" Background="Transparent" 
+                                     BorderThickness="0" FontSize="14" Foreground="#333333" 
+                                     TextChanged="TxtLogin_TextChanged" />
                         </Border>
                     </Grid>
 
-                    <!--  Champ Mot de passe  -->
                     <Grid Margin="0,0,0,35">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <TextBlock
-                            Grid.Row="0"
-                            Margin="5,0,0,8"
-                            FontSize="14"
-                            FontWeight="SemiBold"
-                            Foreground="#666666"
-                            Text="🔒 Mot de passe" />
+                        <TextBlock Grid.Row="0" Margin="5,0,0,8" FontSize="14" FontWeight="SemiBold" 
+                                   Foreground="#666666" Text="🔒 Mot de passe" />
 
-                        <Border
-                            x:Name="PasswordBorder"
-                            Grid.Row="1"
-                            Background="White"
-                            BorderBrush="#E0E0E0"
-                            BorderThickness="2"
-                            CornerRadius="8">
-                            <PasswordBox
-                                x:Name="TxtPassword"
-                                Padding="15,12"
-                                Background="Transparent"
-                                BorderThickness="0"
-                                FontSize="14"
-                                Foreground="#333333"
-                                KeyUp="TxtPassword_KeyUp"
-                                PasswordChanged="TxtPassword_PasswordChanged" />
+                        <Border x:Name="PasswordBorder" Grid.Row="1" Background="White" 
+                                BorderBrush="#E0E0E0" BorderThickness="2" CornerRadius="8">
+                            <PasswordBox x:Name="TxtPassword" Padding="15,12" Background="Transparent" 
+                                         BorderThickness="0" FontSize="14" Foreground="#333333" 
+                                         KeyUp="TxtPassword_KeyUp" PasswordChanged="TxtPassword_PasswordChanged" />
                         </Border>
                     </Grid>
 
-                    <!--  Message d'erreur  -->
-                    <Border
-                        x:Name="ErrorBorder"
-                        Margin="0,0,0,20"
-                        Padding="15,10"
-                        Background="#FFE6E6"
-                        BorderBrush="#FF6B6B"
-                        BorderThickness="1"
-                        CornerRadius="5"
-                        Visibility="Collapsed">
-                        <TextBlock
-                            x:Name="ErrorMessage"
-                            FontSize="12"
-                            Foreground="#C62828"
-                            Text="❌ Identifiant ou mot de passe incorrect"
-                            TextAlignment="Center" />
+                    <Border x:Name="ErrorBorder" Margin="0,0,0,20" Padding="15,10" Background="#FFE6E6" 
+                            BorderBrush="#FF6B6B" BorderThickness="1" CornerRadius="5" Visibility="Collapsed">
+                        <TextBlock x:Name="ErrorMessage" FontSize="12" Foreground="#C62828" 
+                                   Text="❌ Identifiant ou mot de passe incorrect" TextAlignment="Center" />
                     </Border>
 
-                    <!--  Bouton de connexion  -->
-                    <Button
-                        x:Name="ButSeConnecter"
-                        Height="50"
-                        Margin="0,0,0,20"
-                        Background="#E30613"
-                        BorderBrush="Transparent"
-                        Click="ButSeConnecter_Click"
-                        Content="🚀 SE CONNECTER"
-                        Cursor="Hand"
-                        FontSize="16"
-                        FontWeight="Bold"
-                        Foreground="White">
+                    <Button x:Name="ButSeConnecter" Height="50" Margin="0,0,0,20" Background="#E30613" 
+                            BorderBrush="Transparent" Click="ButSeConnecter_Click" Content="🚀 SE CONNECTER" 
+                            Cursor="Hand" FontSize="16" FontWeight="Bold" Foreground="White">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="Button">
-                                            <Border
-                                                Background="{TemplateBinding Background}"
-                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                CornerRadius="25">
+                                            <Border Background="{TemplateBinding Background}" 
+                                                    BorderBrush="{TemplateBinding BorderBrush}" 
+                                                    BorderThickness="{TemplateBinding BorderThickness}" 
+                                                    CornerRadius="25">
                                                 <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                             </Border>
                                             <ControlTemplate.Triggers>
@@ -263,16 +155,9 @@
                     </Button>
                 </StackPanel>
 
-                <!--  Pied de page  -->
-                <StackPanel
-                    Grid.Row="2"
-                    Margin="0,20,0,0"
-                    VerticalAlignment="Bottom">
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        FontSize="11"
-                        Foreground="#AAAAAA"
-                        Text="© 2025 Sibilia - Gestion des Commandes" />
+                <StackPanel Grid.Row="2" Margin="0,20,0,0" VerticalAlignment="Bottom">
+                    <TextBlock HorizontalAlignment="Center" FontSize="11" Foreground="#AAAAAA" 
+                               Text="© 2025 Sibilia - Gestion des Commandes" />
                 </StackPanel>
             </Grid>
         </Grid>

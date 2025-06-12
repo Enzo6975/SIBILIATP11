@@ -9,46 +9,17 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <Grid Background="White">
-        <DataGrid
-            x:Name="clients"
-            Height="400"
-            Margin="30,30,30,0"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Top"
-            AutoGenerateColumns="False"
-            IsReadOnly="True"
-            ItemsSource="{Binding .}">
+        <DataGrid x:Name="clients" Height="400" Margin="30,30,30,0" HorizontalAlignment="Center" 
+                  VerticalAlignment="Top" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding .}">
             <DataGrid.Columns>
-                <DataGridTextColumn
-                    Width="50"
-                    Binding="{Binding NumClient, ValidatesOnExceptions=False}"
-                    Header="Num" />
-                <DataGridTextColumn
-                    Width="*"
-                    Binding="{Binding NomClient, ValidatesOnExceptions=True}"
-                    Header="Nom" />
-                <DataGridTextColumn
-                    Width="*"
-                    Binding="{Binding PrenomClient, ValidatesOnExceptions=True}"
-                    Header="Prenom" />
-                <DataGridTextColumn
-                    Width="*"
-                    Binding="{Binding Tel, ValidatesOnExceptions=True}"
-                    Header="Téléphone" />
-                <DataGridTextColumn
-                    Width="*"
-                    Binding="{Binding AdresseRue, ValidatesOnExceptions=True}"
-                    Header="Adresse" />
-                <DataGridTextColumn
-                    Width="*"
-                    Binding="{Binding AdresseCP, ValidatesOnExceptions=True}"
-                    Header="Code postal" />
-                <DataGridTextColumn
-                    Width="*"
-                    Binding="{Binding AdresseVille, ValidatesOnExceptions=True}"
-                    Header="Ville" />
+                <DataGridTextColumn Width="50" Binding="{Binding NumClient, ValidatesOnExceptions=False}" Header="Num" />
+                <DataGridTextColumn Width="*" Binding="{Binding NomClient, ValidatesOnExceptions=True}" Header="Nom" />
+                <DataGridTextColumn Width="*" Binding="{Binding PrenomClient, ValidatesOnExceptions=True}" Header="Prenom" />
+                <DataGridTextColumn Width="*" Binding="{Binding Tel, ValidatesOnExceptions=True}" Header="Téléphone" />
+                <DataGridTextColumn Width="*" Binding="{Binding AdresseRue, ValidatesOnExceptions=True}" Header="Adresse" />
+                <DataGridTextColumn Width="*" Binding="{Binding AdresseCP, ValidatesOnExceptions=True}" Header="Code postal" />
+                <DataGridTextColumn Width="*" Binding="{Binding AdresseVille, ValidatesOnExceptions=True}" Header="Ville" />
             </DataGrid.Columns>
         </DataGrid>
-
     </Grid>
 </UserControl>

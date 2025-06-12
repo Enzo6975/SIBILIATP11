@@ -74,19 +74,6 @@ namespace SIBILIATP11.UserControl
                 || uneCommande.UnClient.PrenomClient.StartsWith(inputClient.Text, StringComparison.OrdinalIgnoreCase));
         }
 
-        private void inputClient_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (dgCommandes.ItemsSource != null)
-            {
-                CollectionViewSource.GetDefaultView(dgCommandes.ItemsSource).Refresh();
-            }
-        }
-
-        private void dgCommandes_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ChargerPlatsCommande();
-        }
-
         private void ChargerPlatsCommande()
         {
             platsCommandeSelectionnee.Clear();
@@ -111,7 +98,6 @@ namespace SIBILIATP11.UserControl
                 }
                 catch (Exception ex)
                 {
-                    // Échec silencieux
                 }
             }
             else
@@ -119,6 +105,19 @@ namespace SIBILIATP11.UserControl
                 dgPlatsCommande.ItemsSource = null;
                 txtDetailCommande.Text = "Sélectionnez une commande pour voir les détails";
             }
+        }
+
+        private void inputClient_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (dgCommandes.ItemsSource != null)
+            {
+                CollectionViewSource.GetDefaultView(dgCommandes.ItemsSource).Refresh();
+            }
+        }
+
+        private void dgCommandes_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ChargerPlatsCommande();
         }
 
         private void btnClearFilter_Click(object sender, RoutedEventArgs e)
@@ -135,14 +134,12 @@ namespace SIBILIATP11.UserControl
 
             try
             {
-                // Récupérer l'employé connecté depuis la MainWindow
                 Employe employeConnecte = null;
                 if (Application.Current.MainWindow is MainWindow mainWindow)
                 {
                     employeConnecte = mainWindow.EmployeConnecte;
                 }
 
-                // Ouvrir la fenêtre de modification
                 WindowModification fenetreModification = new WindowModification(commandeSelectionnee, LaGestionCommande, employeConnecte);
                 fenetreModification.Owner = Window.GetWindow(this);
 
@@ -150,14 +147,12 @@ namespace SIBILIATP11.UserControl
 
                 if (resultat == true)
                 {
-                    // Actualiser l'affichage silencieusement
                     CollectionViewSource.GetDefaultView(dgCommandes.ItemsSource).Refresh();
                     ChargerPlatsCommande();
                 }
             }
             catch (Exception ex)
             {
-                // Échec silencieux
             }
         }
 
@@ -200,7 +195,6 @@ namespace SIBILIATP11.UserControl
                 }
                 catch (Exception ex)
                 {
-                    // Échec silencieux
                 }
             }
         }

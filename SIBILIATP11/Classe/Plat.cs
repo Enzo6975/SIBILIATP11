@@ -125,6 +125,27 @@ namespace SIBILIATP11.Classe
             return nb;
         }
 
+        public void Read()
+        {
+            using (var cmdSelect = new NpgsqlCommand("SELECT * FROM plat WHERE numplat = @numPlat"))
+            {
+                cmdSelect.Parameters.AddWithValue("@numPlat", this.NumPlat);
+
+                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
+                if (dt.Rows.Count > 0)
+                {
+                    this.NomPlat = dt.Rows[0]["nomplat"]?.ToString() ?? "";
+                    this.PrixUnitaire = Convert.ToDouble(dt.Rows[0]["prixunitaire"]);
+                    this.DelaiPreparation = (Int32)dt.Rows[0]["delaipreparation"];
+                    this.NbPersonnes = (Int32)dt.Rows[0]["nbpersonnes"];
+                    this.UneSousCategorie = new SousCategorie((Int32)dt.Rows[0]["numsouscategorie"]);
+                    this.UnePeriode = new Periode((Int32)dt.Rows[0]["numperiode"]);
+                    this.UneSousCategorie.Read();
+                    this.UnePeriode.Read();
+                }
+            }
+        }
+
         public int Update()
         {
             using (var cmdUpdate = new NpgsqlCommand("UPDATE plat SET nomplat = @nomPlat, prixunitaire = @prixUnitaire, delaipreparation = @delaiPreparation, nbpersonnes = @nbPersonnes, numsouscategorie = @numSousCategorie, numperiode = @numPeriode WHERE numplat = @numPlat"))
@@ -169,27 +190,6 @@ namespace SIBILIATP11.Classe
                 }
             }
             return lesPlats;
-        }
-
-        public void Read()
-        {
-            using (var cmdSelect = new NpgsqlCommand("SELECT * FROM plat WHERE numplat = @numPlat"))
-            {
-                cmdSelect.Parameters.AddWithValue("@numPlat", this.NumPlat);
-
-                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
-                if (dt.Rows.Count > 0)
-                {
-                    this.NomPlat = dt.Rows[0]["nomplat"]?.ToString() ?? "";
-                    this.PrixUnitaire = Convert.ToDouble(dt.Rows[0]["prixunitaire"]);
-                    this.DelaiPreparation = (Int32)dt.Rows[0]["delaipreparation"];
-                    this.NbPersonnes = (Int32)dt.Rows[0]["nbpersonnes"];
-                    this.UneSousCategorie = new SousCategorie((Int32)dt.Rows[0]["numsouscategorie"]);
-                    this.UnePeriode = new Periode((Int32)dt.Rows[0]["numperiode"]);
-                    this.UneSousCategorie.Read();
-                    this.UnePeriode.Read();
-                }
-            }
         }
 
         public List<Plat> FindBySelection(string criteres)

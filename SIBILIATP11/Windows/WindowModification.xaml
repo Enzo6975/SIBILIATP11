@@ -26,68 +26,34 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!--  Titre  -->
-        <TextBlock
-            Grid.Row="0"
-            Margin="0,0,0,20"
-            HorizontalAlignment="Center"
-            FontSize="18"
-            FontWeight="Bold"
-            Text="Modification de la commande" />
+        <TextBlock Grid.Row="0" Margin="0,0,0,20" HorizontalAlignment="Center" FontSize="18" 
+                   FontWeight="Bold" Text="Modification de la commande" />
 
-        <!--  Numéro de commande (non modifiable)  -->
         <Grid Grid.Row="1" Margin="0,5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <TextBlock
-                Grid.Column="0"
-                VerticalAlignment="Center"
-                FontWeight="SemiBold"
-                Text="N° Commande :" />
-            <TextBox
-                x:Name="txtNumCommande"
-                Grid.Column="1"
-                Background="#F0F0F0"
-                Foreground="Gray"
-                IsReadOnly="True" />
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" FontWeight="SemiBold" Text="N° Commande :" />
+            <TextBox x:Name="txtNumCommande" Grid.Column="1" Background="#F0F0F0" Foreground="Gray" IsReadOnly="True" />
         </Grid>
 
-        <!--  Numéro employé (non modifiable - employé connecté)  -->
         <Grid Grid.Row="2" Margin="0,5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <TextBlock
-                Grid.Column="0"
-                VerticalAlignment="Center"
-                FontWeight="SemiBold"
-                Text="Employé :" />
-            <TextBox
-                x:Name="txtEmploye"
-                Grid.Column="1"
-                Background="#F0F0F0"
-                Foreground="Gray"
-                IsReadOnly="True" />
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" FontWeight="SemiBold" Text="Employé :" />
+            <TextBox x:Name="txtEmploye" Grid.Column="1" Background="#F0F0F0" Foreground="Gray" IsReadOnly="True" />
         </Grid>
 
-        <!--  Client (ComboBox pour sélectionner un autre client)  -->
         <Grid Grid.Row="3" Margin="0,5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <TextBlock
-                Grid.Column="0"
-                VerticalAlignment="Center"
-                FontWeight="SemiBold"
-                Text="Client :" />
-            <ComboBox
-                x:Name="cbClient"
-                Grid.Column="1"
-                VerticalAlignment="Center">
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" FontWeight="SemiBold" Text="Client :" />
+            <ComboBox x:Name="cbClient" Grid.Column="1" VerticalAlignment="Center">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock>
@@ -100,104 +66,53 @@
             </ComboBox>
         </Grid>
 
-        <!--  Date de commande  -->
         <Grid Grid.Row="4" Margin="0,5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <TextBlock
-                Grid.Column="0"
-                VerticalAlignment="Center"
-                FontWeight="SemiBold"
-                Text="Date commande :" />
-            <DatePicker
-                x:Name="dpDateCommande"
-                Grid.Column="1"
-                VerticalAlignment="Center" />
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" FontWeight="SemiBold" Text="Date commande :" />
+            <DatePicker x:Name="dpDateCommande" Grid.Column="1" VerticalAlignment="Center" />
         </Grid>
 
-        <!--  Date prévue  -->
         <Grid Grid.Row="5" Margin="0,5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <TextBlock
-                Grid.Column="0"
-                VerticalAlignment="Center"
-                FontWeight="SemiBold"
-                Text="Date prévue :" />
-            <DatePicker
-                x:Name="dpDatePrevue"
-                Grid.Column="1"
-                VerticalAlignment="Center" />
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" FontWeight="SemiBold" Text="Date prévue :" />
+            <DatePicker x:Name="dpDatePrevue" Grid.Column="1" VerticalAlignment="Center" />
         </Grid>
 
-        <!--  Prix total (calculé automatiquement, non modifiable)  -->
         <Grid Grid.Row="6" Margin="0,5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <TextBlock
-                Grid.Column="0"
-                VerticalAlignment="Center"
-                FontWeight="SemiBold"
-                Text="Prix total (€) :" />
-            <TextBox
-                x:Name="txtPrixTotal"
-                Grid.Column="1"
-                Background="#F0F0F0"
-                Foreground="Gray"
-                IsReadOnly="True" />
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" FontWeight="SemiBold" Text="Prix total (€) :" />
+            <TextBox x:Name="txtPrixTotal" Grid.Column="1" Background="#F0F0F0" Foreground="Gray" IsReadOnly="True" />
         </Grid>
 
-        <!--  État Payée  -->
         <Grid Grid.Row="7" Margin="0,5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <TextBlock
-                Grid.Column="0"
-                VerticalAlignment="Center"
-                FontWeight="SemiBold"
-                Text="Payée :" />
-            <CheckBox
-                x:Name="chkPayee"
-                Grid.Column="1"
-                VerticalAlignment="Center"
-                Content="Commande payée" />
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" FontWeight="SemiBold" Text="Payée :" />
+            <CheckBox x:Name="chkPayee" Grid.Column="1" VerticalAlignment="Center" Content="Commande payée" />
         </Grid>
 
-        <!--  État Retirée  -->
         <Grid Grid.Row="8" Margin="0,5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <TextBlock
-                Grid.Column="0"
-                VerticalAlignment="Center"
-                FontWeight="SemiBold"
-                Text="Retirée :" />
-            <CheckBox
-                x:Name="chkRetiree"
-                Grid.Column="1"
-                VerticalAlignment="Center"
-                Content="Commande retirée" />
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" FontWeight="SemiBold" Text="Retirée :" />
+            <CheckBox x:Name="chkRetiree" Grid.Column="1" VerticalAlignment="Center" Content="Commande retirée" />
         </Grid>
 
-        <!--  Section des plats de la commande  -->
-        <Border
-            Grid.Row="9"
-            Margin="0,15,0,10"
-            Padding="10"
-            Background="#F9F9F9"
-            BorderBrush="#CCCCCC"
-            BorderThickness="1"
-            CornerRadius="5">
+        <Border Grid.Row="9" Margin="0,15,0,10" Padding="10" Background="#F9F9F9" 
+                BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="5">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -205,32 +120,16 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock
-                    Grid.Row="0"
-                    Margin="0,0,0,10"
-                    FontSize="14"
-                    FontWeight="Bold"
-                    Text="Plats de la commande :" />
+                <TextBlock Grid.Row="0" Margin="0,0,0,10" FontSize="14" FontWeight="Bold" 
+                           Text="Plats de la commande :" />
 
-                <DataGrid
-                    x:Name="dgPlatsModification"
-                    Grid.Row="1"
-                    AutoGenerateColumns="False"
-                    CanUserAddRows="False"
-                    CanUserDeleteRows="False"
-                    CellEditEnding="dgPlatsModification_CellEditEnding"
-                    GridLinesVisibility="All"
-                    HeadersVisibility="Column">
+                <DataGrid x:Name="dgPlatsModification" Grid.Row="1" AutoGenerateColumns="False" 
+                          CanUserAddRows="False" CanUserDeleteRows="False" 
+                          CellEditEnding="dgPlatsModification_CellEditEnding" GridLinesVisibility="All" 
+                          HeadersVisibility="Column">
                     <DataGrid.Columns>
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding UnPlat.NomPlat}"
-                            Header="Nom du Plat"
-                            IsReadOnly="True" />
-                        <DataGridTextColumn
-                            Width="80"
-                            Binding="{Binding Quantite, UpdateSourceTrigger=PropertyChanged}"
-                            Header="Quantité">
+                        <DataGridTextColumn Width="*" Binding="{Binding UnPlat.NomPlat}" Header="Nom du Plat" IsReadOnly="True" />
+                        <DataGridTextColumn Width="80" Binding="{Binding Quantite, UpdateSourceTrigger=PropertyChanged}" Header="Quantité">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Background" Value="#E8F5E8" />
@@ -242,10 +141,7 @@
                                 </Style>
                             </DataGridTextColumn.EditingElementStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn
-                            Width="100"
-                            Binding="{Binding Prix, StringFormat=F2, UpdateSourceTrigger=PropertyChanged}"
-                            Header="Prix unitaire (€)">
+                        <DataGridTextColumn Width="100" Binding="{Binding Prix, StringFormat=F2, UpdateSourceTrigger=PropertyChanged}" Header="Prix unitaire (€)">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Background" Value="#E8F5E8" />
@@ -257,11 +153,7 @@
                                 </Style>
                             </DataGridTextColumn.EditingElementStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn
-                            Width="100"
-                            Binding="{Binding CalculerTotal, StringFormat=F2}"
-                            Header="Total (€)"
-                            IsReadOnly="True">
+                        <DataGridTextColumn Width="100" Binding="{Binding CalculerTotal, StringFormat=F2}" Header="Total (€)" IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="FontWeight" Value="Bold" />
@@ -272,72 +164,32 @@
                         <DataGridTemplateColumn Width="80" Header="Actions">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button
-                                        Width="25"
-                                        Height="25"
-                                        Background="#f44336"
-                                        Click="btnSupprimerPlat_Click"
-                                        Content="✗"
-                                        FontWeight="Bold"
-                                        Foreground="White"
-                                        ToolTip="Supprimer ce plat" />
+                                    <Button Width="25" Height="25" Background="#f44336" 
+                                            Click="btnSupprimerPlat_Click" Content="✗" FontWeight="Bold" 
+                                            Foreground="White" ToolTip="Supprimer ce plat" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <StackPanel
-                    Grid.Row="2"
-                    Margin="0,10,0,0"
-                    HorizontalAlignment="Left"
-                    Orientation="Horizontal">
-                    <Button
-                        x:Name="btnAjouterPlat"
-                        Width="120"
-                        Height="30"
-                        Margin="0,0,10,0"
-                        Background="#4CAF50"
-                        Click="btnAjouterPlat_Click"
-                        Content="Ajouter un plat"
-                        Foreground="White" />
-                    <Button
-                        x:Name="btnRecalculerTotal"
-                        Width="120"
-                        Height="30"
-                        Background="#FF9800"
-                        Click="btnRecalculerTotal_Click"
-                        Content="Recalculer total"
-                        Foreground="White" />
+                <StackPanel Grid.Row="2" Margin="0,10,0,0" HorizontalAlignment="Left" Orientation="Horizontal">
+                    <Button x:Name="btnAjouterPlat" Width="120" Height="30" Margin="0,0,10,0" 
+                            Background="#4CAF50" Click="btnAjouterPlat_Click" Content="Ajouter un plat" 
+                            Foreground="White" />
+                    <Button x:Name="btnRecalculerTotal" Width="120" Height="30" Background="#FF9800" 
+                            Click="btnRecalculerTotal_Click" Content="Recalculer total" Foreground="White" />
                 </StackPanel>
             </Grid>
         </Border>
 
-        <!--  Boutons  -->
-        <StackPanel
-            Grid.Row="10"
-            Margin="0,10,0,0"
-            HorizontalAlignment="Right"
-            Orientation="Horizontal">
-            <Button
-                x:Name="btnValider"
-                Width="80"
-                Height="30"
-                Margin="0,0,10,0"
-                Background="#4CAF50"
-                Click="btnValider_Click"
-                Content="Valider"
-                Foreground="White"
-                Style="{DynamicResource {x:Static ToolBar.ButtonStyleKey}}" />
-            <Button
-                x:Name="btnAnnuler"
-                Width="80"
-                Height="30"
-                Background="#f44336"
-                Click="btnAnnuler_Click"
-                Content="Annuler"
-                Foreground="White"
-                Style="{DynamicResource {x:Static ToolBar.ButtonStyleKey}}" />
+        <StackPanel Grid.Row="10" Margin="0,10,0,0" HorizontalAlignment="Right" Orientation="Horizontal">
+            <Button x:Name="btnValider" Width="80" Height="30" Margin="0,0,10,0" Background="#4CAF50" 
+                    Click="btnValider_Click" Content="Valider" Foreground="White" 
+                    Style="{DynamicResource {x:Static ToolBar.ButtonStyleKey}}" />
+            <Button x:Name="btnAnnuler" Width="80" Height="30" Background="#f44336" 
+                    Click="btnAnnuler_Click" Content="Annuler" Foreground="White" 
+                    Style="{DynamicResource {x:Static ToolBar.ButtonStyleKey}}" />
         </StackPanel>
     </Grid>
 </Window>
