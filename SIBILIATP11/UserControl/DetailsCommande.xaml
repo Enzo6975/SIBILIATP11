@@ -10,101 +10,128 @@
     mc:Ignorable="d">
     <Grid x:Name="grid">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- En-tête -->
+        <!--  En-tête  -->
         <StackPanel Grid.Row="0" Margin="20,20,20,10">
-            <Label Content="Détail de la commande" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"/>
+            <Label
+                HorizontalAlignment="Center"
+                Content="Détail de la commande"
+                FontSize="18"
+                FontWeight="Bold" />
         </StackPanel>
 
-        <!-- Informations de la commande -->
-        <StackPanel Grid.Row="1" Margin="20,0,20,20" Orientation="Vertical">
+        <!--  Informations de la commande  -->
+        <StackPanel
+            Grid.Row="1"
+            Margin="20,0,20,20"
+            Orientation="Vertical">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0">
-                    <Label Content="Date de commande :" FontWeight="Bold"/>
-                    <Label x:Name="lblDateCommande" Content="{Binding CommandeEnCours.DateCommande, StringFormat=dd/MM/yyyy}"/>
+                    <Label Content="Date de commande :" FontWeight="Bold" />
+                    <Label x:Name="lblDateCommande" Content="{Binding CommandeEnCours.DateCommande, StringFormat=dd/MM/yyyy}" />
 
-                    <Label Content="Client :" FontWeight="Bold" Margin="0,10,0,0"/>
-                    <ComboBox x:Name="cbClient" 
-                              ItemsSource="{Binding LaGestionCommande.LesClients}"
-                              SelectedItem="{Binding CommandeEnCours.UnClient}"
-                              DisplayMemberPath="NomComplet"
-                              Width="200"
-                              HorizontalAlignment="Left"/>
+                    <Label
+                        Margin="0,10,0,0"
+                        Content="Client :"
+                        FontWeight="Bold" />
+                    <ComboBox
+                        x:Name="cbClient"
+                        Width="200"
+                        HorizontalAlignment="Left"
+                        DisplayMemberPath="NomComplet"
+                        ItemsSource="{Binding LaGestionCommande.LesClients}"
+                        SelectedItem="{Binding CommandeEnCours.UnClient}" />
                 </StackPanel>
 
                 <StackPanel Grid.Column="1">
-                    <Label Content="Date de retrait prévue :" FontWeight="Bold"/>
-                    <DatePicker x:Name="dpDateRetrait" 
-                                SelectedDate="{Binding CommandeEnCours.DateRetraitPrevue}"
-                                Width="150"
-                                HorizontalAlignment="Left"/>
+                    <Label Content="Date de retrait prévue :" FontWeight="Bold" />
+                    <DatePicker
+                        x:Name="dpDateRetrait"
+                        Width="150"
+                        HorizontalAlignment="Left"
+                        SelectedDate="{Binding CommandeEnCours.DateRetraitPrevue}" />
 
-                    <Label Content="Employé :" FontWeight="Bold" Margin="0,10,0,0"/>
-                    <ComboBox x:Name="cbEmploye"
-                              ItemsSource="{Binding LaGestionCommande.LesEmploye}"
-                              SelectedItem="{Binding CommandeEnCours.UnEmploye}"
-                              DisplayMemberPath="NomComplet"
-                              Width="200"
-                              HorizontalAlignment="Left"/>
+                    <Label
+                        Margin="0,10,0,0"
+                        Content="Employé :"
+                        FontWeight="Bold" />
+                    <ComboBox
+                        x:Name="cbEmploye"
+                        Width="200"
+                        HorizontalAlignment="Left"
+                        DisplayMemberPath="NomComplet"
+                        ItemsSource="{Binding LaGestionCommande.LesEmploye}"
+                        SelectedItem="{Binding CommandeEnCours.UnEmploye}" />
                 </StackPanel>
             </Grid>
         </StackPanel>
 
-        <!-- Liste des plats dans la commande -->
-        <GroupBox Grid.Row="2" Header="Plats commandés" Margin="20,0,20,20">
-            <DataGrid x:Name="dgLignesCommande"
-                      ItemsSource="{Binding LignesDeLaCommande}"
-                      AutoGenerateColumns="False"
-                      CanUserAddRows="False"
-                      GridLinesVisibility="Horizontal"
-                      AlternatingRowBackground="LightGray">
+        <!--  Liste des plats dans la commande  -->
+        <GroupBox
+            Grid.Row="2"
+            Margin="20,0,20,20"
+            Header="Plats commandés">
+            <DataGrid
+                x:Name="dgLignesCommande"
+                AlternatingRowBackground="LightGray"
+                AutoGenerateColumns="False"
+                CanUserAddRows="False"
+                GridLinesVisibility="Horizontal"
+                ItemsSource="{Binding LignesDeLaCommande}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Plat" 
-                                        Binding="{Binding UnPlat.NomPlat}" 
-                                        Width="*"
-                                        IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Prix unitaire" 
-                                        Binding="{Binding UnPlat.PrixUnitaire, StringFormat=F2}" 
-                                        Width="100"
-                                        IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Quantité" 
-                                        Binding="{Binding Quantite}" 
-                                        Width="80"/>
-                    <DataGridTextColumn Header="Total ligne" 
-                                        Binding="{Binding CalculerTotal, StringFormat=F2}" 
-                                        Width="100"
-                                        IsReadOnly="True"/>
-                    <DataGridTemplateColumn Header="Actions" Width="120">
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding UnPlat.NomPlat}"
+                        Header="Plat"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        Width="100"
+                        Binding="{Binding UnPlat.PrixUnitaire, StringFormat=F2}"
+                        Header="Prix unitaire"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        Width="80"
+                        Binding="{Binding Quantite}"
+                        Header="Quantité" />
+                    <DataGridTextColumn
+                        Width="100"
+                        Binding="{Binding CalculerTotal, StringFormat=F2}"
+                        Header="Total ligne"
+                        IsReadOnly="True" />
+                    <DataGridTemplateColumn Width="120" Header="Actions">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Content="+" 
-                                            Width="25" 
-                                            Height="25"
-                                            Margin="2"
-                                            Click="AugmenterQuantite_Click"/>
-                                    <Button Content="-" 
-                                            Width="25" 
-                                            Height="25"
-                                            Margin="2"
-                                            Click="DiminuerQuantite_Click"/>
-                                    <Button Content="X" 
-                                            Width="25" 
-                                            Height="25"
-                                            Margin="2"
-                                            Background="LightCoral"
-                                            Click="SupprimerLigne_Click"/>
+                                    <Button
+                                        Width="25"
+                                        Height="25"
+                                        Margin="2"
+                                        Click="AugmenterQuantite_Click"
+                                        Content="+" />
+                                    <Button
+                                        Width="25"
+                                        Height="25"
+                                        Margin="2"
+                                        Click="DiminuerQuantite_Click"
+                                        Content="-" />
+                                    <Button
+                                        Width="25"
+                                        Height="25"
+                                        Margin="2"
+                                        Background="LightCoral"
+                                        Click="SupprimerLigne_Click"
+                                        Content="X" />
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -113,53 +140,95 @@
             </DataGrid>
         </GroupBox>
 
-        <!-- Résumé et total -->
-        <StackPanel Grid.Row="3" Margin="20,0,20,20" HorizontalAlignment="Right">
+        <!--  Résumé et total  -->
+        <StackPanel
+            Grid.Row="3"
+            Margin="20,0,20,20"
+            HorizontalAlignment="Right">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="100" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Label Grid.Row="0" Grid.Column="0" Content="Nombre d'articles :" FontWeight="Bold"/>
-                <Label Grid.Row="0" Grid.Column="1" x:Name="lblNbArticles" Content="{Binding NombreArticles}" HorizontalAlignment="Right"/>
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Content="Nombre d'articles :"
+                    FontWeight="Bold" />
+                <Label
+                    x:Name="lblNbArticles"
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Content="{Binding NombreArticles}" />
 
-                <Label Grid.Row="1" Grid.Column="0" Content="Total HT :" FontWeight="Bold"/>
-                <Label Grid.Row="1" Grid.Column="1" x:Name="lblTotalHT" Content="{Binding CommandeEnCours.PrixTotal, StringFormat=F2}" HorizontalAlignment="Right"/>
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Content="Total HT :"
+                    FontWeight="Bold" />
+                <Label
+                    x:Name="lblTotalHT"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Content="{Binding CommandeEnCours.PrixTotal, StringFormat=F2}" />
 
-                <Label Grid.Row="2" Grid.Column="0" Content="TOTAL TTC :" FontWeight="Bold" FontSize="16" Foreground="DarkBlue"/>
-                <Label Grid.Row="2" Grid.Column="1" x:Name="lblTotalTTC" Content="{Binding CommandeEnCours.PrixTotal, StringFormat=F2}" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Foreground="DarkBlue"/>
+                <Label
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Content="TOTAL TTC :"
+                    FontSize="16"
+                    FontWeight="Bold"
+                    Foreground="DarkBlue" />
+                <Label
+                    x:Name="lblTotalTTC"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Content="{Binding CommandeEnCours.PrixTotal, StringFormat=F2}"
+                    FontSize="16"
+                    FontWeight="Bold"
+                    Foreground="DarkBlue" />
             </Grid>
         </StackPanel>
 
-        <!-- Boutons d'action -->
-        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Center" Margin="20">
-            <Button x:Name="btnViderPanier" 
-                    Content="Vider le panier" 
-                    Width="120" 
-                    Height="35"
-                    Margin="10,0"
-                    Background="LightCoral"
-                    Click="ViderPanier_Click"/>
-            <Button x:Name="btnAnnuler" 
-                    Content="Annuler" 
-                    Width="120" 
-                    Height="35"
-                    Margin="10,0"
-                    Click="Annuler_Click"/>
-            <Button x:Name="btnValider" 
-                    Content="Valider la commande" 
-                    Width="150" 
-                    Height="35"
-                    Margin="10,0"
-                    Background="LightGreen"
-                    FontWeight="Bold"
-                    Click="ValiderCommande_Click"/>
+        <!--  Boutons d'action  -->
+        <StackPanel
+            Grid.Row="4"
+            Margin="20"
+            HorizontalAlignment="Center"
+            Orientation="Horizontal">
+            <Button
+                x:Name="btnViderPanier"
+                Width="120"
+                Height="35"
+                Margin="10,0"
+                Background="LightCoral"
+                Click="ViderPanier_Click"
+                Content="Vider le panier" />
+            <Button
+                x:Name="btnAnnuler"
+                Width="120"
+                Height="35"
+                Margin="10,0"
+                Click="Annuler_Click"
+                Content="Annuler" />
+            <Button
+                x:Name="btnValider"
+                Width="150"
+                Height="35"
+                Margin="10,0"
+                Background="LightGreen"
+                Click="ValiderCommande_Click"
+                Content="Valider la commande"
+                FontWeight="Bold" />
         </StackPanel>
     </Grid>
 </UserControl>

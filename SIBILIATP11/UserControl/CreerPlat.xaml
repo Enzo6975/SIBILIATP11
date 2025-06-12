@@ -76,7 +76,7 @@
                     Grid.Row="2"
                     Grid.Column="0"
                     VerticalAlignment="Center"
-                    Content="Délai préparation (min) :"
+                    Content="Délai préparation (jour) :"
                     FontWeight="Bold" />
                 <TextBox
                     x:Name="txtDelaiPreparation"
