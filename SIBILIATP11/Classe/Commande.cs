@@ -137,28 +137,6 @@ namespace SIBILIATP11.Classe
             return nb;
         }
 
-        public void Read()
-        {
-            using (var cmdSelect = new NpgsqlCommand("SELECT * FROM commande WHERE numcommande = @numCommande"))
-            {
-                cmdSelect.Parameters.AddWithValue("@numCommande", this.NumCommande);
-
-                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
-                if (dt.Rows.Count > 0)
-                {
-                    this.DateCommande = (DateTime)dt.Rows[0]["datecommande"];
-                    this.DateRetraitPrevue = (DateTime)dt.Rows[0]["dateretraitprevue"];
-                    this.Payee = (Boolean)dt.Rows[0]["payee"];
-                    this.Retiree = (Boolean)dt.Rows[0]["retiree"];
-                    this.PrixTotal = (Double)dt.Rows[0]["prixtotal"];
-                    this.UnEmploye = new Employe((Int32)dt.Rows[0]["numemploye"]);
-                    this.UnClient = new Client((Int32)dt.Rows[0]["numclient"]);
-                    this.UnEmploye.Read();
-                    this.UnClient.Read();
-                }
-            }
-        }
-
         public int Update()
         {
             try
@@ -200,7 +178,18 @@ namespace SIBILIATP11.Classe
             {
                 DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
                 foreach (DataRow dr in dt.Rows)
-                    lesCommandes.Add(new Commande((Int32)dr["numcommande"], (DateTime)dr["datecommande"], (DateTime)dr["dateretraitprevue"], (Boolean)dr["payee"], (Boolean)dr["retiree"], (Double)dr["prixtotal"], new Employe((Int32)dr["numemploye"]), new Client((Int32)dr["numclient"])));
+                {
+                    lesCommandes.Add(new Commande(
+                        (Int32)dr["numcommande"],
+                        (DateTime)dr["datecommande"],
+                        (DateTime)dr["dateretraitprevue"],
+                        (Boolean)dr["payee"],
+                        (Boolean)dr["retiree"],
+                        Convert.ToDouble(dr["prixtotal"]),
+                        new Employe((Int32)dr["numemploye"]),
+                        new Client((Int32)dr["numclient"])
+                    ));
+                }
             }
             return lesCommandes;
         }
@@ -212,9 +201,42 @@ namespace SIBILIATP11.Classe
             {
                 DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
                 foreach (DataRow dr in dt.Rows)
-                    lesCommandes.Add(new Commande((Int32)dr["numcommande"], (DateTime)dr["datecommande"], (DateTime)dr["dateretraitprevue"], (Boolean)dr["payee"], (Boolean)dr["retiree"], (Double)dr["prixtotal"], new Employe((Int32)dr["numemploye"]), new Client((Int32)dr["numclient"])));
+                {
+                    lesCommandes.Add(new Commande(
+                        (Int32)dr["numcommande"],
+                        (DateTime)dr["datecommande"],
+                        (DateTime)dr["dateretraitprevue"],
+                        (Boolean)dr["payee"],
+                        (Boolean)dr["retiree"],
+                        Convert.ToDouble(dr["prixtotal"]),
+                        new Employe((Int32)dr["numemploye"]),
+                        new Client((Int32)dr["numclient"])
+                    ));
+                }
             }
             return lesCommandes;
+        }
+
+        public void Read()
+        {
+            using (var cmdSelect = new NpgsqlCommand("SELECT * FROM commande WHERE numcommande = @numCommande"))
+            {
+                cmdSelect.Parameters.AddWithValue("@numCommande", this.NumCommande);
+
+                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
+                if (dt.Rows.Count > 0)
+                {
+                    this.DateCommande = (DateTime)dt.Rows[0]["datecommande"];
+                    this.DateRetraitPrevue = (DateTime)dt.Rows[0]["dateretraitprevue"];
+                    this.Payee = (Boolean)dt.Rows[0]["payee"];
+                    this.Retiree = (Boolean)dt.Rows[0]["retiree"];
+                    this.PrixTotal = Convert.ToDouble(dt.Rows[0]["prixtotal"]);
+                    this.UnEmploye = new Employe((Int32)dt.Rows[0]["numemploye"]);
+                    this.UnClient = new Client((Int32)dt.Rows[0]["numclient"]);
+                    this.UnEmploye.Read();
+                    this.UnClient.Read();
+                }
+            }
         }
     }
 }

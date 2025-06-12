@@ -14,17 +14,15 @@ using System.Windows.Shapes;
 
 namespace SIBILIATP11
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public GestionCommande LaGestion { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
-            Window_Loaded();
             ChargeData();
+            Window_Loaded();
         }
 
         public void Window_Loaded()
@@ -44,11 +42,16 @@ namespace SIBILIATP11
         {
             try
             {
-                LaGestion = new GestionCommande();
+                LaGestion = new GestionCommande("Application Sibilia");
                 this.DataContext = LaGestion;
             }
             catch (Exception ex)
             {
+                MessageBox.Show($"Erreur lors du chargement des données: {ex.Message}",
+                    "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                LaGestion = new GestionCommande("Application Sibilia - Mode dégradé");
+                this.DataContext = LaGestion;
             }
         }
 
