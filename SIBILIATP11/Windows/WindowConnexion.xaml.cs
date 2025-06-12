@@ -15,12 +15,12 @@ using System.Windows.Shapes;
 
 namespace SIBILIATP11.Windows
 {
-    /// <summary>
-    /// Logique d'interaction pour WindowConnexion.xaml
-    /// </summary>
     public partial class WindowConnexion : Window
     {
         private Dictionary<string, string> utilisateurs = new();
+        private List<Employe> tousLesEmployes = new();
+
+        public Employe EmployeConnecte { get; private set; }
 
         public WindowConnexion()
         {
@@ -35,6 +35,8 @@ namespace SIBILIATP11.Windows
 
             if (utilisateurs.ContainsKey(login) && utilisateurs[login] == mdp)
             {
+                EmployeConnecte = tousLesEmployes.FirstOrDefault(emp => emp.Login == login);
+
                 DialogResult = true;
                 Close();
             }
@@ -42,15 +44,32 @@ namespace SIBILIATP11.Windows
             {
                 TxtLogin.BorderBrush = Brushes.Red;
                 TxtPassword.BorderBrush = Brushes.Red;
+                MessageBox.Show("Identifiant ou mot de passe incorrect", "Erreur de connexion",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
+
         private void ChargerPasswordEtLogin()
         {
-            Employe e = new Employe();
-            List<Employe> tousLesEmployes = e.FindAll();
+            try
+            {
+                Employe e = new Employe();
+                tousLesEmployes = e.FindAll();
 
-            utilisateurs = tousLesEmployes.ToDictionary(emp => emp.Login, emp => emp.Password);
+                foreach (var employe in tousLesEmployes)
+                {
+                    employe.Read();
+                }
+
+                utilisateurs = tousLesEmployes.ToDictionary(emp => emp.Login, emp => emp.Password);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erreur lors du chargement des employés: {ex.Message}",
+                    "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
+
         private void ButFermer_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;

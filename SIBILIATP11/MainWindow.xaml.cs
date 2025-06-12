@@ -17,6 +17,7 @@ namespace SIBILIATP11
     public partial class MainWindow : Window
     {
         public GestionCommande LaGestion { get; set; }
+        public Employe EmployeConnecte { get; set; }
 
         public MainWindow()
         {
@@ -30,11 +31,28 @@ namespace SIBILIATP11
             this.Hide();
             WindowConnexion dialogwindowmc = new WindowConnexion();
             bool? resultmc = dialogwindowmc.ShowDialog();
+
             if (resultmc == true)
+            {
+                EmployeConnecte = dialogwindowmc.EmployeConnecte;
+                MettreAJourAffichageConnexion();
                 this.Show();
+            }
             else if (resultmc == false)
             {
                 Application.Current.Shutdown();
+            }
+        }
+
+        private void MettreAJourAffichageConnexion()
+        {
+            if (EmployeConnecte != null)
+            {
+                TxtBlockConnexion.Text = $"Connecté en tant que -\n{EmployeConnecte.PrenomEmploye} {EmployeConnecte.NomEmploye}";
+            }
+            else
+            {
+                TxtBlockConnexion.Text = "Connecté en tant que -\nUtilisateur inconnu";
             }
         }
 
@@ -57,6 +75,7 @@ namespace SIBILIATP11
 
         private void ButDeconnexion_Click(object sender, RoutedEventArgs e)
         {
+            EmployeConnecte = null;
             Window_Loaded();
         }
     }
