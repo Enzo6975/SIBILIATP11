@@ -35,22 +35,17 @@ namespace SIBILIATP11.Classe
 
         public int NumSousCategorie
         {
-            get
-            {
-                return this.numSousCategorie;
-            }
+            get { return this.numSousCategorie; }
             set
             {
                 this.numSousCategorie = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(NumSousCategorie)));
             }
         }
 
         public string NomSousCategorie
         {
-            get
-            {
-                return this.nomSousCategorie;
-            }
+            get { return this.nomSousCategorie; }
             set
             {
                 this.nomSousCategorie = value;
@@ -60,10 +55,7 @@ namespace SIBILIATP11.Classe
 
         public Categorie UneCategorie
         {
-            get
-            {
-                return this.uneCategorie;
-            }
+            get { return this.uneCategorie; }
             set
             {
                 this.uneCategorie = value;
@@ -94,7 +86,7 @@ namespace SIBILIATP11.Classe
                 DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
                 if (dt.Rows.Count > 0)
                 {
-                    this.NomSousCategorie = (String)dt.Rows[0]["nomsouscategorie"];
+                    this.NomSousCategorie = dt.Rows[0]["nomsouscategorie"]?.ToString() ?? "";
                     this.UneCategorie = new Categorie((Int32)dt.Rows[0]["numcategorie"]);
                     this.UneCategorie.Read();
                 }
@@ -128,7 +120,13 @@ namespace SIBILIATP11.Classe
             {
                 DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
                 foreach (DataRow dr in dt.Rows)
-                    lesSousCategories.Add(new SousCategorie((Int32)dr["numsouscategorie"], (String)dr["nomsouscategorie"], new Categorie((Int32)dr["numcategorie"])));
+                {
+                    lesSousCategories.Add(new SousCategorie(
+                        (Int32)dr["numsouscategorie"],
+                        dr["nomsouscategorie"]?.ToString() ?? "",
+                        new Categorie((Int32)dr["numcategorie"])
+                    ));
+                }
             }
             return lesSousCategories;
         }
@@ -140,7 +138,13 @@ namespace SIBILIATP11.Classe
             {
                 DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
                 foreach (DataRow dr in dt.Rows)
-                    lesSousCategories.Add(new SousCategorie((Int32)dr["numsouscategorie"], (String)dr["nomsouscategorie"], new Categorie((Int32)dr["numcategorie"])));
+                {
+                    lesSousCategories.Add(new SousCategorie(
+                        (Int32)dr["numsouscategorie"],
+                        dr["nomsouscategorie"]?.ToString() ?? "",
+                        new Categorie((Int32)dr["numcategorie"])
+                    ));
+                }
             }
             return lesSousCategories;
         }

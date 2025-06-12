@@ -33,10 +33,7 @@ namespace SIBILIATP11.Classe
 
         public int Quantite
         {
-            get
-            {
-                return this.quantite;
-            }
+            get { return this.quantite; }
             set
             {
                 this.quantite = value;
@@ -46,10 +43,7 @@ namespace SIBILIATP11.Classe
 
         public double Prix
         {
-            get
-            {
-                return this.prix;
-            }
+            get { return this.prix; }
             set
             {
                 this.prix = value;
@@ -59,10 +53,7 @@ namespace SIBILIATP11.Classe
 
         public Commande UneCommande
         {
-            get
-            {
-                return this.uneCommande;
-            }
+            get { return this.uneCommande; }
             set
             {
                 this.uneCommande = value;
@@ -72,10 +63,7 @@ namespace SIBILIATP11.Classe
 
         public Plat UnPlat
         {
-            get
-            {
-                return this.unPlat;
-            }
+            get { return this.unPlat; }
             set
             {
                 this.unPlat = value;
@@ -83,12 +71,15 @@ namespace SIBILIATP11.Classe
             }
         }
 
+        public double CalculerTotal
+        {
+            get { return this.Quantite * this.Prix; }
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public int Create()
         {
-            // Note : La table de liaison n'a généralement pas d'ID auto-généré
-            // Elle retourne le nombre de lignes affectées
             using (var cmdInsert = new NpgsqlCommand("INSERT INTO platcommande (quantite, prix, numcommande, numplat) VALUES (@quantite, @prix, @numCommande, @numPlat)"))
             {
                 cmdInsert.Parameters.AddWithValue("@quantite", this.Quantite);
@@ -101,7 +92,6 @@ namespace SIBILIATP11.Classe
 
         public void Read()
         {
-            // Pour une table de liaison, la lecture se fait généralement par les deux clés
             using (var cmdSelect = new NpgsqlCommand("SELECT * FROM platcommande WHERE numcommande = @numCommande AND numplat = @numPlat"))
             {
                 cmdSelect.Parameters.AddWithValue("@numCommande", this.UneCommande.NumCommande);
@@ -112,8 +102,6 @@ namespace SIBILIATP11.Classe
                 {
                     this.Quantite = (Int32)dt.Rows[0]["quantite"];
                     this.Prix = Convert.ToDouble(dt.Rows[0]["prix"]);
-                    // Les objets Commande et Plat sont déjà initialisés
-                    // On peut charger leurs détails si nécessaire
                     this.UneCommande.Read();
                     this.UnPlat.Read();
                 }
@@ -150,7 +138,6 @@ namespace SIBILIATP11.Classe
                 DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
                 foreach (DataRow dr in dt.Rows)
                 {
-                    // Correction : le prix peut être un double, pas forcément un int
                     lesContients.Add(new Contient(
                         (Int32)dr["quantite"],
                         Convert.ToDouble(dr["prix"]),
@@ -181,35 +168,14 @@ namespace SIBILIATP11.Classe
             return lesContients;
         }
 
-        // Méthodes utilitaires spécifiques à Contient
-
-        /// <summary>
-        /// Trouve tous les plats d'une commande spécifique
-        /// </summary>
-        /// <param name="numCommande">Numéro de la commande</param>
-        /// <returns>Liste des contenus pour cette commande</returns>
         public List<Contient> FindByCommande(int numCommande)
         {
             return FindBySelection($"numcommande = {numCommande}");
         }
 
-        /// <summary>
-        /// Trouve toutes les commandes contenant un plat spécifique
-        /// </summary>
-        /// <param name="numPlat">Numéro du plat</param>
-        /// <returns>Liste des contenus pour ce plat</returns>
         public List<Contient> FindByPlat(int numPlat)
         {
             return FindBySelection($"numplat = {numPlat}");
-        }
-
-        /// <summary>
-        /// Calcule le total pour cette ligne (quantité × prix)
-        /// Propriété pour le binding XAML
-        /// </summary>
-        public double CalculerTotal
-        {
-            get { return this.Quantite * this.Prix; }
         }
     }
 }

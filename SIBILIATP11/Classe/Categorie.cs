@@ -12,14 +12,16 @@ namespace SIBILIATP11.Classe
 {
     public class Categorie : ICrud<Categorie>, INotifyPropertyChanged
     {
-        private int numCategorie; 
+        private int numCategorie;
         private string nomCategorie;
+
         public Categorie() { }
 
         public Categorie(int numCategorie)
         {
             this.NumCategorie = numCategorie;
         }
+
         public Categorie(int numCategorie, string nomCategorie)
         {
             this.NumCategorie = numCategorie;
@@ -28,39 +30,22 @@ namespace SIBILIATP11.Classe
 
         public int NumCategorie
         {
-            get
-            {
-                return this.numCategorie;
-            }
-
+            get { return this.numCategorie; }
             set
             {
                 this.numCategorie = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(NumCategorie)));
             }
         }
 
         public string NomCategorie
         {
-            get
-            {
-                return this.nomCategorie;
-            }
-
+            get { return this.nomCategorie; }
             set
             {
                 this.nomCategorie = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(NomCategorie)));
             }
-        }
-        public List<Categorie> FindAll()
-        {
-            List<Categorie> lesCategories = new List<Categorie>();
-            using (NpgsqlCommand cmdSelect = new NpgsqlCommand("select * from categorie ;"))
-            {
-                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
-                foreach (DataRow dr in dt.Rows)
-                    lesCategories.Add(new Categorie((Int32)dr["numcategorie"], (String)dr["nomcategorie"]));
-            }
-            return lesCategories;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -85,7 +70,7 @@ namespace SIBILIATP11.Classe
                 DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
                 if (dt.Rows.Count > 0)
                 {
-                    this.NomCategorie = (String)dt.Rows[0]["nomcategorie"];
+                    this.NomCategorie = dt.Rows[0]["nomcategorie"]?.ToString() ?? "";
                 }
             }
         }
@@ -109,6 +94,23 @@ namespace SIBILIATP11.Classe
             }
         }
 
+        public List<Categorie> FindAll()
+        {
+            List<Categorie> lesCategories = new List<Categorie>();
+            using (NpgsqlCommand cmdSelect = new NpgsqlCommand("SELECT * FROM categorie"))
+            {
+                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
+                foreach (DataRow dr in dt.Rows)
+                {
+                    lesCategories.Add(new Categorie(
+                        (Int32)dr["numcategorie"],
+                        dr["nomcategorie"]?.ToString() ?? ""
+                    ));
+                }
+            }
+            return lesCategories;
+        }
+
         public List<Categorie> FindBySelection(string criteres)
         {
             List<Categorie> lesCategories = new List<Categorie>();
@@ -116,7 +118,12 @@ namespace SIBILIATP11.Classe
             {
                 DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
                 foreach (DataRow dr in dt.Rows)
-                    lesCategories.Add(new Categorie((Int32)dr["numcategorie"], (String)dr["nomcategorie"]));
+                {
+                    lesCategories.Add(new Categorie(
+                        (Int32)dr["numcategorie"],
+                        dr["nomcategorie"]?.ToString() ?? ""
+                    ));
+                }
             }
             return lesCategories;
         }

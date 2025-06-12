@@ -121,10 +121,10 @@ namespace SIBILIATP11.Classe
                 DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
                 if (dt.Rows.Count > 0)
                 {
-                    this.NomEmploye = (String)dt.Rows[0]["nomemploye"];
-                    this.PrenomEmploye = (String)dt.Rows[0]["prenomemploye"];
-                    this.Password = (String)dt.Rows[0]["password"];
-                    this.Login = (String)dt.Rows[0]["login"];
+                    this.NomEmploye = dt.Rows[0]["nomemploye"]?.ToString() ?? "";
+                    this.PrenomEmploye = dt.Rows[0]["prenomemploye"]?.ToString() ?? "";
+                    this.Password = dt.Rows[0]["password"]?.ToString() ?? "";
+                    this.Login = dt.Rows[0]["login"]?.ToString() ?? "";
                     this.UnRole = new Role((Int32)dt.Rows[0]["numrole"]);
                     this.UnRole.Read();
                 }
@@ -161,7 +161,16 @@ namespace SIBILIATP11.Classe
             {
                 DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
                 foreach (DataRow dr in dt.Rows)
-                    lesEmployes.Add(new Employe((Int32)dr["numemploye"], (String)dr["nomemploye"], (String)dr["prenomemploye"], (String)dr["password"], (String)dr["login"], new Role((Int32)dr["numrole"])));
+                {
+                    lesEmployes.Add(new Employe(
+                        (Int32)dr["numemploye"],
+                        dr["nomemploye"]?.ToString() ?? "",
+                        dr["prenomemploye"]?.ToString() ?? "",
+                        dr["password"]?.ToString() ?? "",
+                        dr["login"]?.ToString() ?? "",
+                        new Role((Int32)dr["numrole"])
+                    ));
+                }
             }
             return lesEmployes;
         }
@@ -173,7 +182,16 @@ namespace SIBILIATP11.Classe
             {
                 DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
                 foreach (DataRow dr in dt.Rows)
-                    lesEmployes.Add(new Employe((Int32)dr["numemploye"], (String)dr["nomemploye"], (String)dr["prenomemploye"], (String)dr["password"], (String)dr["login"], new Role((Int32)dr["numrole"])));
+                {
+                    lesEmployes.Add(new Employe(
+                        (Int32)dr["numemploye"],
+                        dr["nomemploye"]?.ToString() ?? "",
+                        dr["prenomemploye"]?.ToString() ?? "",
+                        dr["password"]?.ToString() ?? "",
+                        dr["login"]?.ToString() ?? "",
+                        new Role((Int32)dr["numrole"])
+                    ));
+                }
             }
             return lesEmployes;
         }

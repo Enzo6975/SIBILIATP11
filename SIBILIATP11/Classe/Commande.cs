@@ -41,6 +41,7 @@ namespace SIBILIATP11.Classe
             this.UnEmploye = unEmploye;
             this.UnClient = unClient;
         }
+
         public int NumCommande
         {
             get { return this.numCommande; }
