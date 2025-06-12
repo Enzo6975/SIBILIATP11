@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:SIBILIATP11.UserControl"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    d:DesignHeight="450"
+    d:DesignHeight="800"
     d:DesignWidth="800"
     mc:Ignorable="d">
     <Grid x:Name="grid">
@@ -46,7 +46,7 @@
             </StackPanel>
             <DataGrid
                 x:Name="plats"
-                Height="300"
+                Height="500"
                 Margin="30,30,30,0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"
@@ -73,6 +73,14 @@
                         Width="*"
                         Binding="{Binding NbPersonnes}"
                         Header="Nb personnes" />
+
+                    <DataGridTemplateColumn Header="Action" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Ajouter" Click="AjouterPlat_Click"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </StackPanel>

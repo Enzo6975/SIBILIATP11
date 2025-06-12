@@ -1,0 +1,199 @@
+﻿<Window x:Class="SIBILIATP11.Windows.DetailCommande"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SIBILIATP11.UserControl"
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="900">
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="20">
+                <!-- En-tête de la commande -->
+                <Border BorderBrush="DarkBlue" BorderThickness="2" CornerRadius="5" Padding="15" Margin="0,0,0,20">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Titre -->
+                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" 
+                                 Text="Détail de la Commande" 
+                                 FontSize="24" FontWeight="Bold" 
+                                 HorizontalAlignment="Center" 
+                                 Margin="0,0,0,15"/>
+
+                        <!-- Informations de base -->
+                        <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,20,0">
+                            <StackPanel Orientation="Horizontal" Margin="0,5">
+                                <Label Content="N° Commande :" FontWeight="Bold" Width="120"/>
+                                <TextBlock x:Name="txtNumCommande" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5">
+                                <Label Content="Date Commande :" FontWeight="Bold" Width="120"/>
+                                <TextBlock x:Name="txtDateCommande" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5">
+                                <Label Content="Date Retrait :" FontWeight="Bold" Width="120"/>
+                                <TextBlock x:Name="txtDateRetrait" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Statuts et prix -->
+                        <StackPanel Grid.Row="1" Grid.Column="1">
+                            <StackPanel Orientation="Horizontal" Margin="0,5">
+                                <Label Content="Statut Paiement :" FontWeight="Bold" Width="120"/>
+                                <TextBlock x:Name="txtStatutPaiement" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5">
+                                <Label Content="Statut Retrait :" FontWeight="Bold" Width="120"/>
+                                <TextBlock x:Name="txtStatutRetrait" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5">
+                                <Label Content="Prix Total :" FontWeight="Bold" Width="120"/>
+                                <TextBlock x:Name="txtPrixTotal" VerticalAlignment="Center" 
+                                         FontSize="16" FontWeight="Bold" 
+                                         Foreground="DarkGreen"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Informations client et employé -->
+                        <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,15,0,0">
+                            <StackPanel Margin="0,0,40,0">
+                                <Label Content="Client :" FontWeight="Bold"/>
+                                <TextBlock x:Name="txtClient" Margin="10,0,0,0"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <Label Content="Employé :" FontWeight="Bold"/>
+                                <TextBlock x:Name="txtEmploye" Margin="10,0,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Liste des plats commandés -->
+                <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="5" Padding="15">
+                    <StackPanel>
+                        <TextBlock Text="Plats Commandés" 
+                                 FontSize="18" FontWeight="Bold" 
+                                 Margin="0,0,0,15"/>
+
+                        <DataGrid x:Name="dgPlatsCommandes" 
+                                AutoGenerateColumns="False" 
+                                IsReadOnly="True"
+                                GridLinesVisibility="Horizontal"
+                                AlternatingRowBackground="LightGray"
+                                HeadersVisibility="Column">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Plat" 
+                                                  Binding="{Binding UnPlat.NomPlat}" 
+                                                  Width="*"/>
+                                <DataGridTextColumn Header="Prix Unitaire" 
+                                                  Binding="{Binding Prix, StringFormat=F2}" 
+                                                  Width="100">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Quantité" 
+                                                  Binding="{Binding Quantite}" 
+                                                  Width="80">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Sous-total" 
+                                                  Binding="{Binding CalculerTotal, StringFormat=F2}" 
+                                                  Width="100">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Délai Préparation" 
+                                                  Binding="{Binding UnPlat.DelaiPreparation}" 
+                                                  Width="120">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Nb Personnes" 
+                                                  Binding="{Binding UnPlat.NbPersonnes}" 
+                                                  Width="100">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <!-- Résumé des totaux -->
+                        <Border BorderBrush="DarkBlue" BorderThickness="1" 
+                              CornerRadius="3" Padding="10" Margin="0,15,0,0"
+                              Background="LightBlue">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="150"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" Grid.Column="0" 
+                                         Text="Nombre total d'articles :" 
+                                         FontWeight="Bold" HorizontalAlignment="Right" Margin="0,2"/>
+                                <TextBlock Grid.Row="0" Grid.Column="1" 
+                                         x:Name="txtNombreArticles" 
+                                         HorizontalAlignment="Right" Margin="10,2"/>
+
+                                <TextBlock Grid.Row="1" Grid.Column="0" 
+                                         Text="Nombre total de personnes :" 
+                                         FontWeight="Bold" HorizontalAlignment="Right" Margin="0,2"/>
+                                <TextBlock Grid.Row="1" Grid.Column="1" 
+                                         x:Name="txtNombrePersonnes" 
+                                         HorizontalAlignment="Right" Margin="10,2"/>
+
+                                <Separator Grid.Row="2" Grid.ColumnSpan="2" Margin="0,5"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <!-- Boutons d'action -->
+                <StackPanel Orientation="Horizontal" 
+                          HorizontalAlignment="Center" 
+                          Margin="0,20,0,0">
+                    <Button x:Name="btnModifier" 
+                          Content="Modifier la Commande" 
+                          Width="150" Height="35" 
+                          Margin="10,0" 
+                          Click="BtnModifier_Click"/>
+                    <Button x:Name="btnFermer" 
+                          Content="Fermer" 
+                          Width="100" Height="35" 
+                          Margin="10,0" 
+                          Click="BtnFermer_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

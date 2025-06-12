@@ -24,44 +24,108 @@ namespace SIBILIATP11.UserControl
     public partial class CreerCommande : System.Windows.Controls.UserControl
     {
         private GestionCommande LaGestionCommande { get; set; }
+        // La commande que l'utilisateur est en train de construire
+        public Commande CommandeEnCours { get; set; }
+        // La liste des articles (plats et quantités) pour la commande en cours.
+        // C'est cette liste que vous afficherez dans le récapitulatif de la commande.
+        public ObservableCollection<Contient> LignesDeLaCommande { get; set; }
+
+
+
 
         public CreerCommande()
         {
             InitializeComponent();
-            // Initialiser la gestion
-            InitialiserGestionCommande();
-            // Différer l'initialisation après le chargement
+            InitialiserGestionCommande(); // Votre méthode existante
+            // 1. Créer une nouvelle instance de commande vide
+            CommandeEnCours = new Commande
+            {
+                DateCommande = DateTime.Now,
+                // Pré-remplir les valeurs par défaut si nécessaire
+                UnClient = LaGestionCommande.LesClients.FirstOrDefault(), // Exemple : premier client par défaut
+                UnEmploye = LaGestionCommande.LesEmploye.FirstOrDefault() // Exemple : premier employé par défaut
+            };
+            // 2. Initialiser la collection pour les lignes de la commande
+            LignesDeLaCommande = new ObservableCollection<Contient>();
+            // 3. (Recommandé) Lier cette collection à un ListView ou DataGrid pour voir le panier
+            // Par exemple, si vous avez un DataGrid nommé 'recapPanier'
+            // recapPanier.ItemsSource = LignesDeLaCommande;
             this.Loaded += CreerCommande_Loaded;
         }
+
+    
+        
+
+
+        private void CalculerPrixTotal()
+        {
+            // Recalculer le total à partir des lignes de la commande
+            double total = 0;
+            foreach (var ligne in LignesDeLaCommande)
+            {
+                // (Assurez-vous que Contient a les propriétés UnPlat.PrixUnitaire et Quantite)
+                total += ligne.UnPlat.PrixUnitaire * ligne.Quantite;
+            }
+            CommandeEnCours.PrixTotal = total;
+            // Afficher le total dans un TextBlock, par exemple
+            // textBlockTotal.Text = $"Total : {total:C}";
+        }
+
+
+
+
+
+        private void ValiderCommande_Click(object sender, RoutedEventArgs e)
+        {
+            // 1. Sauvegarder l'objet Commande en base pour obtenir son ID
+            // La méthode Create retourne le nouvel ID
+            CommandeEnCours.Create();
+            // 2. Ajouter la commande à la gestion globale
+            LaGestionCommande.LesCommandes.Add(CommandeEnCours);
+            // 3. Parcourir les lignes du panier pour les lier à la commande et les sauvegarder
+            foreach (var ligne in LignesDeLaCommande)
+            {
+                // Assigner la commande (qui a maintenant son ID) à chaque ligne
+                ligne.UneCommande = CommandeEnCours;
+                // Sauvegarder chaque ligne en base
+                ligne.Create(); // (Je suppose qu'il y a une méthode Create() dans Contient.cs)
+
+                // Ajouter chaque ligne à la gestion globale
+                LaGestionCommande.LesContients.Add(ligne);
+            }
+            MessageBox.Show("Commande enregistrée avec succès !");
+            // Réinitialiser l'interface pour une nouvelle commande
+            // ...
+        }
+
+
+
+
+
+
 
         private void CreerCommande_Loaded(object sender, RoutedEventArgs e)
         {
             // Se désabonner pour éviter les appels multiples
             this.Loaded -= CreerCommande_Loaded;
-
             // Configurer le DataGrid et le filtrage
             if (LaGestionCommande != null)
             {
                 plats.ItemsSource = LaGestionCommande.LesPlats;
-
                 // Configurer le filtre
                 plats.Items.Filter = RechercheMotClefPlat;
-
                 // Configurer la ComboBox des catégories
                 ConfigurerComboBoxCategories();
-
                 // Configurer le DatePicker avec la date d'aujourd'hui par défaut
                 ConfigurerDatePicker();
             }
 
             // Ajouter les événements pour le filtrage en temps réel
             recherche.TextChanged += Recherche_TextChanged;
-            cbCategorie.SelectionChanged += CbCategorie_SelectionChanged;
-            
+            cbCategorie.SelectionChanged += CbCategorie_SelectionChanged;           
             // Ajouter l'événement pour le filtrage par date
             if (dpDateCommande != null)
                 dpDateCommande.SelectedDateChanged += DpDateCommande_SelectedDateChanged;
-
             // Ajouter les événements pour le filtrage par prix
             if (txtPrixMin != null)
                 txtPrixMin.TextChanged += TxtPrix_TextChanged;
@@ -69,14 +133,18 @@ namespace SIBILIATP11.UserControl
                 txtPrixMax.TextChanged += TxtPrix_TextChanged;
         }
 
+
+
+
+
+
+
         private void ConfigurerComboBoxCategories()
         {
             // Créer une liste avec "Toutes les catégories" en premier
             var categoriesAvecTous = new List<object>();
-
             // Ajouter l'option "Toutes les catégories"
             categoriesAvecTous.Add(new { NumCategorie = -1, NomCategorie = "Toutes les catégories" });
-
             // Ajouter toutes les catégories existantes
             if (LaGestionCommande.LesCategories != null)
             {
@@ -89,10 +157,15 @@ namespace SIBILIATP11.UserControl
             cbCategorie.ItemsSource = categoriesAvecTous;
             cbCategorie.DisplayMemberPath = "NomCategorie";
             cbCategorie.SelectedValuePath = "NumCategorie";
-
             // Sélectionner "Toutes les catégories" par défaut
             cbCategorie.SelectedIndex = 0;
         }
+
+
+
+
+
+
 
         private void ConfigurerDatePicker()
         {
@@ -103,6 +176,12 @@ namespace SIBILIATP11.UserControl
                 dpDateCommande.DisplayDateStart = DateTime.Today.AddDays(1); // Empêcher la sélection de dates passées
             }
         }
+
+
+
+
+
+
 
         private void InitialiserGestionCommande()
         {
@@ -129,20 +208,25 @@ namespace SIBILIATP11.UserControl
             }
         }
 
+
+
+
+
+
+
+
         // Méthode de filtrage combinée (recherche + catégorie + date + prix)
         private bool RechercheMotClefPlat(object obj)
         {
             Plat unPlat = obj as Plat;
             if (unPlat == null)
                 return false;
-
             // Filtrage par texte de recherche
             bool correspondTexte = true;
             if (!String.IsNullOrEmpty(recherche.Text))
             {
                 correspondTexte = unPlat.NomPlat.StartsWith(recherche.Text, StringComparison.OrdinalIgnoreCase);
             }
-
             // Filtrage par catégorie
             bool correspondCategorie = true;
             if (cbCategorie.SelectedValue != null)
@@ -187,8 +271,7 @@ namespace SIBILIATP11.UserControl
             }
 
             // Filtrage par prix
-            bool correspondPrix = true;
-            
+            bool correspondPrix = true;          
             // Vérifier le prix minimum
             if (txtPrixMin != null && !string.IsNullOrEmpty(txtPrixMin.Text))
             {
@@ -206,9 +289,16 @@ namespace SIBILIATP11.UserControl
                     correspondPrix = correspondPrix && unPlat.PrixUnitaire <= prixMax;
                 }
             }
-
             return correspondTexte && correspondCategorie && correspondDate && correspondPrix;
         }
+
+
+
+
+
+
+
+
 
         // Event handler pour le filtrage en temps réel par texte
         private void Recherche_TextChanged(object sender, TextChangedEventArgs e)
@@ -216,17 +306,26 @@ namespace SIBILIATP11.UserControl
             RefreshFilter();
         }
 
+
+
+
         // Event handler pour le changement de catégorie
         private void CbCategorie_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             RefreshFilter();
         }
 
+
+
+
         // Event handler pour le changement de date
         private void DpDateCommande_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             RefreshFilter();
         }
+
+
+
 
         // Event handler pour le changement de prix (min et max)
         private void TxtPrix_TextChanged(object sender, TextChangedEventArgs e)
@@ -257,9 +356,14 @@ namespace SIBILIATP11.UserControl
                     textBox.Foreground = System.Windows.Media.Brushes.Black;
                 }
             }
-
             RefreshFilter();
         }
+
+
+
+
+
+
 
         // Méthode helper pour rafraîchir le filtre
         private void RefreshFilter()
@@ -270,6 +374,12 @@ namespace SIBILIATP11.UserControl
             }
         }
 
+
+
+
+
+
+
         // Méthode pour réinitialiser les filtres (optionnelle)
         private void ReinitialiserFiltres()
         {
@@ -279,6 +389,13 @@ namespace SIBILIATP11.UserControl
             txtPrixMin.Text = ""; // Réinitialiser prix minimum
             txtPrixMax.Text = ""; // Réinitialiser prix maximum
         }
+
+
+
+
+
+
+
 
         // Méthode pour obtenir les plats disponibles pour une date donnée
         private List<Plat> ObtenirPlatsDisponibles(DateTime dateCommande)
@@ -292,9 +409,15 @@ namespace SIBILIATP11.UserControl
                     .Where(p => p.DelaiPreparation <= joursDisponibles)
                     .ToList();
             }
-
             return platsDisponibles;
         }
+
+
+
+
+
+
+
 
         // Méthode pour obtenir les plats dans une fourchette de prix
         private List<Plat> ObtenirPlatsDansFourchettePrix(double? prixMin, double? prixMax)
@@ -309,9 +432,14 @@ namespace SIBILIATP11.UserControl
                         (!prixMax.HasValue || p.PrixUnitaire <= prixMax.Value))
                     .ToList();
             }
-
             return platsFiltrés;
         }
+
+
+
+
+
+
 
         // Méthode pour afficher des informations sur la disponibilité (optionnelle)
         private void AfficherInfoDisponibilite()
@@ -326,6 +454,12 @@ namespace SIBILIATP11.UserControl
             }
         }
 
+
+
+
+
+
+
         // Méthode pour afficher des statistiques de prix (optionnelle)
         private void AfficherStatistiquesPrix()
         {
@@ -339,6 +473,12 @@ namespace SIBILIATP11.UserControl
                 // lblStatsPrix.Content = $"Prix: Min {prixMin:C}, Max {prixMax:C}, Moyen {prixMoyen:C}";
             }
         }
+
+
+
+
+
+
 
         // Méthode pour valider la cohérence des prix min/max
         private bool ValiderFourchettePrix()
@@ -361,6 +501,13 @@ namespace SIBILIATP11.UserControl
             return true;
         }
 
+
+
+
+
+
+
+
         // Méthode pour optimiser le chargement des données (optionnelle)
         private void PreChargerDonneesCategories()
         {
@@ -375,6 +522,44 @@ namespace SIBILIATP11.UserControl
                         plat.UneSousCategorie.Read();
                     }
                 }
+            }
+        }
+
+
+
+
+
+
+
+        private void AjouterPlat_Click(object sender, RoutedEventArgs e)
+        {
+            // Récupérer le plat sélectionné depuis le DataContext du bouton
+            if ((sender as Button)?.DataContext is Plat platSelectionne)
+            {
+                // Chercher si ce plat existe déjà dans les lignes de la commande en cours
+                Contient ligneExistante = LignesDeLaCommande.FirstOrDefault(c => c.UnPlat.NumPlat == platSelectionne.NumPlat);
+
+                if (ligneExistante != null)
+                {
+                    // Le plat est déjà dans le panier, on incrémente la quantité
+                    // (Assurez-vous que la classe Contient a une propriété Quantite)
+                    ligneExistante.Quantite++;
+                }
+                else
+                {
+                    // Le plat n'est pas dans le panier, on crée une nouvelle ligne 'Contient'
+                    Contient nouvelleLigne = new Contient
+                    {
+                        UnPlat = platSelectionne,
+                        UneCommande = this.CommandeEnCours,
+                        Quantite = 1
+                    };
+                    LignesDeLaCommande.Add(nouvelleLigne);
+                }
+                // Mettre à jour le prix total de la commande
+                CalculerPrixTotal();
+                // Rafraîchir l'affichage du panier (si vous en avez un)
+                // recapPanier.Items.Refresh(); // ou laisser l'ObservableCollection faire le travail
             }
         }
     }
