@@ -43,6 +43,9 @@ namespace SIBILIATP11.Classe
             get { return this.nomCategorie; }
             set
             {
+                if (value == "")
+                    throw new ArgumentOutOfRangeException("le nom de la catégorie ne peut pas être nul");
+                value = char.ToUpper(value[0]) + value.Substring(1).ToLower();
                 this.nomCategorie = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(NomCategorie)));
             }

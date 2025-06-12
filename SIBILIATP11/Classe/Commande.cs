@@ -93,6 +93,8 @@ namespace SIBILIATP11.Classe
             get { return this.prixTotal; }
             set
             {
+                if (value < 0) 
+                    throw new ArgumentOutOfRangeException("prix ne peu pas être négatif ");
                 this.prixTotal = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PrixTotal)));
             }
