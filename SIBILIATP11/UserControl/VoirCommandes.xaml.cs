@@ -34,7 +34,7 @@ namespace SIBILIATP11.UserControl
             PlatsCommandeSelectionnee = new ObservableCollection<Contient>();
 
             // Configurer le DataGrid avec les commandes de la gestion
-            dgCommandes.ItemsSource = LaGestionCommande.LesCommandes;
+            //dgCommandes.ItemsSource = LaGestionCommande.LesCommandes;
 
             // Configurer le filtre
             dgCommandes.Items.Filter = RechercheMotClefCommande;

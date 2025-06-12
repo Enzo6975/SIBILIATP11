@@ -19,7 +19,7 @@ namespace SIBILIATP11
     /// </summary>
     public partial class MainWindow : Window
     {
-        public GestionCommande LaGestion { get; set; }
+        public static GestionCommande LaGestion { get; set; }
         public MainWindow()
         {
             ChargeData();
