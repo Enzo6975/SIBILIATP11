@@ -5,7 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TD3_BindingBDPension.Model;
+using SIBILIATP11.Model;
 
 namespace SIBILIATP11.Classe
 {
@@ -32,7 +32,6 @@ namespace SIBILIATP11.Classe
                     {
                         Plat plat = new Plat
                         {
-                            // Assurez-vous que les noms des colonnes ici correspondent exactement à ceux de votre base de données
                             NumPlat = (int)row["NumPlat"],
                             NomPlat = (string)row["NomPlat"],
                             PrixUnitaire = (double)Convert.ToDecimal(row["PrixUnitaire"]),
@@ -43,7 +42,7 @@ namespace SIBILIATP11.Classe
                     }
                 }
             }
-            catch (Exception ex) // N'oubliez pas d'ajouter 'using System;' en haut du fichier
+            catch (Exception ex)
             {
                 throw;
             }

@@ -12,6 +12,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="200" />
         </Grid.RowDefinitions>
 
@@ -43,17 +44,19 @@
                         VerticalAlignment="Center"
                         Text="Client :" />
                     <TextBox
+                        x:Name="inputClient"
                         Grid.Column="1"
                         Margin="0,0,10,0"
                         VerticalAlignment="Center"
-                        Text="{Binding FiltreClient, UpdateSourceTrigger=PropertyChanged}" />
+                        TextChanged="inputClient_TextChanged" />
 
                     <!--  Bouton effacer filtres  -->
                     <Button
+                        x:Name="btnClearFilter"
                         Grid.Column="2"
                         Margin="10,0,0,0"
                         Padding="10,5"
-                        Command="{Binding EffacerFiltresCommand}"
+                        Click="btnClearFilter_Click"
                         Content="Effacer filtres" />
                 </Grid>
             </StackPanel>
@@ -61,14 +64,14 @@
 
         <!--  DataGrid des commandes  -->
         <DataGrid
+            x:Name="dgCommandes"
             Grid.Row="1"
             Margin="5"
             AutoGenerateColumns="False"
             GridLinesVisibility="All"
             HeadersVisibility="Column"
             IsReadOnly="False"
-            ItemsSource="{Binding CommandesFiltrees}"
-            SelectedItem="{Binding CommandeSelectionnee}">
+            SelectionChanged="dgCommandes_SelectionChanged">
 
             <DataGrid.Columns>
                 <!--  Numéro de commande  -->
@@ -113,16 +116,44 @@
                             <CheckBox
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                IsChecked="{Binding Retiree, UpdateSourceTrigger=PropertyChanged}" />
+                                Checked="OnCommandeRetireeChanged"
+                                IsChecked="{Binding Retiree, UpdateSourceTrigger=PropertyChanged}"
+                                Unchecked="OnCommandeRetireeChanged" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
 
+        <!--  Boutons d'action  -->
+        <StackPanel
+            Grid.Row="2"
+            Margin="5"
+            HorizontalAlignment="Center"
+            Orientation="Horizontal">
+            <Button
+                x:Name="btnAdd"
+                Margin="5"
+                Padding="10,5"
+                Click="btnAdd_Click"
+                Content="Ajouter" />
+            <Button
+                x:Name="btnEdit"
+                Margin="5"
+                Padding="10,5"
+                Click="btnEdit_Click"
+                Content="Modifier" />
+            <Button
+                x:Name="btnDel"
+                Margin="5"
+                Padding="10,5"
+                Click="btnDel_Click"
+                Content="Supprimer" />
+        </StackPanel>
+
         <!--  Détails de la commande sélectionnée  -->
         <Border
-            Grid.Row="2"
+            Grid.Row="3"
             Margin="5"
             Padding="10"
             Background="#F9F9F9">
@@ -133,25 +164,30 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock
+                    x:Name="txtDetailCommande"
                     Grid.Row="0"
                     Margin="0,0,0,10"
                     FontSize="14"
                     FontWeight="Bold"
-                    Text="{Binding CommandeSelectionnee.NumCommande, StringFormat='Détails de la commande #{0}'}" />
+                    Text="Sélectionnez une commande pour voir les détails" />
 
                 <DataGrid
+                    x:Name="dgPlatsCommande"
                     Grid.Row="1"
                     AutoGenerateColumns="False"
                     GridLinesVisibility="All"
                     HeadersVisibility="Column"
-                    IsReadOnly="True"
-                    ItemsSource="{Binding PlatsCommandeSelectionnee}">
+                    IsReadOnly="True">
 
                     <DataGrid.Columns>
                         <DataGridTextColumn
                             Width="120"
                             Binding="{Binding UnPlat.NumPlat}"
                             Header="Numéro Plat" />
+                        <DataGridTextColumn
+                            Width="200"
+                            Binding="{Binding UnPlat.NomPlat}"
+                            Header="Nom du Plat" />
                         <DataGridTextColumn
                             Width="80"
                             Binding="{Binding Quantite}"

@@ -81,9 +81,7 @@
                     FontSize="12"
                     FontWeight="Bold"
                     Header="COMMANDE À RESTITUER">
-                    <ContentControl x:Name="ContentControlCommandeARestituer">
-                        <uc:SelectionnerClient />
-                    </ContentControl>
+                    <ContentControl x:Name="ContentControlCommandeARestituer" />
                 </TabItem>
                 <TabItem
                     Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"

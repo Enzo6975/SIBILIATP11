@@ -8,7 +8,7 @@ using Npgsql;
 using SIBILIATP11.Classe;
 
 
-namespace TD3_BindingBDPension.Model
+namespace SIBILIATP11.Model
 {
 
     public  class DataAccess

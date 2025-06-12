@@ -6,7 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TD3_BindingBDPension.Model;
+using SIBILIATP11.Model;
 
 namespace SIBILIATP11.Classe
 {
@@ -71,7 +71,7 @@ namespace SIBILIATP11.Classe
 
             set
             {
-                this.nomClient = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(NomClient)));
             }
         }
 
@@ -84,7 +84,7 @@ namespace SIBILIATP11.Classe
 
             set
             {
-                this.prenomClient = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PrenomClient)));
             }
         }
 
@@ -97,7 +97,7 @@ namespace SIBILIATP11.Classe
 
             set
             {
-                this.tel = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Tel)));
             }
         }
 
@@ -110,7 +110,7 @@ namespace SIBILIATP11.Classe
 
             set
             {
-                this.adresseRue = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AdresseRue)));
             }
         }
 
@@ -123,7 +123,7 @@ namespace SIBILIATP11.Classe
 
             set
             {
-                this.adresseCP = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AdresseCP)));
             }
         }
 
@@ -136,7 +136,7 @@ namespace SIBILIATP11.Classe
 
             set
             {
-                this.adresseVille = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AdresseVille)));
             }
         }
 
@@ -144,27 +144,35 @@ namespace SIBILIATP11.Classe
 
         public int Create()
         {
-            
-            try
+
+            int nb = 0;
+            using (var cmdInsert = new NpgsqlCommand("insert into client (nomclient, prenomclient, tel, adresserue, adressecp, adresseville) values (@nomClient, @prenomClient, @tel, @adresserue, @adressecp, @adresseville) RETURNING numclient"))
             {
-                return DataAccess.Instance.AddClient(this);
+                cmdInsert.Parameters.AddWithValue("nomclient", this.NomClient);
+                cmdInsert.Parameters.AddWithValue("prenomclient", this.PrenomClient);
+                cmdInsert.Parameters.AddWithValue("tel", this.Tel);
+                cmdInsert.Parameters.AddWithValue("adresserue", this.AdresseRue);
+                cmdInsert.Parameters.AddWithValue("adressecp", this.AdresseCP);
+                cmdInsert.Parameters.AddWithValue("adresseville", this.AdresseVille);
+                nb = DataAccess.Instance.ExecuteInsert(cmdInsert);
             }
-            catch (Exception ex)
-            {
-                
-                throw new Exception("Erreur lors de la création du client en base de données.", ex);
-            }
+            this.NumClient = nb;
+            return nb;
         }
 
         public int Delete()
         {
-            throw new NotImplementedException();
+            using (var cmdUpdate = new NpgsqlCommand("delete from client where numclient =@numClient;"))
+            {
+                cmdUpdate.Parameters.AddWithValue("numclient", this.NumClient);
+                return DataAccess.Instance.ExecuteSet(cmdUpdate);
+            }
         }
 
         public List<Client> FindAll()
         {
             List<Client> lesClients = new List<Client>();
-            using (NpgsqlCommand cmdSelect = new NpgsqlCommand("select * from client ;"))
+            using (NpgsqlCommand cmdSelect = new NpgsqlCommand("select * from client;"))
             {
                 DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
                 foreach (DataRow dr in dt.Rows)
@@ -180,12 +188,33 @@ namespace SIBILIATP11.Classe
 
         public void Read()
         {
-            throw new NotImplementedException();
+            using (var cmdSelect = new NpgsqlCommand("select * from client where numclient =@numClient;"))
+            {
+                cmdSelect.Parameters.AddWithValue("numclient", this.NumClient);
+
+                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
+                this.NomClient = (String)dt.Rows[0]["nomclient"];
+                this.PrenomClient = (String)dt.Rows[0]["prenomclient"];
+                this.Tel = (String)dt.Rows[0]["tel"];
+                this.AdresseRue = (String)dt.Rows[0]["adresserue"];
+                this.AdresseCP = (String)dt.Rows[0]["adressecp"];
+                this.AdresseVille = (String)dt.Rows[0]["adresseville"];
+
+            }
         }
 
         public int Update()
         {
-            throw new NotImplementedException();
+            using (var cmdUpdate = new NpgsqlCommand("update client set nomclient =@nomClient, prenomclient = @prenomClient, tel = @tel, adresserue = @adresseRue, adressecp = @adresseCP, adresseville = @adresseVille where numclient =@numClient;"))
+            {
+                cmdUpdate.Parameters.AddWithValue("nomclient", this.NomClient);
+                cmdUpdate.Parameters.AddWithValue("prenomclient", this.PrenomClient);
+                cmdUpdate.Parameters.AddWithValue("tel", this.Tel);
+                cmdUpdate.Parameters.AddWithValue("adresserue", this.AdresseRue);
+                cmdUpdate.Parameters.AddWithValue("adressecp", this.AdresseCP);
+                cmdUpdate.Parameters.AddWithValue("adresseville", this.AdresseVille);
+                return DataAccess.Instance.ExecuteSet(cmdUpdate);
+            }
         }
     }
 }

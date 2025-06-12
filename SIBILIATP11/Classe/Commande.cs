@@ -1,4 +1,5 @@
 ﻿using Npgsql;
+using SIBILIATP11.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,7 +7,6 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TD3_BindingBDPension.Model;
 
 namespace SIBILIATP11.Classe
 {
@@ -23,7 +23,6 @@ namespace SIBILIATP11.Classe
 
         public Commande()
         {
-
         }
 
         public Commande(int numCommande)
@@ -42,108 +41,79 @@ namespace SIBILIATP11.Classe
             this.UnEmploye = unEmploye;
             this.UnClient = unClient;
         }
-
         public int NumCommande
         {
-            get
-            {
-                return this.numCommande;
-            }
-
-            set
-            {
-                this.numCommande = value;
-            }
+            get { return this.numCommande; }
+            set { this.numCommande = value; }
         }
 
         public DateTime DateCommande
         {
-            get
-            {
-                return this.dateCommande;
-            }
-
+            get { return this.dateCommande; }
             set
             {
                 this.dateCommande = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DateCommande)));
             }
         }
 
         public DateTime DateRetraitPrevue
         {
-            get
-            {
-                return this.dateRetraitPrevue;
-            }
-
+            get { return this.dateRetraitPrevue; }
             set
             {
                 this.dateRetraitPrevue = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DateRetraitPrevue)));
             }
         }
 
         public bool Payee
         {
-            get
-            {
-                return this.payee;
-            }
-
+            get { return this.payee; }
             set
             {
                 this.payee = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Payee)));
             }
         }
 
         public bool Retiree
         {
-            get
-            {
-                return this.retiree;
-            }
-
+            get { return this.retiree; }
             set
             {
                 this.retiree = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Retiree)));
             }
         }
 
         public double PrixTotal
         {
-            get
-            {
-                return this.prixTotal;
-            }
-
+            get { return this.prixTotal; }
             set
             {
                 this.prixTotal = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PrixTotal)));
             }
         }
 
         public Employe UnEmploye
         {
-            get
-            {
-                return this.unEmploye;
-            }
-
+            get { return this.unEmploye; }
             set
             {
                 this.unEmploye = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(UnEmploye)));
             }
         }
 
         public Client UnClient
         {
-            get
-            {
-                return this.unClient;
-            }
-
+            get { return this.unClient; }
             set
             {
                 this.unClient = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(UnClient)));
             }
         }
 
@@ -151,29 +121,42 @@ namespace SIBILIATP11.Classe
 
         public int Create()
         {
-            throw new NotImplementedException();
-        }
-
-        public int Delete()
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Commande> FindAll()
-        {
-            List<Commande> lesCommandes = new List<Commande>();
-            using (NpgsqlCommand cmdSelect = new NpgsqlCommand("select * from commande ;"))
+            int nb = 0;
+            using (var cmdInsert = new NpgsqlCommand("INSERT INTO commande (datecommande, dateretraitprevue, payee, retiree, prixtotal, numemploye, numclient) VALUES (@dateCommande, @dateRetraitPrevue, @payee, @retiree, @prixTotal, @numEmploye, @numClient) RETURNING numcommande"))
             {
-                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
-                foreach (DataRow dr in dt.Rows)
-                    lesCommandes.Add(new Commande((Int32)dr["numcommande"], (DateTime)dr["datecommande"], (DateTime)dr["dateretraitprevue"], (Boolean)dr["payee"], (Boolean)dr["retiree"], (Double)dr["prixtotal"], new Employe((Int32)dr["numemploye"]), new Client((Int32)dr["numclient"])));
+                cmdInsert.Parameters.AddWithValue("@dateCommande", this.DateCommande);
+                cmdInsert.Parameters.AddWithValue("@dateRetraitPrevue", this.DateRetraitPrevue);
+                cmdInsert.Parameters.AddWithValue("@payee", this.Payee);
+                cmdInsert.Parameters.AddWithValue("@retiree", this.Retiree);
+                cmdInsert.Parameters.AddWithValue("@prixTotal", this.PrixTotal);
+                cmdInsert.Parameters.AddWithValue("@numEmploye", this.UnEmploye.NumEmploye);
+                cmdInsert.Parameters.AddWithValue("@numClient", this.UnClient.NumClient);
+                nb = DataAccess.Instance.ExecuteInsert(cmdInsert);
             }
-            return lesCommandes;
+            this.NumCommande = nb;
+            return nb;
         }
 
-        public List<Commande> FindBySelection(string criteres)
+        public void Read()
         {
-            throw new NotImplementedException();
+            using (var cmdSelect = new NpgsqlCommand("SELECT * FROM commande WHERE numcommande = @numCommande"))
+            {
+                cmdSelect.Parameters.AddWithValue("@numCommande", this.NumCommande);
+
+                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
+                if (dt.Rows.Count > 0)
+                {
+                    this.DateCommande = (DateTime)dt.Rows[0]["datecommande"];
+                    this.DateRetraitPrevue = (DateTime)dt.Rows[0]["dateretraitprevue"];
+                    this.Payee = (Boolean)dt.Rows[0]["payee"];
+                    this.Retiree = (Boolean)dt.Rows[0]["retiree"];
+                    this.PrixTotal = (Double)dt.Rows[0]["prixtotal"];
+                    this.UnEmploye = new Employe((Int32)dt.Rows[0]["numemploye"]);
+                    this.UnClient = new Client((Int32)dt.Rows[0]["numclient"]);
+                    this.UnEmploye.Read();
+                    this.UnClient.Read();
+                }
+            }
         }
 
         public int Update()
@@ -181,10 +164,15 @@ namespace SIBILIATP11.Classe
             try
             {
                 using (NpgsqlCommand cmdUpdate = new NpgsqlCommand(
-                    "UPDATE commande SET retiree = @retiree, payee = @payee WHERE numcommande = @numcommande"))
+                    "UPDATE commande SET datecommande = @dateCommande, dateretraitprevue = @dateRetraitPrevue, payee = @payee, retiree = @retiree, prixtotal = @prixTotal, numemploye = @numEmploye, numclient = @numClient WHERE numcommande = @numcommande"))
                 {
-                    cmdUpdate.Parameters.AddWithValue("@retiree", this.Retiree);
+                    cmdUpdate.Parameters.AddWithValue("@dateCommande", this.DateCommande);
+                    cmdUpdate.Parameters.AddWithValue("@dateRetraitPrevue", this.DateRetraitPrevue);
                     cmdUpdate.Parameters.AddWithValue("@payee", this.Payee);
+                    cmdUpdate.Parameters.AddWithValue("@retiree", this.Retiree);
+                    cmdUpdate.Parameters.AddWithValue("@prixTotal", this.PrixTotal);
+                    cmdUpdate.Parameters.AddWithValue("@numEmploye", this.UnEmploye.NumEmploye);
+                    cmdUpdate.Parameters.AddWithValue("@numClient", this.UnClient.NumClient);
                     cmdUpdate.Parameters.AddWithValue("@numcommande", this.NumCommande);
 
                     return DataAccess.Instance.ExecuteSet(cmdUpdate);
@@ -196,9 +184,37 @@ namespace SIBILIATP11.Classe
             }
         }
 
-        public void Read()
+        public int Delete()
         {
-            throw new NotImplementedException();
+            using (var cmdDelete = new NpgsqlCommand("DELETE FROM commande WHERE numcommande = @numCommande"))
+            {
+                cmdDelete.Parameters.AddWithValue("@numCommande", this.NumCommande);
+                return DataAccess.Instance.ExecuteSet(cmdDelete);
+            }
+        }
+
+        public List<Commande> FindAll()
+        {
+            List<Commande> lesCommandes = new List<Commande>();
+            using (NpgsqlCommand cmdSelect = new NpgsqlCommand("SELECT * FROM commande"))
+            {
+                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
+                foreach (DataRow dr in dt.Rows)
+                    lesCommandes.Add(new Commande((Int32)dr["numcommande"], (DateTime)dr["datecommande"], (DateTime)dr["dateretraitprevue"], (Boolean)dr["payee"], (Boolean)dr["retiree"], (Double)dr["prixtotal"], new Employe((Int32)dr["numemploye"]), new Client((Int32)dr["numclient"])));
+            }
+            return lesCommandes;
+        }
+
+        public List<Commande> FindBySelection(string criteres)
+        {
+            List<Commande> lesCommandes = new List<Commande>();
+            using (NpgsqlCommand cmdSelect = new NpgsqlCommand($"SELECT * FROM commande WHERE {criteres}"))
+            {
+                DataTable dt = DataAccess.Instance.ExecuteSelect(cmdSelect);
+                foreach (DataRow dr in dt.Rows)
+                    lesCommandes.Add(new Commande((Int32)dr["numcommande"], (DateTime)dr["datecommande"], (DateTime)dr["dateretraitprevue"], (Boolean)dr["payee"], (Boolean)dr["retiree"], (Double)dr["prixtotal"], new Employe((Int32)dr["numemploye"]), new Client((Int32)dr["numclient"])));
+            }
+            return lesCommandes;
         }
     }
 }

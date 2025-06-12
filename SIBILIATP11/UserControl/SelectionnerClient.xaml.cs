@@ -14,7 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using TD3_BindingBDPension.Model;
+using SIBILIATP11.Model;
 
 namespace SIBILIATP11.UserControl
 {
