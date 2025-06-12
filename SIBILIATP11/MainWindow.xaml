@@ -90,7 +90,9 @@
                     Height="70"
                     FontSize="12"
                     FontWeight="Bold"
-                    Header="CLIENTS" />
+                    Header="CLIENTS">
+                    <uc:VoirClient/>
+                </TabItem>
             </TabControl>
         </StackPanel>
         <StackPanel

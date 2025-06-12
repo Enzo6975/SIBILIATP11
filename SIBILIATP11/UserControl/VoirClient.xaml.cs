@@ -26,7 +26,14 @@ namespace SIBILIATP11.UserControl
 
         public VoirClient()
         {
+            // Initialisez votre ObservableCollection
+            ClientsList = new ObservableCollection<Client>();
             InitializeComponent();
+            // Chargez les clients depuis la base de données
+            LoadClients();
+
+            // Définissez le DataContext de ce UserControl à votre collection de clients
+            this.DataContext = ClientsList;
         }
         // Méthode pour charger les clients
         private void LoadClients()
