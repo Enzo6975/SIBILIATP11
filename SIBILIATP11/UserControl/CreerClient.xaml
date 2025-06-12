@@ -9,8 +9,9 @@
     <Grid>
         <Label Content="Créer un client" Background="#FFFD2828" FontSize="30" Foreground="White" FontWeight="Bold" VerticalAlignment="Top" />
 
-        <StackPanel x:Name="StackPanelCreerClient" HorizontalAlignment="Center" VerticalAlignment="Center" Width="395">
-            <Label Content="Nom"/>
+        <StackPanel x:Name="StackPanelCreerClient" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200
+                    ">
+            <Label Content="Nom" HorizontalAlignment="Left"/>
             <TextBox x:Name="txtBoxNomClient" TextWrapping="Wrap"  Width="200" Text="{Binding NomClient, UpdateSourceTrigger=PropertyChanged}"/>
             <Label Content="Prénom"/>
             <TextBox x:Name="txtBoxPrenomClient" TextWrapping="Wrap"  Width="200" Text="{Binding PrenomClient, UpdateSourceTrigger=PropertyChanged}"/>
