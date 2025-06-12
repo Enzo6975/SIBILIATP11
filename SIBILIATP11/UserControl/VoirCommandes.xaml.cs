@@ -1,4 +1,5 @@
 ﻿using SIBILIATP11.Classe;
+using SIBILIATP11.Windows;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -110,8 +111,7 @@ namespace SIBILIATP11.UserControl
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Erreur lors du chargement des plats: {ex.Message}",
-                        "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                    // Échec silencieux
                 }
             }
             else
@@ -126,88 +126,45 @@ namespace SIBILIATP11.UserControl
             inputClient.Text = string.Empty;
         }
 
-        private void btnAdd_Click(object sender, RoutedEventArgs e)
-        {
-            Commande uneCommande = new Commande();
-
-            MessageBoxResult result = MessageBox.Show("Ajouter une nouvelle commande ?",
-                "Nouvelle commande", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (result == MessageBoxResult.Yes)
-            {
-                try
-                {
-                    uneCommande.DateCommande = DateTime.Now;
-                    uneCommande.DateRetraitPrevue = DateTime.Now.AddDays(1);
-                    uneCommande.Payee = false;
-                    uneCommande.Retiree = false;
-                    uneCommande.PrixTotal = 0;
-
-                    if (LaGestionCommande.LesEmploye?.Count > 0)
-                        uneCommande.UnEmploye = LaGestionCommande.LesEmploye[0];
-                    if (LaGestionCommande.LesClients?.Count > 0)
-                        uneCommande.UnClient = LaGestionCommande.LesClients[0];
-
-                    uneCommande.NumCommande = uneCommande.Create();
-                    LaGestionCommande.LesCommandes.Add(uneCommande);
-
-                    CollectionViewSource.GetDefaultView(dgCommandes.ItemsSource).Refresh();
-
-                    MessageBox.Show("Commande créée avec succès", "Succès",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"La commande n'a pas pu être créée: {ex.Message}", "Erreur",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-        }
-
         private void btnEdit_Click(object sender, RoutedEventArgs e)
         {
             if (dgCommandes.SelectedItem == null)
-            {
-                MessageBox.Show("Veuillez sélectionner une commande", "Attention",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
-            }
 
             Commande commandeSelectionnee = (Commande)dgCommandes.SelectedItem;
 
-            MessageBoxResult result = MessageBox.Show(
-                $"Modifier la commande #{commandeSelectionnee.NumCommande} ?\n" +
-                $"Client: {commandeSelectionnee.UnClient?.NomClient} {commandeSelectionnee.UnClient?.PrenomClient}\n" +
-                $"Date: {commandeSelectionnee.DateCommande:dd/MM/yyyy}",
-                "Modifier commande", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (result == MessageBoxResult.Yes)
+            try
             {
-                try
+                // Récupérer l'employé connecté depuis la MainWindow
+                Employe employeConnecte = null;
+                if (Application.Current.MainWindow is MainWindow mainWindow)
                 {
-                    commandeSelectionnee.Update();
+                    employeConnecte = mainWindow.EmployeConnecte;
+                }
 
+                // Ouvrir la fenêtre de modification
+                WindowModification fenetreModification = new WindowModification(commandeSelectionnee, LaGestionCommande, employeConnecte);
+                fenetreModification.Owner = Window.GetWindow(this);
+
+                bool? resultat = fenetreModification.ShowDialog();
+
+                if (resultat == true)
+                {
+                    // Actualiser l'affichage silencieusement
                     CollectionViewSource.GetDefaultView(dgCommandes.ItemsSource).Refresh();
-
-                    MessageBox.Show("Commande modifiée avec succès", "Succès",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
+                    ChargerPlatsCommande();
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"La commande n'a pas pu être modifiée: {ex.Message}", "Erreur",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+            }
+            catch (Exception ex)
+            {
+                // Échec silencieux
             }
         }
 
         private void btnDel_Click(object sender, RoutedEventArgs e)
         {
             if (dgCommandes.SelectedItem == null)
-            {
-                MessageBox.Show("Veuillez sélectionner une commande", "Attention",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
-            }
 
             Commande commande = dgCommandes.SelectedItem as Commande;
 
@@ -218,61 +175,32 @@ namespace SIBILIATP11.UserControl
                     .Count(c => c.UneCommande.NumCommande == commande.NumCommande);
             }
 
+            string messageConfirmation = $"Supprimer la commande #{commande.NumCommande} ?\n" +
+                                       $"Client: {commande.UnClient?.NomClient} {commande.UnClient?.PrenomClient}\n" +
+                                       $"Date: {commande.DateCommande:dd/MM/yyyy}\n" +
+                                       $"Montant: {commande.PrixTotal:F2} €";
+
             if (nbPlatsCommande > 0)
             {
-                MessageBoxResult result = MessageBox.Show("Attention, des plats seront supprimés aussi.",
-                    "Attention", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
-                if (result == MessageBoxResult.Cancel)
-                    return;
+                messageConfirmation += $"\n({nbPlatsCommande} plat(s) seront supprimés)";
             }
 
-            try
-            {
-                commande.Delete();
-                LaGestionCommande.LesCommandes.Remove(commande);
+            MessageBoxResult result = MessageBox.Show(messageConfirmation, "Confirmation",
+                MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-                CollectionViewSource.GetDefaultView(dgCommandes.ItemsSource).Refresh();
-
-                MessageBox.Show("Commande supprimée avec succès", "Succès",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"La commande n'a pas pu être supprimée: {ex.Message}", "Erreur",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private void OnCommandeRetireeChanged(object sender, RoutedEventArgs e)
-        {
-            if (sender is CheckBox checkBox && checkBox.DataContext is Commande commande)
+            if (result == MessageBoxResult.Yes)
             {
                 try
                 {
-                    commande.Update();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Erreur lors de la mise à jour: {ex.Message}",
-                        "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
-                    commande.Retiree = !commande.Retiree;
-                }
-            }
-        }
+                    commande.Delete();
+                    LaGestionCommande.LesCommandes.Remove(commande);
 
-        private void OnPayeeChanged(object sender, RoutedEventArgs e)
-        {
-            if (sender is CheckBox checkBox && checkBox.DataContext is Commande commande)
-            {
-                try
-                {
-                    commande.Update();
+                    CollectionViewSource.GetDefaultView(dgCommandes.ItemsSource).Refresh();
+                    ChargerPlatsCommande();
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Erreur lors de la mise à jour: {ex.Message}",
-                        "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
-                    commande.Payee = !commande.Payee;
+                    // Échec silencieux
                 }
             }
         }

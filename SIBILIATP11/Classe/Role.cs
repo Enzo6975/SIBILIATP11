@@ -43,8 +43,6 @@ namespace SIBILIATP11.Classe
             get { return this.nomRole; }
             set
             {
-                if (string.IsNullOrEmpty(value))
-                    throw new ArgumentNullException("le nom de rôle ne peut pas être nul");
                 this.nomRole = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(NomRole)));
             }

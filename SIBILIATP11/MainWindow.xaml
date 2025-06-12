@@ -7,12 +7,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uc="clr-namespace:SIBILIATP11.UserControl"
     x:Name="Sibilia"
-    Title="MainWindow"
-    Width="800"
-    Height="450"
+    Title="Sibilia - Gestion des Commandes"
+    Width="1200"
+    Height="800"
+    Background="#F5F5F5"
     WindowStartupLocation="CenterScreen"
     WindowState="Maximized"
     mc:Ignorable="d">
+
     <Grid x:Name="LaGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="10*" />
@@ -23,106 +25,309 @@
             <ColumnDefinition Width="20*" />
             <ColumnDefinition Width="80*" />
         </Grid.ColumnDefinitions>
-        <StackPanel
-            x:Name="StackPanelLogo"
+
+        <!--  Logo avec améliorations visuelles (sans flou)  -->
+        <Border
             Grid.Row="0"
-            Grid.Column="2">
-            <StackPanel.Background>
-                <ImageBrush ImageSource="/logo-sibilia.png" Stretch="Uniform" />
-            </StackPanel.Background>
-        </StackPanel>
-        <StackPanel
-            x:Name="StackPanelFond"
+            Grid.Column="1"
+            Background="White"
+            BorderBrush="#E0E0E0"
+            BorderThickness="0,0,0,2">
+            <Grid>
+                <Image
+                    Margin="20"
+                    RenderOptions.BitmapScalingMode="HighQuality"
+                    Source="/logo-sibilia.png"
+                    Stretch="Uniform" />
+                <Rectangle
+                    Height="4"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom"
+                    Fill="#E30613" />
+            </Grid>
+        </Border>
+
+        <!--  Menu latéral stylisé (sans flou)  -->
+        <Border
             Grid.Row="0"
             Grid.RowSpan="3"
             Grid.Column="0"
-            Background="#FFE30613">
-            <TextBlock
-                x:Name="TxtBlockConnexion"
-                Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"
-                FontWeight="Bold"
-                Foreground="White"
-                Text="Connecté en tant que -&#x0a;Enzo Pagès"
-                TextAlignment="Center"
-                TextWrapping="Wrap" />
-        </StackPanel>
-        <StackPanel
-            x:Name="TailleBonne"
+            Background="#E30613">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!--  Section utilisateur améliorée et visible  -->
+                <Border
+                    Grid.Row="0"
+                    Margin="0,0,0,10"
+                    Background="#D60511">
+                    <StackPanel Margin="15,20">
+                        <Ellipse
+                            Width="60"
+                            Height="60"
+                            Margin="0,0,0,15"
+                            Fill="White" />
+                        <TextBlock
+                            x:Name="TxtBlockConnexion"
+                            FontSize="12"
+                            FontWeight="Bold"
+                            Foreground="White"
+                            LineHeight="16"
+                            Text="Connecté en tant que -&#x0a;Enzo Pagès"
+                            TextAlignment="Center"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
+
+                <!--  Navigation - TabControl dans le panneau latéral  -->
+                <StackPanel Grid.Row="1" Margin="0,10,0,10">
+                    <Button
+                        x:Name="btnCreerCommande"
+                        Height="60"
+                        Margin="5,2"
+                        Background="Transparent"
+                        BorderBrush="White"
+                        BorderThickness="1"
+                        Click="TabButton_Click"
+                        Content="📝 CRÉER UNE COMMANDE"
+                        FontSize="11"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        Tag="0">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border
+                                                Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                CornerRadius="8">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="White" />
+                                                    <Setter Property="Foreground" Value="#E30613" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <Button
+                        x:Name="btnVoirCommandes"
+                        Height="60"
+                        Margin="5,2"
+                        Background="White"
+                        BorderBrush="#E30613"
+                        BorderThickness="2"
+                        Click="TabButton_Click"
+                        Content="👁️ VOIR LES COMMANDES"
+                        FontSize="11"
+                        FontWeight="Bold"
+                        Foreground="#E30613"
+                        Tag="1">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border
+                                                Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                CornerRadius="8">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#F0F0F0" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <Button
+                        x:Name="btnCreerPlat"
+                        Height="60"
+                        Margin="5,2"
+                        Background="Transparent"
+                        BorderBrush="White"
+                        BorderThickness="1"
+                        Click="TabButton_Click"
+                        Content="🍽️ CRÉER UN PLAT"
+                        FontSize="11"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        Tag="2"
+                        Visibility="Collapsed">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border
+                                                Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                CornerRadius="8">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="White" />
+                                                    <Setter Property="Foreground" Value="#E30613" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <Button
+                        x:Name="btnClients"
+                        Height="60"
+                        Margin="5,2"
+                        Background="Transparent"
+                        BorderBrush="White"
+                        BorderThickness="1"
+                        Click="TabButton_Click"
+                        Content="👥 CLIENTS"
+                        FontSize="11"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        Tag="3">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border
+                                                Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                CornerRadius="8">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="White" />
+                                                    <Setter Property="Foreground" Value="#E30613" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+
+                <!--  Bouton déconnexion stylisé (sans flou)  -->
+                <Border
+                    Grid.Row="2"
+                    Margin="0,10,0,0"
+                    Background="#FFE30613">
+                    <Button
+                        x:Name="ButDeconnexion"
+                        Margin="15"
+                        Padding="15,10"
+                        Background="Transparent"
+                        BorderBrush="White"
+                        BorderThickness="2"
+                        Click="ButDeconnexion_Click"
+                        Content="DÉCONNEXION"
+                        Cursor="Hand"
+                        FontSize="12"
+                        FontWeight="Bold"
+                        Foreground="White">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border
+                                                Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                CornerRadius="8">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="White" />
+                                                    <Setter Property="Foreground" Value="#E30613" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!--  Contenu principal simplifié  -->
+        <Grid
             Grid.Row="1"
-            Grid.RowSpan="2"
-            Grid.Column="0" />
-        <StackPanel
-            x:Name="StackPanelMenu"
-            Grid.Row="1"
-            Grid.ColumnSpan="2">
-            <TabControl
-                Grid.ColumnSpan="2"
-                Height="{Binding ActualHeight, ElementName=TailleBonne, Mode=OneWay}"
-                Margin="-2,-2,0,0"
-                Background="{x:Null}"
-                BorderBrush="{x:Null}"
-                TabStripPlacement="Left">
-                <TabItem
-                    Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"
-                    Height="70"
-                    FontSize="12"
-                    FontWeight="Bold"
-                    Header="CRÉER UNE COMMANDE">
-                    <uc:CreerCommande x:Name="CreerCommande" />
-                </TabItem>
-                <TabItem
-                    Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"
-                    Height="70"
-                    FontSize="12"
-                    FontWeight="Bold"
-                    Header="VOIR LES COMMANDES">
-                    <uc:VoirCommandes x:Name="VoirCommandes" />
-                </TabItem>
-                <TabItem
-                    x:Name="TabItemCreerPlat"
-                    Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"
-                    Height="70"
-                    FontSize="12"
-                    FontWeight="Bold"
-                    Header="CRÉER UN PLAT"
-                    Visibility="Collapsed">
-                    <uc:CreerPlat x:Name="CreerPlat" />
-                </TabItem>
-                <TabItem
-                    Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"
-                    Height="70"
-                    FontSize="12"
-                    FontWeight="Bold"
-                    Header="CLIENTS">
-                    <uc:VoirClient x:Name="VoirClient" />
-                </TabItem>
-            </TabControl>
-        </StackPanel>
-        <StackPanel
-            x:Name="StackPanelDeconnexion"
-            Grid.Row="2"
-            Grid.Column="0"
-            Background="#FFE30613">
-            <Button
-                x:Name="ButDeconnexion"
-                Width="{Binding ActualWidth, ElementName=StackPanelDeconnexion, Mode=OneWay}"
-                Height="{Binding ActualHeight, ElementName=StackPanelDeconnexion, Mode=OneWay}"
-                Background="#FFE30613"
-                BorderBrush="#FFE30613"
-                Click="ButDeconnexion_Click"
-                Content="Déconnexion"
-                FontWeight="Bold"
-                Foreground="White"
-                RenderTransformOrigin="0.5,0.5">
-                <Button.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform />
-                        <SkewTransform AngleX="0" />
-                        <RotateTransform />
-                        <TranslateTransform X="0" />
-                    </TransformGroup>
-                </Button.RenderTransform>
-            </Button>
-        </StackPanel>
+            Grid.Column="1"
+            Margin="10,0,0,0">
+            <!--  UserControls qui s'affichent selon le bouton sélectionné  -->
+            <Border
+                x:Name="ContentBorder"
+                Margin="5"
+                Background="White"
+                BorderBrush="#E0E0E0"
+                BorderThickness="1"
+                CornerRadius="8">
+
+                <Grid>
+                    <uc:CreerCommande
+                        x:Name="CreerCommande"
+                        Margin="10"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Visibility="Collapsed" />
+
+                    <uc:VoirCommandes
+                        x:Name="VoirCommandes"
+                        Margin="10"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Visibility="Visible" />
+
+                    <uc:CreerPlat
+                        x:Name="CreerPlat"
+                        Margin="10"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Visibility="Collapsed" />
+
+                    <uc:VoirClient
+                        x:Name="VoirClient"
+                        Margin="10"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Visibility="Collapsed" />
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </Window>
