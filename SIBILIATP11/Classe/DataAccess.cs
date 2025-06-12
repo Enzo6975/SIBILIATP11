@@ -169,43 +169,7 @@ namespace TD3_BindingBDPension.Model
                 return ExecuteInsert(cmd);
             }
         }
-        public List<Client> GetAllClients()
-        {
-            List<Client> clients = new List<Client>();
-            try
-            {
-                using (NpgsqlCommand cmd = new NpgsqlCommand("SELECT NumClient, NomClient, PrenomClient, Tel, AdresseRue, AdresseCP, AdresseVille FROM client ORDER BY NumClient"))
-                {
-                    DataTable dt = ExecuteSelect(cmd); // Exécute la requête SELECT
-
-                    foreach (DataRow row in dt.Rows)
-                    {
-                        clients.Add(new Client
-                        {
-                            NumClient = Convert.ToInt32(row["NumClient"]),
-                            NomClient = row["NomClient"].ToString(),
-                            PrenomClient = row["PrenomClient"].ToString(),
-                            Tel = row["Tel"].ToString(),
-                            AdresseRue = row["AdresseRue"].ToString(),
-                            AdresseCP = row["AdresseCP"].ToString(),
-                            AdresseVille = row["AdresseVille"].ToString()
-                        });
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // LogError.Log(ex, "Erreur lors de la récupération de tous les clients.");
-                MessageBox.Show("Erreur lors de la récupération des clients : " + ex.Message);
-                // Vous pouvez choisir de relancer l'exception ou de retourner une liste vide
-                throw;
-            }
-            finally
-            {
-                CloseConnection(); // Il est important de fermer la connexion après avoir fini les opérations
-            }
-            return clients;
-        }
+        
 
     }
 }

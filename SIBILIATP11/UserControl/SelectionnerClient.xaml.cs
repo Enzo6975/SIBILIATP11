@@ -45,10 +45,11 @@ namespace SIBILIATP11.UserControl
         {
             try
             {
-                // Utilisez l'instance Singleton de DataAccess pour récupérer les clients
-                List<Client> clientsFromDb = DataAccess.Instance.GetAllClients();
+                List<SIBILIATP11.Classe.Client> clientsFromDb = new SIBILIATP11.Classe.Client().FindAll();
 
-                // Ajoutez chaque client récupéré à votre ObservableCollection
+                // Efface la liste actuelle pour éviter les doublons lors du rechargement
+                ClientsList.Clear();
+
                 foreach (var client in clientsFromDb)
                 {
                     ClientsList.Add(client);
@@ -57,7 +58,6 @@ namespace SIBILIATP11.UserControl
             catch (Exception ex)
             {
                 MessageBox.Show("Erreur lors du chargement des clients : " + ex.Message, "Erreur de base de données", MessageBoxButton.OK, MessageBoxImage.Error);
-
             }
         }
 
