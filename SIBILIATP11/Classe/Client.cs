@@ -81,7 +81,8 @@ namespace SIBILIATP11.Classe
             get { return this.tel; }
             set
             {
-                this.tel = value;
+                if (value.Length != 10)
+                    throw new ArgumentOutOfRangeException("numero de telephone pas valide");
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Tel)));
             }
         }
