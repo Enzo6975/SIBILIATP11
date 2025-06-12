@@ -76,6 +76,7 @@
                     FontSize="12"
                     FontWeight="Bold"
                     Header="VOIR LES COMMANDES">
+                    <uc:VoirCommandes x:Name="VoirCommandes" />
                 </TabItem>
                 <TabItem
                     Width="{Binding ActualWidth, ElementName=StackPanelFond, Mode=OneWay}"
@@ -91,7 +92,7 @@
                     FontSize="12"
                     FontWeight="Bold"
                     Header="CLIENTS">
-                    <uc:VoirClient/>
+                    <uc:VoirClient />
                 </TabItem>
             </TabControl>
         </StackPanel>

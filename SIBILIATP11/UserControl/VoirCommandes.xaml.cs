@@ -26,13 +26,32 @@ namespace SIBILIATP11.UserControl
         public VoirCommandes()
         {
             InitializeComponent();
+
+            // Initialiser les collections
             platsCommandeSelectionnee = new ObservableCollection<Contient>();
+
+            // Initialiser GestionCommande de manière sécurisée
             InitialiserGestionCommande();
 
+            // Différer la configuration après le chargement complet
+            this.Loaded += VoirCommandes_Loaded;
+        }
+
+        private void VoirCommandes_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Se désabonner pour éviter les appels multiples
+            this.Loaded -= VoirCommandes_Loaded;
+
+            // Configurer le DataGrid avec les commandes
             if (LaGestionCommande != null)
             {
                 dgCommandes.ItemsSource = LaGestionCommande.LesCommandes;
+
+                // Configurer le filtre pour le DataGrid
                 dgCommandes.Items.Filter = RechercheMotClefCommande;
+
+                // Debug: afficher le nombre de commandes chargées
+                System.Diagnostics.Debug.WriteLine($"Nombre de commandes chargées: {LaGestionCommande.LesCommandes?.Count ?? 0}");
             }
         }
 
@@ -40,23 +59,34 @@ namespace SIBILIATP11.UserControl
         {
             try
             {
+                // Méthode 1 : Essayer de récupérer depuis MainWindow via DataContext
                 if (App.Current.MainWindow?.DataContext is GestionCommande gestionDC)
                 {
                     LaGestionCommande = gestionDC;
                 }
+                // Méthode 2 : Essayer de récupérer depuis MainWindow via la propriété LaGestion
                 else if (App.Current.MainWindow is MainWindow mainWin && mainWin.LaGestion != null)
                 {
                     LaGestionCommande = mainWin.LaGestion;
                 }
+                else
+                {
+                    // Méthode 3 : Créer une nouvelle instance si pas trouvée
+                    MessageBox.Show("Impossible de récupérer les données depuis MainWindow.\nCréation d'une nouvelle instance.",
+                        "Avertissement", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    LaGestionCommande = new GestionCommande("Gestion Commandes");
+                }
             }
             catch (Exception ex)
             {
+                // Méthode 4 : En cas d'erreur, créer une instance par défaut
                 MessageBox.Show($"Erreur lors de l'initialisation: {ex.Message}\nCréation d'une nouvelle instance.",
                     "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
                 LaGestionCommande = new GestionCommande("Gestion Commandes");
             }
         }
 
+        // Méthode de filtrage (similaire à RechercheMotClefChien)
         private bool RechercheMotClefCommande(object obj)
         {
             if (String.IsNullOrEmpty(inputClient.Text))
@@ -71,16 +101,23 @@ namespace SIBILIATP11.UserControl
                 || uneCommande.UnClient.PrenomClient.StartsWith(inputClient.Text, StringComparison.OrdinalIgnoreCase));
         }
 
+        // Event handler pour le changement de texte dans le filtre
         private void inputClient_TextChanged(object sender, TextChangedEventArgs e)
         {
-            CollectionViewSource.GetDefaultView(dgCommandes.ItemsSource).Refresh();
+            // Vérifier que le DataGrid et son ItemsSource sont configurés
+            if (dgCommandes.ItemsSource != null)
+            {
+                CollectionViewSource.GetDefaultView(dgCommandes.ItemsSource).Refresh();
+            }
         }
 
+        // Event handler pour la sélection d'une commande
         private void dgCommandes_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ChargerPlatsCommande();
         }
 
+        // Méthode pour charger les plats de la commande sélectionnée
         private void ChargerPlatsCommande()
         {
             platsCommandeSelectionnee.Clear();
@@ -91,6 +128,7 @@ namespace SIBILIATP11.UserControl
 
                 try
                 {
+                    // Utiliser la collection déjà chargée dans GestionCommande
                     var platsCommande = LaGestionCommande.LesContients
                         .Where(c => c.UneCommande.NumCommande == commandeSelectionnee.NumCommande)
                         .ToList();
@@ -100,7 +138,10 @@ namespace SIBILIATP11.UserControl
                         platsCommandeSelectionnee.Add(contient);
                     }
 
+                    // Mettre à jour le DataGrid des plats
                     dgPlatsCommande.ItemsSource = platsCommandeSelectionnee;
+
+                    // Mettre à jour le texte de détail
                     txtDetailCommande.Text = $"Détails de la commande #{commandeSelectionnee.NumCommande}";
                 }
                 catch (Exception ex)
@@ -116,13 +157,20 @@ namespace SIBILIATP11.UserControl
             }
         }
 
+        // Bouton pour effacer le filtre
         private void btnClearFilter_Click(object sender, RoutedEventArgs e)
         {
             inputClient.Text = string.Empty;
         }
+
+        // Bouton Ajouter
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             Commande uneCommande = new Commande();
+
+            // TODO: Créer WindowCommande
+            // WindowCommande wCommande = new WindowCommande(uneCommande, Action.Ajouter);
+            // bool? result = wCommande.ShowDialog();
 
             MessageBoxResult result = MessageBox.Show("Ajouter une nouvelle commande ?",
                 "Nouvelle commande", MessageBoxButton.YesNo, MessageBoxImage.Question);
@@ -131,12 +179,14 @@ namespace SIBILIATP11.UserControl
             {
                 try
                 {
+                    // TODO: Configurer les propriétés de la commande via la fenêtre d'édition
                     uneCommande.DateCommande = DateTime.Now;
                     uneCommande.DateRetraitPrevue = DateTime.Now.AddDays(1);
                     uneCommande.Payee = false;
                     uneCommande.Retiree = false;
                     uneCommande.PrixTotal = 0;
 
+                    // Pour l'instant, utiliser des valeurs par défaut
                     if (LaGestionCommande.LesEmploye?.Count > 0)
                         uneCommande.UnEmploye = LaGestionCommande.LesEmploye[0];
                     if (LaGestionCommande.LesClients?.Count > 0)
@@ -145,6 +195,7 @@ namespace SIBILIATP11.UserControl
                     uneCommande.NumCommande = uneCommande.Create();
                     LaGestionCommande.LesCommandes.Add(uneCommande);
 
+                    // Rafraîchir l'affichage
                     CollectionViewSource.GetDefaultView(dgCommandes.ItemsSource).Refresh();
 
                     MessageBox.Show("Commande créée avec succès", "Succès",
@@ -157,6 +208,8 @@ namespace SIBILIATP11.UserControl
                 }
             }
         }
+
+        // Bouton Modifier
         private void btnEdit_Click(object sender, RoutedEventArgs e)
         {
             if (dgCommandes.SelectedItem == null)
@@ -168,6 +221,7 @@ namespace SIBILIATP11.UserControl
 
             Commande commandeSelectionnee = (Commande)dgCommandes.SelectedItem;
 
+            // Créer une copie pour l'édition
             Commande copie = new Commande(commandeSelectionnee.NumCommande,
                 commandeSelectionnee.DateCommande,
                 commandeSelectionnee.DateRetraitPrevue,
@@ -177,6 +231,11 @@ namespace SIBILIATP11.UserControl
                 commandeSelectionnee.UnEmploye,
                 commandeSelectionnee.UnClient);
 
+            // TODO: Créer WindowCommande similaire à WindowChien
+            // WindowCommande wCommande = new WindowCommande(copie, Action.Modifier);
+            // bool? result = wCommande.ShowDialog();
+
+            // Pour l'instant, simuler avec une MessageBox
             MessageBoxResult result = MessageBox.Show(
                 $"Modifier la commande #{commandeSelectionnee.NumCommande} ?\n" +
                 $"Client: {commandeSelectionnee.UnClient?.NomClient} {commandeSelectionnee.UnClient?.PrenomClient}\n" +
@@ -187,11 +246,13 @@ namespace SIBILIATP11.UserControl
             {
                 try
                 {
-                    commandeSelectionnee.DateRetraitPrevue = copie.DateRetraitPrevue;
-                    commandeSelectionnee.Payee = copie.Payee;
-                    commandeSelectionnee.Retiree = copie.Retiree;
+                    // Appliquer les modifications (à adapter selon votre fenêtre d'édition)
+                    // commandeSelectionnee.DateRetraitPrevue = copie.DateRetraitPrevue;
+                    // commandeSelectionnee.Payee = copie.Payee;
+                    // commandeSelectionnee.Retiree = copie.Retiree;
                     commandeSelectionnee.Update();
 
+                    // Rafraîchir l'affichage
                     CollectionViewSource.GetDefaultView(dgCommandes.ItemsSource).Refresh();
 
                     MessageBox.Show("Commande modifiée avec succès", "Succès",
@@ -204,6 +265,8 @@ namespace SIBILIATP11.UserControl
                 }
             }
         }
+
+        // Bouton Supprimer
         private void btnDel_Click(object sender, RoutedEventArgs e)
         {
             if (dgCommandes.SelectedItem == null)
@@ -215,6 +278,7 @@ namespace SIBILIATP11.UserControl
 
             Commande commande = dgCommandes.SelectedItem as Commande;
 
+            // Vérifier s'il y a des plats dans cette commande
             int nbPlatsCommande = 0;
             if (LaGestionCommande.LesContients != null)
             {
@@ -235,6 +299,7 @@ namespace SIBILIATP11.UserControl
                 commande.Delete();
                 LaGestionCommande.LesCommandes.Remove(commande);
 
+                // Rafraîchir l'affichage
                 CollectionViewSource.GetDefaultView(dgCommandes.ItemsSource).Refresh();
 
                 MessageBox.Show("Commande supprimée avec succès", "Succès",
@@ -247,6 +312,7 @@ namespace SIBILIATP11.UserControl
             }
         }
 
+        // Event handler pour la case à cocher "Commande retirée"
         private void OnCommandeRetireeChanged(object sender, RoutedEventArgs e)
         {
             if (sender is CheckBox checkBox && checkBox.DataContext is Commande commande)
@@ -254,11 +320,13 @@ namespace SIBILIATP11.UserControl
                 try
                 {
                     commande.Update();
+                    // MessageBox supprimé - la mise à jour se fait silencieusement
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Erreur lors de la mise à jour: {ex.Message}",
                         "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                    // Annuler le changement en cas d'erreur
                     commande.Retiree = !commande.Retiree;
                 }
             }
