@@ -1,4 +1,5 @@
 ﻿using SIBILIATP11.Classe;
+using SIBILIATP11.Windows;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -91,6 +92,92 @@ namespace SIBILIATP11.UserControl
         {
             txtRecherche.Text = "";
             txtRecherche.Focus();
+        }
+
+        private void BtnCreerClient_Click(object sender, RoutedEventArgs e)
+        {
+            WindowCreerClient windowCreerClient = new WindowCreerClient();
+            bool? result = windowCreerClient.ShowDialog();
+
+            if (result == true)
+            {
+                // Recharger la liste des clients après création
+                RafraichirDonnees();
+            }
+        }
+
+        private void BtnModifierClient_Click(object sender, RoutedEventArgs e)
+        {
+            if (clients.SelectedItem is Client clientSelectionne)
+            {
+                WindowModifierClient windowModifierClient = new WindowModifierClient(clientSelectionne);
+                bool? result = windowModifierClient.ShowDialog();
+
+                if (result == true)
+                {
+                    // Recharger la liste des clients après modification
+                    RafraichirDonnees();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Veuillez sélectionner un client à modifier.", "Aucun client sélectionné", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void BtnSupprimerClient_Click(object sender, RoutedEventArgs e)
+        {
+            if (clients.SelectedItem is Client clientSelectionne)
+            {
+                // Premier message de confirmation
+                MessageBoxResult result1 = MessageBox.Show(
+                    $"Êtes-vous sûr de vouloir supprimer le client :\n\n{clientSelectionne.NomClient} {clientSelectionne.PrenomClient}\nTéléphone : {clientSelectionne.Tel}",
+                    "Confirmation de suppression",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (result1 == MessageBoxResult.Yes)
+                {
+                    // Deuxième message de confirmation
+                    MessageBoxResult result2 = MessageBox.Show(
+                        "ATTENTION : Cette action est irréversible !\n\nConfirmez-vous définitivement la suppression de ce client ?",
+                        "Confirmation finale",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Warning);
+
+                    if (result2 == MessageBoxResult.Yes)
+                    {
+                        try
+                        {
+                            // Supposons que la classe Client a une méthode Delete()
+                            clientSelectionne.Delete();
+
+                            MessageBox.Show($"Le client '{clientSelectionne.NomClient} {clientSelectionne.PrenomClient}' a été supprimé avec succès.",
+                                "Suppression réussie", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                            // Recharger la liste des clients après suppression
+                            RafraichirDonnees();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Erreur lors de la suppression du client : " + ex.Message,
+                                "Erreur de base de données", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Veuillez sélectionner un client à supprimer.", "Aucun client sélectionné", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void Clients_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Activer/désactiver les boutons selon la sélection
+            bool isClientSelected = clients.SelectedItem != null;
+            btnModifierClient.IsEnabled = isClientSelected;
+            btnSupprimerClient.IsEnabled = isClientSelected;
         }
 
         // Méthode publique pour recharger les données (utile si les données sont modifiées ailleurs)
