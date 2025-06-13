@@ -417,5 +417,10 @@ namespace SIBILIATP11.UserControl
                     "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        private void selectionClient_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

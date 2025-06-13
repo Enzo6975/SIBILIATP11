@@ -1,0 +1,34 @@
+﻿<Window x:Class="SIBILIATP11.Windows.WindowSelectionnerClient"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SIBILIATP11.Windows"
+        Title="Sélectionner un Client"
+    Width="800"
+    Height="500"
+    mc:Ignorable="d">
+    <Grid>
+        <Label VerticalAlignment="Top" Background="#FFFD2828" Content="Séléctionner un Client" FontSize="30" 
+               FontWeight="Bold" Foreground="White" />
+        <StackPanel>
+            <DataGrid x:Name="clients" Height="400" Margin="30,70,30,0" HorizontalAlignment="Center" 
+                      VerticalAlignment="Top" AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding .}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="50" Binding="{Binding NumClient, ValidatesOnExceptions=False}" Header="Num" />
+                    <DataGridTextColumn Width="*" Binding="{Binding NomClient, ValidatesOnExceptions=True}" Header="Nom" />
+                    <DataGridTextColumn Width="*" Binding="{Binding PrenomClient, ValidatesOnExceptions=True}" Header="Prenom" />
+                    <DataGridTextColumn Width="*" Binding="{Binding Tel, ValidatesOnExceptions=True}" Header="Téléphone" />
+                    <DataGridTextColumn Width="*" Binding="{Binding AdresseRue, ValidatesOnExceptions=True}" Header="Adresse" />
+                    <DataGridTextColumn Width="*" Binding="{Binding AdresseCP, ValidatesOnExceptions=True}" Header="Code postal" />
+                    <DataGridTextColumn Width="*" Binding="{Binding AdresseVille, ValidatesOnExceptions=True}" Header="Ville" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <Button x:Name="butCreerClient" Margin="0,24,0,0" HorizontalAlignment="Center" Background="#FFFD2828" 
+                    Click="butCreerClient_Click" Content="Creer un client" FontSize="16" FontWeight="Bold" 
+                    Foreground="White" />
+            <Button x:Name="butSelectClient" Margin="0,24,0,0" HorizontalAlignment="Center" Background="#FFFD2828" 
+                    Content="Selectionner client" FontSize="16" FontWeight="Bold" Foreground="White" />
+        </StackPanel>
+    </Grid>
+</Window>

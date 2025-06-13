@@ -68,6 +68,19 @@
                     <TextBlock Text=" €" FontWeight="Bold"/>
                 </StackPanel>
 
+
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Text="Client : " />
+                    <TextBlock x:Name="txtClient" />
+
+
+
+                </StackPanel>
+                <Button x:Name="selectionClient" Content="Sélectionner un client" Height="35" Margin="30,10,30,0" 
+                        Background="#E30613" Foreground="White" FontWeight="Bold" Click="selectionClient_Click"/>
+
+
                 <Button x:Name="btnValiderCommande" Content="Valider la commande" Height="35" Margin="0,20,0,0" 
                         Background="#E30613" Foreground="White" FontWeight="Bold" Click="ValiderCommande_Click"/>
             </StackPanel>
