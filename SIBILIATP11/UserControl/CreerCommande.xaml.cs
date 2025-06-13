@@ -40,7 +40,6 @@ namespace SIBILIATP11.UserControl
 
         public ObservableCollection<Contient> LignesDeLaCommande { get; set; }
 
-        // Propriété pour afficher le nom du client sélectionné
         public string NomClientAffiche
         {
             get
@@ -63,7 +62,7 @@ namespace SIBILIATP11.UserControl
             CommandeEnCours = new Commande
             {
                 DateCommande = DateTime.Now,
-                UnClient = null, // Pas de client par défaut
+                UnClient = null,
                 UnEmploye = LaGestionCommande?.LesEmploye?.FirstOrDefault()
             };
 
@@ -131,10 +130,8 @@ namespace SIBILIATP11.UserControl
         {
             if (dateRetrait != null)
             {
-                // Date minimale par défaut : demain
                 DateTime dateMinimale = DateTime.Today.AddDays(1);
 
-                // Calculer le délai de préparation maximum si il y a des plats dans le panier
                 int delaiMaxPreparation = CalculerDelaiPreparationMax();
 
                 if (delaiMaxPreparation > 0)
@@ -144,7 +141,6 @@ namespace SIBILIATP11.UserControl
 
                 dateRetrait.DisplayDateStart = dateMinimale;
 
-                // Si la date sélectionnée est antérieure à la nouvelle date minimale, la mettre à jour
                 if (!dateRetrait.SelectedDate.HasValue || dateRetrait.SelectedDate.Value < dateMinimale)
                 {
                     dateRetrait.SelectedDate = dateMinimale;
@@ -178,7 +174,7 @@ namespace SIBILIATP11.UserControl
             CommandeEnCours = new Commande
             {
                 DateCommande = DateTime.Now,
-                UnClient = null, // Remettre à null lors de la réinitialisation
+                UnClient = null,
                 UnEmploye = LaGestionCommande?.LesEmploye?.FirstOrDefault()
             };
 
@@ -186,7 +182,6 @@ namespace SIBILIATP11.UserControl
             OnPropertyChanged(nameof(LignesDeLaCommande));
             OnPropertyChanged(nameof(NomClientAffiche));
 
-            // Réinitialiser la date de retrait
             ConfigurerDatePickerRetrait();
         }
 
@@ -329,7 +324,7 @@ namespace SIBILIATP11.UserControl
                     if (prixMin > prixMax)
                     {
                         MessageBox.Show("Le prix minimum ne peut pas être supérieur au prix maximum.",
-                                      "Erreur de saisie", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                        "Erreur de saisie", MessageBoxButton.OK, MessageBoxImage.Warning);
                         return false;
                     }
                 }
@@ -361,7 +356,7 @@ namespace SIBILIATP11.UserControl
                 plats.Items.Filter = RechercheMotClefPlat;
                 ConfigurerComboBoxCategories();
                 ConfigurerDatePicker();
-                ConfigurerDatePickerRetrait(); // Configurer aussi le DatePicker de retrait
+                ConfigurerDatePickerRetrait();
             }
 
             recherche.TextChanged += Recherche_TextChanged;
@@ -439,7 +434,6 @@ namespace SIBILIATP11.UserControl
                 }
 
                 CalculerPrixTotal();
-                // Mettre à jour la date de retrait minimale après ajout d'un plat
                 ConfigurerDatePickerRetrait();
             }
         }
@@ -469,7 +463,6 @@ namespace SIBILIATP11.UserControl
                     return;
                 }
 
-                // Définir la date de retrait dans la commande
                 CommandeEnCours.DateRetraitPrevue = dateRetrait.SelectedDate.Value;
 
                 CommandeEnCours.Create();
@@ -498,17 +491,14 @@ namespace SIBILIATP11.UserControl
         {
             try
             {
-                // Ouvrir la fenêtre de sélection de client
                 WindowSelectionnerClient fenetreSelection = new WindowSelectionnerClient()
                 {
                     WindowStartupLocation = WindowStartupLocation.CenterOwner,
                     Owner = Window.GetWindow(this)
                 };
 
-                // Afficher la fenêtre en mode modal
                 bool? result = fenetreSelection.ShowDialog();
 
-                // Si un client a été sélectionné
                 if (result == true && fenetreSelection.ClientSelectionne != null)
                 {
                     CommandeEnCours.UnClient = fenetreSelection.ClientSelectionne;
@@ -547,22 +537,14 @@ namespace SIBILIATP11.UserControl
             }
         }
 
-        // Méthode pour supprimer un plat du panier (optionnelle, si vous voulez ajouter cette fonctionnalité)
         private void SupprimerPlat_Click(object sender, RoutedEventArgs e)
         {
             if ((sender as Button)?.DataContext is Contient ligneASupprimer)
             {
                 LignesDeLaCommande.Remove(ligneASupprimer);
                 CalculerPrixTotal();
-                // Mettre à jour la date de retrait minimale après suppression d'un plat
                 ConfigurerDatePickerRetrait();
             }
         }
-
-        /*private void SelectionDateRetrait()
-        {
-            if(recapPanier)
-            CommandeEnCours.DateRetraitPrevue = dateRetrait.SelectedDate.Value;
-        }*/
     }
 }

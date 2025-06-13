@@ -10,9 +10,9 @@
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Border
@@ -45,31 +45,60 @@
             </StackPanel>
         </Border>
 
-        <!-- Boutons d'actions -->
-        <Border Grid.Row="1" Background="#F0F0F0" Padding="10" Margin="30,0,30,10">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button x:Name="btnCreerClient" Content="Nouveau Client" Width="120" Height="30" 
-                        Background="#FFFD2828" Foreground="White" FontWeight="Bold"
-                        Margin="0,0,10,0" Click="BtnCreerClient_Click"
-                        ToolTip="Créer un nouveau client"/>
-                <Button x:Name="btnModifierClient" Content="Modifier" Width="80" Height="30" 
-                        Background="#FF4CAF50" Foreground="White" FontWeight="Bold"
-                        Margin="0,0,10,0" Click="BtnModifierClient_Click"
-                        ToolTip="Modifier le client sélectionné"
-                        IsEnabled="False"/>
-                <Button x:Name="btnSupprimerClient" Content="Supprimer" Width="80" Height="30" 
-                        Background="#FFF44336" Foreground="White" FontWeight="Bold"
-                        Click="BtnSupprimerClient_Click"
-                        ToolTip="Supprimer le client sélectionné"
-                        IsEnabled="False"/>
+        <Border
+            Grid.Row="1"
+            Margin="30,0,30,10"
+            Padding="10"
+            Background="#F0F0F0">
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button
+                    x:Name="btnCreerClient"
+                    Width="120"
+                    Height="30"
+                    Margin="0,0,10,0"
+                    Background="#FFFD2828"
+                    Click="BtnCreerClient_Click"
+                    Content="Nouveau Client"
+                    FontWeight="Bold"
+                    Foreground="White"
+                    ToolTip="Créer un nouveau client" />
+                <Button
+                    x:Name="btnModifierClient"
+                    Width="80"
+                    Height="30"
+                    Margin="0,0,10,0"
+                    Background="#FF4CAF50"
+                    Click="BtnModifierClient_Click"
+                    Content="Modifier"
+                    FontWeight="Bold"
+                    Foreground="White"
+                    IsEnabled="False"
+                    ToolTip="Modifier le client sélectionné" />
+                <Button
+                    x:Name="btnSupprimerClient"
+                    Width="80"
+                    Height="30"
+                    Background="#FFF44336"
+                    Click="BtnSupprimerClient_Click"
+                    Content="Supprimer"
+                    FontWeight="Bold"
+                    Foreground="White"
+                    IsEnabled="False"
+                    ToolTip="Supprimer le client sélectionné" />
             </StackPanel>
         </Border>
 
-        <!-- DataGrid -->
-        <DataGrid x:Name="clients" Grid.Row="2" Height="300" Margin="30,0,30,30" 
-                  HorizontalAlignment="Center" VerticalAlignment="Top" 
-                  AutoGenerateColumns="False" IsReadOnly="True" ItemsSource="{Binding .}"
-                  SelectionChanged="Clients_SelectionChanged">
+        <DataGrid
+            x:Name="clients"
+            Grid.Row="2"
+            Height="300"
+            Margin="30,0,30,30"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            AutoGenerateColumns="False"
+            IsReadOnly="True"
+            ItemsSource="{Binding .}"
+            SelectionChanged="Clients_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTextColumn
                     Width="50"

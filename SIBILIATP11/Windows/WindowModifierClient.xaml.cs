@@ -8,7 +8,7 @@ namespace SIBILIATP11.Windows
     public partial class WindowModifierClient : Window
     {
         public Client ClientEnEdition { get; private set; }
-        private Client clientOriginal; // Pour conserver les valeurs originales
+        private Client clientOriginal;
 
         public WindowModifierClient(Client clientAModifier)
         {
@@ -19,7 +19,6 @@ namespace SIBILIATP11.Windows
                 throw new ArgumentNullException(nameof(clientAModifier), "Le client à modifier ne peut pas être null");
             }
 
-            // Créer une copie du client pour l'édition
             ClientEnEdition = new Client
             {
                 NumClient = clientAModifier.NumClient,
@@ -31,7 +30,6 @@ namespace SIBILIATP11.Windows
                 AdresseVille = clientAModifier.AdresseVille
             };
 
-            // Conserver une copie des valeurs originales
             clientOriginal = new Client
             {
                 NumClient = clientAModifier.NumClient,
@@ -48,7 +46,6 @@ namespace SIBILIATP11.Windows
 
         private void ButValiderModification_Click(object sender, RoutedEventArgs e)
         {
-            // Forcer la mise à jour des bindings
             foreach (UIElement child in StackPanelModifierClient.Children)
             {
                 if (child is TextBox textBox && !textBox.IsReadOnly)
@@ -58,7 +55,6 @@ namespace SIBILIATP11.Windows
                 }
             }
 
-            // Validation des champs obligatoires
             if (string.IsNullOrWhiteSpace(ClientEnEdition.NomClient) ||
                 string.IsNullOrWhiteSpace(ClientEnEdition.PrenomClient) ||
                 string.IsNullOrWhiteSpace(ClientEnEdition.Tel) ||
@@ -70,7 +66,6 @@ namespace SIBILIATP11.Windows
                 return;
             }
 
-            // Vérifier s'il y a des modifications
             if (ClientEnEdition.NomClient == clientOriginal.NomClient &&
                 ClientEnEdition.PrenomClient == clientOriginal.PrenomClient &&
                 ClientEnEdition.Tel == clientOriginal.Tel &&
@@ -82,7 +77,6 @@ namespace SIBILIATP11.Windows
                 return;
             }
 
-            // Demander confirmation avant de sauvegarder
             MessageBoxResult result = MessageBox.Show(
                 $"Confirmer la modification du client :\n\n{ClientEnEdition.NomClient} {ClientEnEdition.PrenomClient}",
                 "Confirmation de modification",
@@ -93,13 +87,11 @@ namespace SIBILIATP11.Windows
             {
                 try
                 {
-                    // Supposons que la classe Client a une méthode Update()
                     ClientEnEdition.Update();
 
                     MessageBox.Show($"Le client '{ClientEnEdition.NomClient} {ClientEnEdition.PrenomClient}' a été modifié avec succès.",
                         "Modification réussie", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                    // Indiquer que la modification a réussi et fermer la fenêtre
                     this.DialogResult = true;
                     this.Close();
                 }
@@ -113,7 +105,6 @@ namespace SIBILIATP11.Windows
 
         private void ButAnnulerModification_Click(object sender, RoutedEventArgs e)
         {
-            // Vérifier s'il y a des modifications non sauvegardées
             if (ClientEnEdition.NomClient != clientOriginal.NomClient ||
                 ClientEnEdition.PrenomClient != clientOriginal.PrenomClient ||
                 ClientEnEdition.Tel != clientOriginal.Tel ||
@@ -133,15 +124,12 @@ namespace SIBILIATP11.Windows
                 }
             }
 
-            // Fermer la fenêtre sans sauvegarder
             this.DialogResult = false;
             this.Close();
         }
 
-        // Gérer la fermeture de la fenêtre avec la croix
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            // Si des modifications ont été apportées, demander confirmation
             if (ClientEnEdition.NomClient != clientOriginal.NomClient ||
                 ClientEnEdition.PrenomClient != clientOriginal.PrenomClient ||
                 ClientEnEdition.Tel != clientOriginal.Tel ||
