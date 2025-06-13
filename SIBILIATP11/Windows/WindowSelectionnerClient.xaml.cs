@@ -33,10 +33,9 @@ namespace SIBILIATP11.Windows
         {
             try
             {
-                List<SIBILIATP11.Classe.Client> clientsFromDb = new SIBILIATP11.Classe.Client().FindAll();
+                List<Client> clientsFromDb = new Client().FindAll();
                 ClientsList.Clear();
-
-                foreach (var client in clientsFromDb)
+                foreach (Client client in clientsFromDb)
                 {
                     ClientsList.Add(client);
                 }
@@ -49,7 +48,6 @@ namespace SIBILIATP11.Windows
 
         private void butCreerClient_Click(object sender, RoutedEventArgs e)
         {
-            // Option 1: Ouvrir dans une nouvelle fenêtre
             CreerClient creerClientUserControl = new CreerClient();
             Window creerClientWindow = new Window
             {
@@ -61,18 +59,7 @@ namespace SIBILIATP11.Windows
                 Owner = this
             };
             creerClientWindow.ShowDialog();
-
-            // Recharger les clients après la fermeture de la fenêtre
             LoadClients();
-
-            // Option 2: Si vous préférez naviguer vers MainWindow
-            /*
-            MainWindow mainWindow = new MainWindow();
-            CreerClient creerClientUserControl = new CreerClient();
-            mainWindow.Sibilia.Content = creerClientUserControl;
-            mainWindow.Show();
-            this.Close();
-            */
         }
     }
 }

@@ -1,18 +1,8 @@
 ﻿using SIBILIATP11.Classe;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using SIBILIATP11.Model;
 
 namespace SIBILIATP11.UserControl
@@ -51,7 +41,6 @@ namespace SIBILIATP11.UserControl
                     bindingExpression?.UpdateSource();
                 }
             }
-
             if (string.IsNullOrWhiteSpace(ClientEnEdition.NomClient) ||
                 string.IsNullOrWhiteSpace(ClientEnEdition.PrenomClient) ||
                 string.IsNullOrWhiteSpace(ClientEnEdition.Tel) ||
@@ -62,14 +51,11 @@ namespace SIBILIATP11.UserControl
                 MessageBox.Show("Veuillez remplir tous les champs requis.", "Erreur de saisie", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-
             try
             {
                 int newNumClient = ClientEnEdition.Create();
                 ClientEnEdition.NumClient = newNumClient;
-
                 MessageBox.Show($"Client '{ClientEnEdition.NomClient} {ClientEnEdition.PrenomClient}' créé avec succès ! Numéro : {ClientEnEdition.NumClient}", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
-
                 RetourToSelectionnerClient();
             }
             catch (Exception ex)
