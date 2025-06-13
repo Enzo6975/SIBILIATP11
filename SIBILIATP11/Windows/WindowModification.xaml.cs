@@ -25,7 +25,6 @@ namespace SIBILIATP11.Windows
             this.employeConnecte = employeConnecte ?? commande.UnEmploye;
             platsCommande = new ObservableCollection<Contient>();
             ModificationReussie = false;
-
             InitialiserInterface();
             ChargerDonnees();
             ChargerPlatsCommande();
@@ -37,7 +36,6 @@ namespace SIBILIATP11.Windows
             {
                 cbClient.ItemsSource = gestionCommande.LesClients;
             }
-
             dgPlatsModification.ItemsSource = platsCommande;
         }
 
@@ -51,15 +49,13 @@ namespace SIBILIATP11.Windows
                 txtPrixTotal.Text = commandeAModifier.PrixTotal.ToString("F2");
                 chkPayee.IsChecked = commandeAModifier.Payee;
                 chkRetiree.IsChecked = commandeAModifier.Retiree;
-
                 if (employeConnecte != null)
                 {
                     txtEmploye.Text = $"{employeConnecte.NumEmploye} - {employeConnecte.NomEmploye} {employeConnecte.PrenomEmploye}";
                 }
-
                 if (commandeAModifier.UnClient != null)
                 {
-                    var clientActuel = gestionCommande.LesClients.FirstOrDefault(c => c.NumClient == commandeAModifier.UnClient.NumClient);
+                    Client clientActuel = gestionCommande.LesClients.FirstOrDefault(c => c.NumClient == commandeAModifier.UnClient.NumClient);
                     if (clientActuel != null)
                     {
                         cbClient.SelectedItem = clientActuel;
@@ -71,31 +67,100 @@ namespace SIBILIATP11.Windows
         private void ChargerPlatsCommande()
         {
             platsCommande.Clear();
-
-            if (gestionCommande?.LesContients != null)
+            try
             {
-                var platsCommande = gestionCommande.LesContients
-                    .Where(c => c.UneCommande.NumCommande == commandeAModifier.NumCommande)
-                    .ToList();
-
-                foreach (var contient in platsCommande)
+                System.Diagnostics.Debug.WriteLine($"Chargement plats pour commande {commandeAModifier.NumCommande}");
+                System.Diagnostics.Debug.WriteLine($"Nombre total de Contients : {gestionCommande?.LesContients?.Count ?? 0}");
+                if (gestionCommande?.LesContients != null)
                 {
-                    this.platsCommande.Add(contient);
+                    List<Contient> platsCommandeList = gestionCommande.LesContients
+                        .Where(c => c.UneCommande != null && c.UneCommande.NumCommande == commandeAModifier.NumCommande)
+                        .ToList();
+                    System.Diagnostics.Debug.WriteLine($"Plats trouvés pour cette commande : {platsCommandeList.Count}");
+                    foreach (Contient contient in platsCommandeList)
+                    {
+                        if (contient.UnPlat != null)
+                        {
+                            platsCommande.Add(contient);
+                            System.Diagnostics.Debug.WriteLine($"Ajouté : {contient.UnPlat.NomPlat} (Qty: {contient.Quantite})");
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine("Contient sans plat trouvé !");
+                        }
+                    }
+                }
+                if (platsCommande.Count == 0)
+                {
+                    System.Diagnostics.Debug.WriteLine("Aucun plat trouvé, tentative de rechargement direct depuis la DB...");
+                    ChargerPlatsDepuisDB();
                 }
             }
-
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur lors du chargement des plats : {ex.Message}");
+                MessageBox.Show($"Erreur lors du chargement des plats : {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
             RecalculerPrixTotal();
+        }
+
+        private void ChargerPlatsDepuisDB()
+        {
+            try
+            {
+                List<Contient> contients = new Contient().FindAll();
+                List<Contient> platsCommandeList = contients
+                    .Where(c => c.UneCommande != null && c.UneCommande.NumCommande == commandeAModifier.NumCommande)
+                    .ToList();
+                System.Diagnostics.Debug.WriteLine($"Plats trouvés directement en DB : {platsCommandeList.Count}");
+                foreach (Contient contient in platsCommandeList)
+                {
+                    if (contient.UnPlat != null)
+                    {
+                        Plat platComplet = gestionCommande.LesPlats?.FirstOrDefault(p => p.NumPlat == contient.UnPlat.NumPlat);
+                        if (platComplet != null)
+                        {
+                            contient.UnPlat = platComplet;
+                        }
+                        else
+                        {
+                            contient.UnPlat.Read();
+                        }
+                        platsCommande.Add(contient);
+                        System.Diagnostics.Debug.WriteLine($"Ajouté depuis DB : {contient.UnPlat.NomPlat} (Qty: {contient.Quantite})");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur chargement depuis DB : {ex.Message}");
+            }
         }
 
         private void RecalculerPrixTotal()
         {
-            double total = platsCommande.Sum(p => p.CalculerTotal);
-            commandeAModifier.PrixTotal = total;
-            txtPrixTotal.Text = total.ToString("F2");
-
-            if (dgPlatsModification != null)
+            try
             {
-                dgPlatsModification.Items.Refresh();
+                double total = 0;
+                foreach (Contient contient in platsCommande)
+                {
+                    if (contient.UnPlat != null)
+                    {
+                        double prixUnitaire = contient.Prix > 0 ? contient.Prix : contient.UnPlat.PrixUnitaire;
+                        total += prixUnitaire * contient.Quantite;
+                    }
+                }
+                commandeAModifier.PrixTotal = total;
+                txtPrixTotal.Text = total.ToString("F2");
+                System.Diagnostics.Debug.WriteLine($"Prix total recalculé : {total:F2}€");
+                if (dgPlatsModification != null)
+                {
+                    dgPlatsModification.Items.Refresh();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur recalcul prix : {ex.Message}");
             }
         }
 
@@ -103,33 +168,34 @@ namespace SIBILIATP11.Windows
         {
             if (!dpDateCommande.SelectedDate.HasValue)
             {
+                MessageBox.Show("Veuillez sélectionner une date de commande.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
             else if (dpDateCommande.SelectedDate.Value > DateTime.Now)
             {
+                MessageBox.Show("La date de commande ne peut pas être dans le futur.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
-
             if (!dpDatePrevue.SelectedDate.HasValue)
             {
+                MessageBox.Show("Veuillez sélectionner une date de retrait prévue.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
-            else if (dpDateCommande.SelectedDate.HasValue &&
-                dpDatePrevue.SelectedDate.Value < dpDateCommande.SelectedDate.Value)
+            else if (dpDateCommande.SelectedDate.HasValue && dpDatePrevue.SelectedDate.Value < dpDateCommande.SelectedDate.Value)
             {
+                MessageBox.Show("La date de retrait ne peut pas être antérieure à la date de commande.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
-
             if (cbClient.SelectedItem == null)
             {
+                MessageBox.Show("Veuillez sélectionner un client.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
-
             if (platsCommande.Count == 0)
             {
+                MessageBox.Show("La commande doit contenir au moins un plat.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
-
             return true;
         }
 
@@ -145,26 +211,58 @@ namespace SIBILIATP11.Windows
 
         private void btnAjouterPlat_Click(object sender, RoutedEventArgs e)
         {
-            if (gestionCommande?.LesPlats != null && gestionCommande.LesPlats.Count > 0)
+            try
             {
-                var platDisponible = gestionCommande.LesPlats.FirstOrDefault(p =>
-                    !platsCommande.Any(pc => pc.UnPlat.NumPlat == p.NumPlat));
-
-                if (platDisponible != null)
+                if (gestionCommande?.LesPlats != null && gestionCommande.LesPlats.Count > 0)
                 {
-                    var nouveauContient = new Contient(1, platDisponible.PrixUnitaire, commandeAModifier, platDisponible);
-                    platsCommande.Add(nouveauContient);
-                    RecalculerPrixTotal();
+                    Plat platDisponible = gestionCommande.LesPlats.FirstOrDefault(p =>
+                        !platsCommande.Any(pc => pc.UnPlat.NumPlat == p.NumPlat));
+                    if (platDisponible != null)
+                    {
+                        Contient nouveauContient = new Contient
+                        {
+                            Quantite = 1,
+                            Prix = platDisponible.PrixUnitaire,
+                            UneCommande = commandeAModifier,
+                            UnPlat = platDisponible
+                        };
+                        platsCommande.Add(nouveauContient);
+                        RecalculerPrixTotal();
+                        System.Diagnostics.Debug.WriteLine($"Plat ajouté : {platDisponible.NomPlat}");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Tous les plats disponibles sont déjà dans la commande.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
                 }
+                else
+                {
+                    MessageBox.Show("Aucun plat disponible.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erreur lors de l'ajout du plat : {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void btnSupprimerPlat_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button button && button.DataContext is Contient contient)
+            try
             {
-                platsCommande.Remove(contient);
-                RecalculerPrixTotal();
+                if (sender is Button button && button.DataContext is Contient contient)
+                {
+                    if (MessageBox.Show($"Supprimer le plat '{contient.UnPlat?.NomPlat}' de la commande ?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    {
+                        platsCommande.Remove(contient);
+                        RecalculerPrixTotal();
+                        System.Diagnostics.Debug.WriteLine($"Plat supprimé : {contient.UnPlat?.NomPlat}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erreur lors de la suppression : {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -177,50 +275,41 @@ namespace SIBILIATP11.Windows
         {
             try
             {
-                if (!ValiderDonnees())
-                    return;
-
+                if (!ValiderDonnees()) return;
                 commandeAModifier.DateCommande = dpDateCommande.SelectedDate ?? DateTime.Now;
                 commandeAModifier.DateRetraitPrevue = dpDatePrevue.SelectedDate ?? DateTime.Now;
                 commandeAModifier.Payee = chkPayee.IsChecked ?? false;
                 commandeAModifier.Retiree = chkRetiree.IsChecked ?? false;
-
                 commandeAModifier.UnEmploye = employeConnecte;
-
                 if (cbClient.SelectedItem is Client clientSelectionne)
                 {
                     commandeAModifier.UnClient = clientSelectionne;
                 }
-
                 RecalculerPrixTotal();
-
                 commandeAModifier.Update();
-
-                var anciensContients = gestionCommande.LesContients
+                List<Contient> anciensContients = gestionCommande.LesContients
                     .Where(c => c.UneCommande.NumCommande == commandeAModifier.NumCommande)
                     .ToList();
-
-                foreach (var ancien in anciensContients)
+                foreach (Contient ancien in anciensContients)
                 {
                     ancien.Delete();
                     gestionCommande.LesContients.Remove(ancien);
                 }
-
-                foreach (var contient in platsCommande)
+                foreach (Contient contient in platsCommande)
                 {
                     contient.UneCommande = commandeAModifier;
                     contient.Create();
                     gestionCommande.LesContients.Add(contient);
                 }
-
                 ModificationReussie = true;
+                MessageBox.Show("Commande modifiée avec succès !", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
                 this.DialogResult = true;
                 this.Close();
             }
             catch (Exception ex)
             {
-                this.DialogResult = false;
-                this.Close();
+                MessageBox.Show($"Erreur lors de la modification : {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Diagnostics.Debug.WriteLine($"Erreur validation : {ex.Message}");
             }
         }
 

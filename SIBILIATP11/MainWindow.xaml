@@ -64,7 +64,6 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!--  Header avec navigation  -->
         <Border
             Grid.Row="0"
             Background="#E30613"
@@ -73,16 +72,11 @@
             <Grid Height="90">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <!--  Connexion  -->
                     <ColumnDefinition Width="*" />
-                    <!--  Navigation  -->
                     <ColumnDefinition Width="Auto" />
-                    <!--  Logo  -->
                     <ColumnDefinition Width="Auto" />
-                    <!--  Déconnexion  -->
                 </Grid.ColumnDefinitions>
 
-                <!--  Informations de connexion  -->
                 <Border
                     Grid.Column="0"
                     Margin="0,0,15,0"
@@ -106,7 +100,6 @@
                     </StackPanel>
                 </Border>
 
-                <!--  Navigation avec boutons  -->
                 <StackPanel
                     Grid.Column="1"
                     Margin="20,0,20,0"
@@ -135,7 +128,6 @@
                         Style="{StaticResource NavigationButtonStyle}" />
                 </StackPanel>
 
-                <!--  Logo  -->
                 <Border
                     Grid.Column="2"
                     Margin="15,10"
@@ -149,7 +141,6 @@
                         Stretch="Uniform" />
                 </Border>
 
-                <!--  Bouton déconnexion  -->
                 <Border
                     Grid.Column="3"
                     Margin="15,0,20,0"
@@ -194,7 +185,6 @@
             </Grid>
         </Border>
 
-        <!--  Zone de contenu pour les UserControls  -->
         <Grid x:Name="ContentGrid" Grid.Row="1">
             <uc:CreerCommande
                 x:Name="CreerCommande"
