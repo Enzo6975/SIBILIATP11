@@ -99,6 +99,7 @@ namespace SIBILIATP11.UserControl
             }
         }
 
+        // Configuration du ComboBox des catégories (inchangé)
         private void ConfigurerComboBoxCategories()
         {
             var categoriesAvecTous = new List<object>();
@@ -115,6 +116,73 @@ namespace SIBILIATP11.UserControl
             cbCategorie.DisplayMemberPath = "NomCategorie";
             cbCategorie.SelectedValuePath = "NumCategorie";
             cbCategorie.SelectedIndex = 0;
+
+            System.Diagnostics.Debug.WriteLine($"Catégories configurées : {categoriesAvecTous.Count - 1}");
+        }
+
+        // NOUVEAU : Configuration du ComboBox des sous-catégories
+        private void ConfigurerComboBoxSousCategories()
+        {
+            var sousCategoriesAvecTous = new List<object>();
+            sousCategoriesAvecTous.Add(new { NumSousCategorie = -1, NomSousCategorie = "Toutes les sous-catégories" });
+
+            if (LaGestionCommande.LesSousCategories != null)
+            {
+                foreach (var sousCategorie in LaGestionCommande.LesSousCategories)
+                {
+                    sousCategoriesAvecTous.Add(sousCategorie);
+                }
+            }
+
+            cbSousCategorie.ItemsSource = sousCategoriesAvecTous;
+            cbSousCategorie.DisplayMemberPath = "NomSousCategorie";
+            cbSousCategorie.SelectedValuePath = "NumSousCategorie";
+            cbSousCategorie.SelectedIndex = 0;
+
+            System.Diagnostics.Debug.WriteLine($"Sous-catégories configurées : {sousCategoriesAvecTous.Count - 1}");
+        }
+
+        // NOUVEAU : Mise à jour des sous-catégories selon la catégorie sélectionnée
+        private void MettreAJourSousCategories()
+        {
+            if (cbCategorie.SelectedValue == null)
+                return;
+
+            int categorieSelectionnee = Convert.ToInt32(cbCategorie.SelectedValue);
+            var sousCategoriesFiltrées = new List<object>();
+            sousCategoriesFiltrées.Add(new { NumSousCategorie = -1, NomSousCategorie = "Toutes les sous-catégories" });
+
+            if (categorieSelectionnee == -1)
+            {
+                // Si "Toutes les catégories" est sélectionné, afficher toutes les sous-catégories
+                if (LaGestionCommande.LesSousCategories != null)
+                {
+                    foreach (var sousCategorie in LaGestionCommande.LesSousCategories)
+                    {
+                        sousCategoriesFiltrées.Add(sousCategorie);
+                    }
+                }
+            }
+            else
+            {
+                // Filtrer les sous-catégories selon la catégorie sélectionnée
+                if (LaGestionCommande.LesSousCategories != null)
+                {
+                    var sousCategoriesDeLaCategorie = LaGestionCommande.LesSousCategories
+                        .Where(sc => sc.UneCategorie != null && sc.UneCategorie.NumCategorie == categorieSelectionnee)
+                        .ToList();
+
+                    foreach (var sousCategorie in sousCategoriesDeLaCategorie)
+                    {
+                        sousCategoriesFiltrées.Add(sousCategorie);
+                    }
+                }
+            }
+
+            cbSousCategorie.ItemsSource = sousCategoriesFiltrées;
+            cbSousCategorie.SelectedIndex = 0;
+
+            System.Diagnostics.Debug.WriteLine($"Sous-catégories filtrées : {sousCategoriesFiltrées.Count - 1} pour catégorie {categorieSelectionnee}");
         }
 
         private void ConfigurerDatePicker()
@@ -185,18 +253,21 @@ namespace SIBILIATP11.UserControl
             ConfigurerDatePickerRetrait();
         }
 
+        // MODIFIÉ : Filtre prenant en compte catégorie ET sous-catégorie
         private bool RechercheMotClefPlat(object obj)
         {
             Plat unPlat = obj as Plat;
             if (unPlat == null)
                 return false;
 
+            // Filtre par texte (nom du plat)
             bool correspondTexte = true;
             if (!String.IsNullOrEmpty(recherche.Text))
             {
                 correspondTexte = unPlat.NomPlat.StartsWith(recherche.Text, StringComparison.OrdinalIgnoreCase);
             }
 
+            // Filtre par catégorie
             bool correspondCategorie = true;
             if (cbCategorie.SelectedValue != null)
             {
@@ -222,6 +293,25 @@ namespace SIBILIATP11.UserControl
                 }
             }
 
+            // NOUVEAU : Filtre par sous-catégorie
+            bool correspondSousCategorie = true;
+            if (cbSousCategorie.SelectedValue != null)
+            {
+                int sousCategorieSelectionnee = Convert.ToInt32(cbSousCategorie.SelectedValue);
+                if (sousCategorieSelectionnee != -1)
+                {
+                    if (unPlat.UneSousCategorie != null)
+                    {
+                        correspondSousCategorie = unPlat.UneSousCategorie.NumSousCategorie == sousCategorieSelectionnee;
+                    }
+                    else
+                    {
+                        correspondSousCategorie = false;
+                    }
+                }
+            }
+
+            // Filtre par date de disponibilité
             bool correspondDate = true;
             if (dpDateCommande != null && dpDateCommande.SelectedDate.HasValue)
             {
@@ -231,6 +321,7 @@ namespace SIBILIATP11.UserControl
                 correspondDate = unPlat.DelaiPreparation <= joursDisponibles;
             }
 
+            // Filtre par fourchette de prix
             bool correspondPrix = true;
             if (txtPrixMin != null && !string.IsNullOrEmpty(txtPrixMin.Text))
             {
@@ -247,7 +338,9 @@ namespace SIBILIATP11.UserControl
                     correspondPrix = correspondPrix && unPlat.PrixUnitaire <= prixMax;
                 }
             }
-            return correspondTexte && correspondCategorie && correspondDate && correspondPrix;
+
+            // MODIFIÉ : Toutes les conditions doivent être vraies, y compris la sous-catégorie
+            return correspondTexte && correspondCategorie && correspondSousCategorie && correspondDate && correspondPrix;
         }
 
         private void RefreshFilter()
@@ -262,6 +355,7 @@ namespace SIBILIATP11.UserControl
         {
             recherche.Text = "";
             cbCategorie.SelectedIndex = 0;
+            cbSousCategorie.SelectedIndex = 0; // NOUVEAU
             dpDateCommande.SelectedDate = DateTime.Today.AddDays(1);
             txtPrixMin.Text = "";
             txtPrixMax.Text = "";
@@ -352,15 +446,23 @@ namespace SIBILIATP11.UserControl
 
             if (LaGestionCommande != null)
             {
+                PreChargerDonneesCategories();
+
                 plats.ItemsSource = LaGestionCommande.LesPlats;
                 plats.Items.Filter = RechercheMotClefPlat;
                 ConfigurerComboBoxCategories();
+                ConfigurerComboBoxSousCategories(); // NOUVEAU
                 ConfigurerDatePicker();
                 ConfigurerDatePickerRetrait();
+
+                System.Diagnostics.Debug.WriteLine($"Plats chargés : {LaGestionCommande.LesPlats?.Count ?? 0}");
+                System.Diagnostics.Debug.WriteLine($"Catégories disponibles : {LaGestionCommande.LesCategories?.Count ?? 0}");
+                System.Diagnostics.Debug.WriteLine($"Sous-catégories disponibles : {LaGestionCommande.LesSousCategories?.Count ?? 0}");
             }
 
             recherche.TextChanged += Recherche_TextChanged;
             cbCategorie.SelectionChanged += CbCategorie_SelectionChanged;
+            cbSousCategorie.SelectionChanged += CbSousCategorie_SelectionChanged; // NOUVEAU
 
             if (dpDateCommande != null)
                 dpDateCommande.SelectedDateChanged += DpDateCommande_SelectedDateChanged;
@@ -378,6 +480,26 @@ namespace SIBILIATP11.UserControl
 
         private void CbCategorie_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            MettreAJourSousCategories(); // NOUVEAU : Met à jour les sous-catégories
+            RefreshFilter();
+        }
+
+        // NOUVEAU : Gestionnaire pour le changement de sous-catégorie
+        private void CbSousCategorie_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cbSousCategorie.SelectedValue != null)
+            {
+                int sousCategorieSelectionnee = Convert.ToInt32(cbSousCategorie.SelectedValue);
+                if (sousCategorieSelectionnee != -1)
+                {
+                    var sousCategorie = LaGestionCommande.LesSousCategories?.FirstOrDefault(sc => sc.NumSousCategorie == sousCategorieSelectionnee);
+                    System.Diagnostics.Debug.WriteLine($"Sous-catégorie sélectionnée : {sousCategorie?.NomSousCategorie ?? "Inconnue"}");
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("Toutes les sous-catégories sélectionnées");
+                }
+            }
             RefreshFilter();
         }
 

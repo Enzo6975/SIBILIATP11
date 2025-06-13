@@ -28,32 +28,80 @@
                     Content="Rechercher :" />
                 <TextBox x:Name="recherche" Height="30" />
             </StackPanel>
+
+            <!--  MODIFIÉ : Ajout du ComboBox sous-catégorie et réorganisation  -->
             <StackPanel
                 x:Name="stackPanel2"
-                Height="30"
                 Margin="0,10,0,0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"
-                Orientation="Horizontal">
-                <ComboBox x:Name="cbCategorie" Width="150" />
-                <DatePicker x:Name="dpDateCommande" Margin="30,0,0,0" />
-                <Label Margin="30,0,0,0" Content="De" />
-                <TextBox
-                    x:Name="txtPrixMin"
-                    Width="50"
-                    Margin="5,0,0,0"
-                    TextAlignment="Center" />
-                <Label Margin="5,0,0,0" Content="à" />
-                <TextBox
-                    x:Name="txtPrixMax"
-                    Width="50"
-                    Margin="5.5,0,0,0" />
-                <Label Margin="5,0,0,0" Content="€" />
+                Orientation="Vertical">
+
+                <!--  Première ligne : Catégories et Sous-catégories  -->
+                <StackPanel
+                    Height="30"
+                    Margin="0,0,0,10"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+                    <Label
+                        VerticalAlignment="Center"
+                        Content="Catégorie :"
+                        FontWeight="SemiBold" />
+                    <ComboBox
+                        x:Name="cbCategorie"
+                        Width="150"
+                        Margin="5,0,20,0" />
+
+                    <Label
+                        VerticalAlignment="Center"
+                        Content="Sous-catégorie :"
+                        FontWeight="SemiBold" />
+                    <ComboBox
+                        x:Name="cbSousCategorie"
+                        Width="150"
+                        Margin="5,0,0,0" />
+                </StackPanel>
+
+                <!--  Deuxième ligne : Date et Prix  -->
+                <StackPanel
+                    Height="30"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+                    <Label
+                        VerticalAlignment="Center"
+                        Content="Date :"
+                        FontWeight="SemiBold" />
+                    <DatePicker x:Name="dpDateCommande" Margin="5,0,20,0" />
+
+                    <Label
+                        VerticalAlignment="Center"
+                        Content="Prix de"
+                        FontWeight="SemiBold" />
+                    <TextBox
+                        x:Name="txtPrixMin"
+                        Width="50"
+                        Margin="5,0,0,0"
+                        TextAlignment="Center" />
+                    <Label
+                        Margin="5,0,0,0"
+                        VerticalAlignment="Center"
+                        Content="à" />
+                    <TextBox
+                        x:Name="txtPrixMax"
+                        Width="50"
+                        Margin="5,0,0,0"
+                        TextAlignment="Center" />
+                    <Label
+                        Margin="5,0,0,0"
+                        VerticalAlignment="Center"
+                        Content="€" />
+                </StackPanel>
             </StackPanel>
+
             <DataGrid
                 x:Name="plats"
-                Height="500"
-                Margin="30,30,30,0"
+                Height="450"
+                Margin="30,20,30,0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"
                 AutoGenerateColumns="False"
@@ -154,15 +202,11 @@
                     <TextBlock FontWeight="Bold" Text=" €" />
                 </StackPanel>
 
-
-
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <TextBlock Text="Client : " />
                     <TextBlock x:Name="txtClient" Text="{}" />
-
-
-
                 </StackPanel>
+
                 <Button
                     x:Name="selectionClient"
                     Height="35"
@@ -173,10 +217,8 @@
                     FontWeight="Bold"
                     Foreground="White" />
 
-
                 <Label Margin="0,20,0,0" Content="Date de retrait : " />
                 <DatePicker x:Name="dateRetrait" />
-
 
                 <Button
                     x:Name="btnValiderCommande"
