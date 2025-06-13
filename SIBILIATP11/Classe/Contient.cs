@@ -35,8 +35,18 @@ namespace SIBILIATP11.Classe
             get { return this.quantite; }
             set
             {
-                this.quantite = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Quantite)));
+                if (value >= 1 && value <= 100) // Validation de la plage
+                {
+                    this.quantite = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Quantite)));
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CalculerTotal)));
+                    
+                    // Mettre à jour automatiquement le prix basé sur le prix unitaire du plat
+                    if (UnPlat != null)
+                    {
+                        this.Prix = UnPlat.PrixUnitaire;
+                    }
+                }
             }
         }
 
@@ -47,6 +57,7 @@ namespace SIBILIATP11.Classe
             {
                 this.prix = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Prix)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CalculerTotal)));
             }
         }
 
@@ -67,6 +78,12 @@ namespace SIBILIATP11.Classe
             {
                 this.unPlat = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(UnPlat)));
+                
+                // Mettre à jour automatiquement le prix quand le plat change
+                if (value != null)
+                {
+                    this.Prix = value.PrixUnitaire;
+                }
             }
         }
 

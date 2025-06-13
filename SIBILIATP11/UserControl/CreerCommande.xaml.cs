@@ -102,19 +102,19 @@ namespace SIBILIATP11.UserControl
 
         private void ConfigurerComboBoxCategories()
         {
-            var souscategoriesAvecTous = new List<object>();
-            souscategoriesAvecTous.Add(new { NumSousCategorie = -1, NomSousCategorie = "Toutes les catégories" });
-            if (LaGestionCommande.LesSousCategories != null)
+            var categoriesAvecTous = new List<object>();
+            categoriesAvecTous.Add(new { NumCategorie = -1, NomCategorie = "Toutes les catégories" });
+            if (LaGestionCommande.LesCategories != null)
             {
-                foreach (var souscategorie in LaGestionCommande.LesSousCategories)
+                foreach (var categorie in LaGestionCommande.LesCategories)
                 {
-                    souscategoriesAvecTous.Add(souscategorie);
+                    categoriesAvecTous.Add(categorie);
                 }
             }
 
-            cbCategorie.ItemsSource = souscategoriesAvecTous;
-            cbCategorie.DisplayMemberPath = "NomSousCategorie";
-            cbCategorie.SelectedValuePath = "NumSousCategorie";
+            cbCategorie.ItemsSource = categoriesAvecTous;
+            cbCategorie.DisplayMemberPath = "NomCategorie";
+            cbCategorie.SelectedValuePath = "NumCategorie";
             cbCategorie.SelectedIndex = 0;
         }
 

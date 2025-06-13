@@ -57,9 +57,9 @@
                            ItemsSource="{Binding LignesDeLaCommande}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Width="*" Binding="{Binding UnPlat.NomPlat}" Header="Plat" IsReadOnly="True"/>
-                        <DataGridTextColumn Width="*" Binding="{Binding Quantite}" Header="Qté" />
+                        <DataGridTextColumn Width="*" Binding="{Binding Quantite}" Header="Qté"  IsReadOnly="True"/>
                         <DataGridTextColumn Width="*" Binding="{Binding UnPlat.PrixUnitaire, StringFormat=F2}" Header="Prix" IsReadOnly="True"/>
-                        <DataGridTextColumn x:Name="delai" Width="*" Binding="{Binding UnPlat.DelaiPreparation}" Header="Delai Preparation"/>
+                        <DataGridTextColumn x:Name="delai" Width="*" Binding="{Binding UnPlat.DelaiPreparation}" Header="Delai Preparation" IsReadOnly="True"/>
                     </DataGrid.Columns>
                 </DataGrid>
 
