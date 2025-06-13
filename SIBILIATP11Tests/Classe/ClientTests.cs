@@ -66,5 +66,20 @@ namespace SIBILIATP11.Classe.Tests
             client.AdresseVille = "Test Ville";
             Assert.AreEqual(6, propertyChangedCount);
         }
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Client_Telephone_Unicite_Test()
+        {
+            var listeClients = new List<Client>
+    {
+        new Client { Tel = "0601020304" }
+    };
+
+            var nouveauClient = new Client { Tel = "0601020304" };
+
+            if (listeClients.Any(c => c.Tel == nouveauClient.Tel))
+                throw new InvalidOperationException("Numéro déjà utilisé");
+        }
+
     }
 }
