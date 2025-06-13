@@ -96,8 +96,7 @@
                         <DataGridTextColumn Width="*" Binding="{Binding UnPlat.NumPlat}" Header="Numéro Plat" />
                         <DataGridTextColumn Width="*" Binding="{Binding UnPlat.NomPlat}" Header="Nom du Plat" />
                         <DataGridTextColumn Width="*" Binding="{Binding Quantite}" Header="Quantité" />
-                        <DataGridTextColumn Width="*" Binding="{Binding Prix, StringFormat=F2}" Header="Prix unitaire (€)" />
-                        <DataGridTextColumn Width="*" Binding="{Binding CalculerTotal, StringFormat=F2}" Header="Total (€)" />
+                        <DataGridTextColumn Width="*" Binding="{Binding UnPlat.PrixUnitaire, StringFormat=F2}" Header="Prix unitaire (€)" />
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

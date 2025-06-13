@@ -10,20 +10,20 @@ namespace SIBILIATP11.Windows
 {
     public partial class WindowModification : Window
     {
-        private Commande _commandeAModifier;
-        private GestionCommande _gestionCommande;
-        private Employe _employeConnecte;
-        private ObservableCollection<Contient> _platsCommande;
+        private Commande commandeAModifier;
+        private GestionCommande gestionCommande;
+        private Employe employeConnecte;
+        private ObservableCollection<Contient> platsCommande;
 
         public bool ModificationReussie { get; private set; }
 
         public WindowModification(Commande commande, GestionCommande gestionCommande, Employe employeConnecte = null)
         {
             InitializeComponent();
-            _commandeAModifier = commande;
-            _gestionCommande = gestionCommande;
-            _employeConnecte = employeConnecte ?? commande.UnEmploye;
-            _platsCommande = new ObservableCollection<Contient>();
+            commandeAModifier = commande;
+            this.gestionCommande = gestionCommande;
+            this.employeConnecte = employeConnecte ?? commande.UnEmploye;
+            platsCommande = new ObservableCollection<Contient>();
             ModificationReussie = false;
 
             InitialiserInterface();
@@ -33,33 +33,33 @@ namespace SIBILIATP11.Windows
 
         private void InitialiserInterface()
         {
-            if (_gestionCommande?.LesClients != null)
+            if (gestionCommande?.LesClients != null)
             {
-                cbClient.ItemsSource = _gestionCommande.LesClients;
+                cbClient.ItemsSource = gestionCommande.LesClients;
             }
 
-            dgPlatsModification.ItemsSource = _platsCommande;
+            dgPlatsModification.ItemsSource = platsCommande;
         }
 
         private void ChargerDonnees()
         {
-            if (_commandeAModifier != null)
+            if (commandeAModifier != null)
             {
-                txtNumCommande.Text = _commandeAModifier.NumCommande.ToString();
-                dpDateCommande.SelectedDate = _commandeAModifier.DateCommande;
-                dpDatePrevue.SelectedDate = _commandeAModifier.DateRetraitPrevue;
-                txtPrixTotal.Text = _commandeAModifier.PrixTotal.ToString("F2");
-                chkPayee.IsChecked = _commandeAModifier.Payee;
-                chkRetiree.IsChecked = _commandeAModifier.Retiree;
+                txtNumCommande.Text = commandeAModifier.NumCommande.ToString();
+                dpDateCommande.SelectedDate = commandeAModifier.DateCommande;
+                dpDatePrevue.SelectedDate = commandeAModifier.DateRetraitPrevue;
+                txtPrixTotal.Text = commandeAModifier.PrixTotal.ToString("F2");
+                chkPayee.IsChecked = commandeAModifier.Payee;
+                chkRetiree.IsChecked = commandeAModifier.Retiree;
 
-                if (_employeConnecte != null)
+                if (employeConnecte != null)
                 {
-                    txtEmploye.Text = $"{_employeConnecte.NumEmploye} - {_employeConnecte.NomEmploye} {_employeConnecte.PrenomEmploye}";
+                    txtEmploye.Text = $"{employeConnecte.NumEmploye} - {employeConnecte.NomEmploye} {employeConnecte.PrenomEmploye}";
                 }
 
-                if (_commandeAModifier.UnClient != null)
+                if (commandeAModifier.UnClient != null)
                 {
-                    var clientActuel = _gestionCommande.LesClients.FirstOrDefault(c => c.NumClient == _commandeAModifier.UnClient.NumClient);
+                    var clientActuel = gestionCommande.LesClients.FirstOrDefault(c => c.NumClient == commandeAModifier.UnClient.NumClient);
                     if (clientActuel != null)
                     {
                         cbClient.SelectedItem = clientActuel;
@@ -70,17 +70,17 @@ namespace SIBILIATP11.Windows
 
         private void ChargerPlatsCommande()
         {
-            _platsCommande.Clear();
+            platsCommande.Clear();
 
-            if (_gestionCommande?.LesContients != null)
+            if (gestionCommande?.LesContients != null)
             {
-                var platsCommande = _gestionCommande.LesContients
-                    .Where(c => c.UneCommande.NumCommande == _commandeAModifier.NumCommande)
+                var platsCommande = gestionCommande.LesContients
+                    .Where(c => c.UneCommande.NumCommande == commandeAModifier.NumCommande)
                     .ToList();
 
                 foreach (var contient in platsCommande)
                 {
-                    _platsCommande.Add(contient);
+                    this.platsCommande.Add(contient);
                 }
             }
 
@@ -89,8 +89,8 @@ namespace SIBILIATP11.Windows
 
         private void RecalculerPrixTotal()
         {
-            double total = _platsCommande.Sum(p => p.CalculerTotal);
-            _commandeAModifier.PrixTotal = total;
+            double total = platsCommande.Sum(p => p.CalculerTotal);
+            commandeAModifier.PrixTotal = total;
             txtPrixTotal.Text = total.ToString("F2");
 
             if (dgPlatsModification != null)
@@ -125,7 +125,7 @@ namespace SIBILIATP11.Windows
                 return false;
             }
 
-            if (_platsCommande.Count == 0)
+            if (platsCommande.Count == 0)
             {
                 return false;
             }
@@ -145,15 +145,15 @@ namespace SIBILIATP11.Windows
 
         private void btnAjouterPlat_Click(object sender, RoutedEventArgs e)
         {
-            if (_gestionCommande?.LesPlats != null && _gestionCommande.LesPlats.Count > 0)
+            if (gestionCommande?.LesPlats != null && gestionCommande.LesPlats.Count > 0)
             {
-                var platDisponible = _gestionCommande.LesPlats.FirstOrDefault(p =>
-                    !_platsCommande.Any(pc => pc.UnPlat.NumPlat == p.NumPlat));
+                var platDisponible = gestionCommande.LesPlats.FirstOrDefault(p =>
+                    !platsCommande.Any(pc => pc.UnPlat.NumPlat == p.NumPlat));
 
                 if (platDisponible != null)
                 {
-                    var nouveauContient = new Contient(1, platDisponible.PrixUnitaire, _commandeAModifier, platDisponible);
-                    _platsCommande.Add(nouveauContient);
+                    var nouveauContient = new Contient(1, platDisponible.PrixUnitaire, commandeAModifier, platDisponible);
+                    platsCommande.Add(nouveauContient);
                     RecalculerPrixTotal();
                 }
             }
@@ -163,7 +163,7 @@ namespace SIBILIATP11.Windows
         {
             if (sender is Button button && button.DataContext is Contient contient)
             {
-                _platsCommande.Remove(contient);
+                platsCommande.Remove(contient);
                 RecalculerPrixTotal();
             }
         }
@@ -180,37 +180,37 @@ namespace SIBILIATP11.Windows
                 if (!ValiderDonnees())
                     return;
 
-                _commandeAModifier.DateCommande = dpDateCommande.SelectedDate ?? DateTime.Now;
-                _commandeAModifier.DateRetraitPrevue = dpDatePrevue.SelectedDate ?? DateTime.Now;
-                _commandeAModifier.Payee = chkPayee.IsChecked ?? false;
-                _commandeAModifier.Retiree = chkRetiree.IsChecked ?? false;
+                commandeAModifier.DateCommande = dpDateCommande.SelectedDate ?? DateTime.Now;
+                commandeAModifier.DateRetraitPrevue = dpDatePrevue.SelectedDate ?? DateTime.Now;
+                commandeAModifier.Payee = chkPayee.IsChecked ?? false;
+                commandeAModifier.Retiree = chkRetiree.IsChecked ?? false;
 
-                _commandeAModifier.UnEmploye = _employeConnecte;
+                commandeAModifier.UnEmploye = employeConnecte;
 
                 if (cbClient.SelectedItem is Client clientSelectionne)
                 {
-                    _commandeAModifier.UnClient = clientSelectionne;
+                    commandeAModifier.UnClient = clientSelectionne;
                 }
 
                 RecalculerPrixTotal();
 
-                _commandeAModifier.Update();
+                commandeAModifier.Update();
 
-                var anciensContients = _gestionCommande.LesContients
-                    .Where(c => c.UneCommande.NumCommande == _commandeAModifier.NumCommande)
+                var anciensContients = gestionCommande.LesContients
+                    .Where(c => c.UneCommande.NumCommande == commandeAModifier.NumCommande)
                     .ToList();
 
                 foreach (var ancien in anciensContients)
                 {
                     ancien.Delete();
-                    _gestionCommande.LesContients.Remove(ancien);
+                    gestionCommande.LesContients.Remove(ancien);
                 }
 
-                foreach (var contient in _platsCommande)
+                foreach (var contient in platsCommande)
                 {
-                    contient.UneCommande = _commandeAModifier;
+                    contient.UneCommande = commandeAModifier;
                     contient.Create();
-                    _gestionCommande.LesContients.Add(contient);
+                    gestionCommande.LesContients.Add(contient);
                 }
 
                 ModificationReussie = true;
