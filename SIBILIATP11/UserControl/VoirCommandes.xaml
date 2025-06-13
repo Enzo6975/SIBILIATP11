@@ -30,6 +30,7 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="200" />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <TextBlock
@@ -48,13 +49,31 @@
                         Grid.Column="2"
                         Width="25"
                         Height="25"
-                        Margin="10,0,0,0"
+                        Margin="10,0,10,0"
                         Click="btnClearFilter_Click"
                         Content="✕"
                         FontWeight="Bold"
                         ToolTip="Effacer la recherche" />
-
+                    <Button
+                        x:Name="btnCommandesDuJour"
+                        Grid.Column="3"
+                        Height="25"
+                        Margin="10,0,0,0"
+                        Padding="8,2"
+                        Background="#2196F3"
+                        Click="btnCommandesDuJour_Click"
+                        Content="📅 Commandes du jour"
+                        FontWeight="SemiBold"
+                        Foreground="White"
+                        ToolTip="Afficher les commandes à retirer aujourd'hui" />
                 </Grid>
+                <TextBlock
+                    x:Name="txtFiltreActif"
+                    Margin="0,5,0,0"
+                    FontSize="12"
+                    FontStyle="Italic"
+                    Foreground="#666666"
+                    Visibility="Collapsed" />
             </StackPanel>
         </Border>
         <DataGrid

@@ -44,7 +44,7 @@ namespace SIBILIATP11.Windows
             if (commandeAModifier != null)
             {
                 txtNumCommande.Text = commandeAModifier.NumCommande.ToString();
-                dpDateCommande.SelectedDate = commandeAModifier.DateCommande;
+                txtDateCommande.Text = commandeAModifier.DateCommande.ToString("dd/MM/yyyy");
                 dpDatePrevue.SelectedDate = commandeAModifier.DateRetraitPrevue;
                 txtPrixTotal.Text = commandeAModifier.PrixTotal.ToString("F2");
                 chkPayee.IsChecked = commandeAModifier.Payee;
@@ -166,22 +166,12 @@ namespace SIBILIATP11.Windows
 
         private bool ValiderDonnees()
         {
-            if (!dpDateCommande.SelectedDate.HasValue)
-            {
-                MessageBox.Show("Veuillez sélectionner une date de commande.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            else if (dpDateCommande.SelectedDate.Value > DateTime.Now)
-            {
-                MessageBox.Show("La date de commande ne peut pas être dans le futur.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
             if (!dpDatePrevue.SelectedDate.HasValue)
             {
                 MessageBox.Show("Veuillez sélectionner une date de retrait prévue.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
-            else if (dpDateCommande.SelectedDate.HasValue && dpDatePrevue.SelectedDate.Value < dpDateCommande.SelectedDate.Value)
+            else if (dpDatePrevue.SelectedDate.Value < commandeAModifier.DateCommande)
             {
                 MessageBox.Show("La date de retrait ne peut pas être antérieure à la date de commande.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
@@ -215,8 +205,7 @@ namespace SIBILIATP11.Windows
             {
                 if (gestionCommande?.LesPlats != null && gestionCommande.LesPlats.Count > 0)
                 {
-                    Plat platDisponible = gestionCommande.LesPlats.FirstOrDefault(p =>
-                        !platsCommande.Any(pc => pc.UnPlat.NumPlat == p.NumPlat));
+                    Plat platDisponible = gestionCommande.LesPlats.FirstOrDefault(p => !platsCommande.Any(pc => pc.UnPlat.NumPlat == p.NumPlat));
                     if (platDisponible != null)
                     {
                         Contient nouveauContient = new Contient
@@ -276,7 +265,10 @@ namespace SIBILIATP11.Windows
             try
             {
                 if (!ValiderDonnees()) return;
-                commandeAModifier.DateCommande = dpDateCommande.SelectedDate ?? DateTime.Now;
+
+                // Ne pas modifier la date de commande - elle reste celle d'origine
+                // commandeAModifier.DateCommande = dpDateCommande.SelectedDate ?? DateTime.Now; // Ligne à supprimer
+
                 commandeAModifier.DateRetraitPrevue = dpDatePrevue.SelectedDate ?? DateTime.Now;
                 commandeAModifier.Payee = chkPayee.IsChecked ?? false;
                 commandeAModifier.Retiree = chkRetiree.IsChecked ?? false;
