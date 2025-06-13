@@ -127,6 +127,39 @@ namespace SIBILIATP11.UserControl
             }
         }
 
+        private void ConfigurerDatePickerRetrait()
+        {
+            if (dateRetrait != null)
+            {
+                // Date minimale par défaut : demain
+                DateTime dateMinimale = DateTime.Today.AddDays(1);
+
+                // Calculer le délai de préparation maximum si il y a des plats dans le panier
+                int delaiMaxPreparation = CalculerDelaiPreparationMax();
+
+                if (delaiMaxPreparation > 0)
+                {
+                    dateMinimale = DateTime.Today.AddDays(delaiMaxPreparation);
+                }
+
+                dateRetrait.DisplayDateStart = dateMinimale;
+
+                // Si la date sélectionnée est antérieure à la nouvelle date minimale, la mettre à jour
+                if (!dateRetrait.SelectedDate.HasValue || dateRetrait.SelectedDate.Value < dateMinimale)
+                {
+                    dateRetrait.SelectedDate = dateMinimale;
+                }
+            }
+        }
+
+        private int CalculerDelaiPreparationMax()
+        {
+            if (LignesDeLaCommande == null || !LignesDeLaCommande.Any())
+                return 0;
+
+            return LignesDeLaCommande.Max(ligne => ligne.UnPlat?.DelaiPreparation ?? 0);
+        }
+
         private void CalculerPrixTotal()
         {
             double total = 0;
@@ -152,6 +185,9 @@ namespace SIBILIATP11.UserControl
             OnPropertyChanged(nameof(CommandeEnCours));
             OnPropertyChanged(nameof(LignesDeLaCommande));
             OnPropertyChanged(nameof(NomClientAffiche));
+
+            // Réinitialiser la date de retrait
+            ConfigurerDatePickerRetrait();
         }
 
         private bool RechercheMotClefPlat(object obj)
@@ -243,9 +279,7 @@ namespace SIBILIATP11.UserControl
 
             if (LaGestionCommande?.LesPlats != null)
             {
-                platsDisponibles = LaGestionCommande.LesPlats
-                    .Where(p => p.DelaiPreparation <= joursDisponibles)
-                    .ToList();
+                platsDisponibles = LaGestionCommande.LesPlats.Where(p => p.DelaiPreparation <= joursDisponibles).ToList();
             }
             return platsDisponibles;
         }
@@ -327,6 +361,7 @@ namespace SIBILIATP11.UserControl
                 plats.Items.Filter = RechercheMotClefPlat;
                 ConfigurerComboBoxCategories();
                 ConfigurerDatePicker();
+                ConfigurerDatePickerRetrait(); // Configurer aussi le DatePicker de retrait
             }
 
             recherche.TextChanged += Recherche_TextChanged;
@@ -404,6 +439,8 @@ namespace SIBILIATP11.UserControl
                 }
 
                 CalculerPrixTotal();
+                // Mettre à jour la date de retrait minimale après ajout d'un plat
+                ConfigurerDatePickerRetrait();
             }
         }
 
@@ -424,6 +461,16 @@ namespace SIBILIATP11.UserControl
                         MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
+
+                if (!dateRetrait.SelectedDate.HasValue)
+                {
+                    MessageBox.Show("Veuillez sélectionner une date de retrait.", "Date de retrait manquante",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Définir la date de retrait dans la commande
+                CommandeEnCours.DateRetraitPrevue = dateRetrait.SelectedDate.Value;
 
                 CommandeEnCours.Create();
                 LaGestionCommande.LesCommandes.Add(CommandeEnCours);
@@ -485,19 +532,37 @@ namespace SIBILIATP11.UserControl
         {
             try
             {
-                    if (CommandeEnCours.UnClient != null)
-                    {
-                        txtClient.Text = $"{CommandeEnCours.UnClient.NomClient} {CommandeEnCours.UnClient.PrenomClient}";
-                    }
-                    else
-                    {
-                        txtClient.Text = "Aucun Client";
-                    }
+                if (CommandeEnCours.UnClient != null)
+                {
+                    txtClient.Text = $"{CommandeEnCours.UnClient.NomClient} {CommandeEnCours.UnClient.PrenomClient}";
+                }
+                else
+                {
+                    txtClient.Text = "Aucun Client";
+                }
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Erreur affichage Client: {ex.Message}");
             }
         }
+
+        // Méthode pour supprimer un plat du panier (optionnelle, si vous voulez ajouter cette fonctionnalité)
+        private void SupprimerPlat_Click(object sender, RoutedEventArgs e)
+        {
+            if ((sender as Button)?.DataContext is Contient ligneASupprimer)
+            {
+                LignesDeLaCommande.Remove(ligneASupprimer);
+                CalculerPrixTotal();
+                // Mettre à jour la date de retrait minimale après suppression d'un plat
+                ConfigurerDatePickerRetrait();
+            }
+        }
+
+        /*private void SelectionDateRetrait()
+        {
+            if(recapPanier)
+            CommandeEnCours.DateRetraitPrevue = dateRetrait.SelectedDate.Value;
+        }*/
     }
 }

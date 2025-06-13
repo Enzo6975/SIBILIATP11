@@ -109,7 +109,8 @@
             <DatePicker
                 x:Name="dpDateCommande"
                 Grid.Column="1"
-                VerticalAlignment="Center" />
+                VerticalAlignment="Center"
+                />
         </Grid>
 
         <Grid Grid.Row="5" Margin="0,5">

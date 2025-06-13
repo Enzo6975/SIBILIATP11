@@ -37,10 +37,10 @@
                     <DataGridTextColumn Width="*" Binding="{Binding DelaiPreparation}" Header="Délai préparation" />
                     <DataGridTextColumn Width="*" Binding="{Binding NbPersonnes}" Header="Nb personnes" />
 
-                    <DataGridTemplateColumn Header="Action" Width="*">
+                    <DataGridTemplateColumn Header="Action" Width="*" >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Content="Ajouter" Click="AjouterPlat_Click"/>
+                                <Button Content="Ajouter" Click="AjouterPlat_Click" Background="#FF4CAF50" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontWeight="Bold" Foreground="White" BorderBrush="#FF4CAF50"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -54,11 +54,12 @@
                 <TextBlock Text="Récapitulatif de la commande" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
 
                 <DataGrid x:Name="recapPanier" Height="300" AutoGenerateColumns="False" CanUserAddRows="False" 
-                          IsReadOnly="True" ItemsSource="{Binding LignesDeLaCommande}">
+                           ItemsSource="{Binding LignesDeLaCommande}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Width="*" Binding="{Binding UnPlat.NomPlat}" Header="Plat" />
-                        <DataGridTextColumn Width="60" Binding="{Binding Quantite}" Header="Qté" />
-                        <DataGridTextColumn Width="80" Binding="{Binding UnPlat.PrixUnitaire, StringFormat=F2}" Header="Prix" />
+                        <DataGridTextColumn Width="*" Binding="{Binding UnPlat.NomPlat}" Header="Plat" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="*" Binding="{Binding Quantite}" Header="Qté" />
+                        <DataGridTextColumn Width="*" Binding="{Binding UnPlat.PrixUnitaire, StringFormat=F2}" Header="Prix" IsReadOnly="True"/>
+                        <DataGridTextColumn x:Name="delai" Width="*" Binding="{Binding UnPlat.DelaiPreparation}" Header="Delai Preparation"/>
                     </DataGrid.Columns>
                 </DataGrid>
 
@@ -79,6 +80,10 @@
                 </StackPanel>
                 <Button x:Name="selectionClient" Content="Sélectionner un client" Height="35" Margin="30,10,30,0" 
                         Background="#E30613" Foreground="White" FontWeight="Bold" Click="selectionClient_Click"/>
+
+
+                <Label Content="Date de retrait : " Margin="0,20,0,0"/>
+                <DatePicker x:Name="dateRetrait"></DatePicker>
 
 
                 <Button x:Name="btnValiderCommande" Content="Valider la commande" Height="35" Margin="0,20,0,0" 
