@@ -108,5 +108,20 @@ namespace SIBILIATP11.Classe.Tests
             employe.NumEmploye = 99;
             Assert.IsFalse(propertyChangedRaised);
         }
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Employe_Login_Unicite_Test()
+        {
+            var listeEmployes = new List<Employe>
+    {
+        new Employe { Login = "dupont" }
+    };
+
+            var nouvelEmploye = new Employe { Login = "dupont" };
+
+            if (listeEmployes.Any(e => e.Login == nouvelEmploye.Login))
+                throw new InvalidOperationException("Login déjà utilisé");
+        }
+
     }
 }
