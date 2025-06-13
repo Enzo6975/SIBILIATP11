@@ -72,7 +72,7 @@
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <TextBlock Text="Client : " />
-                    <TextBlock x:Name="txtClient" />
+                    <TextBlock x:Name="txtClient" Text="{}"/>
 
 
 

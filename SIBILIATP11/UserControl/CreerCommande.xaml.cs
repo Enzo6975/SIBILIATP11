@@ -25,6 +25,8 @@ namespace SIBILIATP11.UserControl
         private GestionCommande LaGestionCommande { get; set; }
 
         private Commande _commandeEnCours;
+
+        private Client clientSelectionne;
         public Commande CommandeEnCours
         {
             get { return _commandeEnCours; }
@@ -468,12 +470,33 @@ namespace SIBILIATP11.UserControl
 
                     MessageBox.Show($"Client sélectionné : {fenetreSelection.ClientSelectionne.PrenomClient} {fenetreSelection.ClientSelectionne.NomClient}",
                         "Client sélectionné", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    AffichageClient();
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Erreur lors de la sélection du client : {ex.Message}",
                     "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void AffichageClient()
+        {
+            try
+            {
+                    if (CommandeEnCours.UnClient != null)
+                    {
+                        txtClient.Text = $"{CommandeEnCours.UnClient.NomClient} {CommandeEnCours.UnClient.PrenomClient}";
+                    }
+                    else
+                    {
+                        txtClient.Text = "Aucun Client";
+                    }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur affichage Client: {ex.Message}");
             }
         }
     }
