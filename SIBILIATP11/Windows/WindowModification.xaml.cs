@@ -266,8 +266,6 @@ namespace SIBILIATP11.Windows
             {
                 if (!ValiderDonnees()) return;
 
-                // Ne pas modifier la date de commande - elle reste celle d'origine
-                // commandeAModifier.DateCommande = dpDateCommande.SelectedDate ?? DateTime.Now; // Ligne à supprimer
 
                 commandeAModifier.DateRetraitPrevue = dpDatePrevue.SelectedDate ?? DateTime.Now;
                 commandeAModifier.Payee = chkPayee.IsChecked ?? false;

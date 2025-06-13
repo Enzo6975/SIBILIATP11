@@ -85,7 +85,6 @@ namespace SIBILIATP11.UserControl
 
             if (result == true)
             {
-                // Recharger la liste des clients après création
                 RafraichirDonnees();
             }
         }
@@ -99,7 +98,6 @@ namespace SIBILIATP11.UserControl
 
                 if (result == true)
                 {
-                    // Recharger la liste des clients après modification
                     RafraichirDonnees();
                 }
             }
@@ -113,7 +111,6 @@ namespace SIBILIATP11.UserControl
         {
             if (clients.SelectedItem is Client clientSelectionne)
             {
-                // Premier message de confirmation
                 MessageBoxResult result1 = MessageBox.Show(
                     $"Êtes-vous sûr de vouloir supprimer le client :\n\n{clientSelectionne.NomClient} {clientSelectionne.PrenomClient}\nTéléphone : {clientSelectionne.Tel}",
                     "Confirmation de suppression",
@@ -122,7 +119,6 @@ namespace SIBILIATP11.UserControl
 
                 if (result1 == MessageBoxResult.Yes)
                 {
-                    // Deuxième message de confirmation
                     MessageBoxResult result2 = MessageBox.Show(
                         "ATTENTION : Cette action est irréversible !\n\nConfirmez-vous définitivement la suppression de ce client ?",
                         "Confirmation finale",
@@ -133,13 +129,11 @@ namespace SIBILIATP11.UserControl
                     {
                         try
                         {
-                            // Supposons que la classe Client a une méthode Delete()
                             clientSelectionne.Delete();
 
                             MessageBox.Show($"Le client '{clientSelectionne.NomClient} {clientSelectionne.PrenomClient}' a été supprimé avec succès.",
                                 "Suppression réussie", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                            // Recharger la liste des clients après suppression
                             RafraichirDonnees();
                         }
                         catch (Exception ex)
@@ -158,13 +152,11 @@ namespace SIBILIATP11.UserControl
 
         private void Clients_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Activer/désactiver les boutons selon la sélection
             bool isClientSelected = clients.SelectedItem != null;
             btnModifierClient.IsEnabled = isClientSelected;
             btnSupprimerClient.IsEnabled = isClientSelected;
         }
 
-        // Méthode publique pour recharger les données (utile si les données sont modifiées ailleurs)
         public void RafraichirDonnees()
         {
             LoadClients();

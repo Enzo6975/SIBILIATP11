@@ -2,6 +2,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using SIBILIATP11.Model;
 
 namespace SIBILIATP11.UserControl
 {

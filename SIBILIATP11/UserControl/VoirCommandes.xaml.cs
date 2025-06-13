@@ -176,9 +176,9 @@ namespace SIBILIATP11.UserControl
                         .Count(c => c.UneCommande.NumCommande == commande.NumCommande);
                 }
                 string messageConfirmation = $"Supprimer définitivement la commande #{commande.NumCommande} ?\n\n" +
-                                           $"Client: {commande.UnClient?.NomClient} {commande.UnClient?.PrenomClient}\n" +
-                                           $"Date: {commande.DateCommande:dd/MM/yyyy}\n" +
-                                           $"Montant: {commande.PrixTotal:F2} €\n";
+                                            $"Client: {commande.UnClient?.NomClient} {commande.UnClient?.PrenomClient}\n" +
+                                            $"Date: {commande.DateCommande:dd/MM/yyyy}\n" +
+                                            $"Montant: {commande.PrixTotal:F2} €\n";
                 if (nbPlatsCommande > 0)
                 {
                     messageConfirmation += $"\n⚠️ {nbPlatsCommande} plat(s) seront également supprimés.\n";
@@ -280,7 +280,7 @@ namespace SIBILIATP11.UserControl
                 if (filtreCommandesDuJourActif)
                 {
                     btnCommandesDuJour.Content = "📅 Toutes les commandes";
-                    btnCommandesDuJour.Background = new SolidColorBrush(Color.FromRgb(255, 152, 0)); // Orange
+                    btnCommandesDuJour.Background = new SolidColorBrush(Color.FromRgb(255, 152, 0));
                     btnCommandesDuJour.ToolTip = "Afficher toutes les commandes";
                     DateTime aujourdhui = DateTime.Today;
                     txtFiltreActif.Text = $"📌 Filtre actif : Commandes à retirer le {aujourdhui:dd/MM/yyyy}";
@@ -290,7 +290,7 @@ namespace SIBILIATP11.UserControl
                 else
                 {
                     btnCommandesDuJour.Content = "📅 Commandes du jour";
-                    btnCommandesDuJour.Background = new SolidColorBrush(Color.FromRgb(33, 150, 243)); // Bleu
+                    btnCommandesDuJour.Background = new SolidColorBrush(Color.FromRgb(33, 150, 243));
                     btnCommandesDuJour.ToolTip = "Afficher les commandes à retirer aujourd'hui";
                     txtFiltreActif.Visibility = Visibility.Collapsed;
                 }
@@ -309,14 +309,14 @@ namespace SIBILIATP11.UserControl
                     if (commandesDuJour.Count == 0)
                     {
                         MessageBox.Show("Aucune commande à retirer aujourd'hui.", "Information",
-                                      MessageBoxButton.OK, MessageBoxImage.Information);
+                                    MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Erreur lors de l'application du filtre : {ex.Message}", "Erreur",
-                              MessageBoxButton.OK, MessageBoxImage.Error);
+                                MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
