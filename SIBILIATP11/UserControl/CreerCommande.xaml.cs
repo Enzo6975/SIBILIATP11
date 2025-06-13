@@ -99,6 +99,87 @@ namespace SIBILIATP11.UserControl
             }
         }
 
+        // MODIFIÉ : Méthode pour vérifier si un plat est disponible selon la période ET la date de commande
+        private bool EstDisponibleSelonPeriodeEtDate(Plat plat, DateTime? dateCommande = null)
+        {
+            if (plat?.UnePeriode == null)
+            {
+                System.Diagnostics.Debug.WriteLine($"Plat {plat?.NomPlat} : Aucune période définie - EXCLU");
+                return false;
+            }
+
+            // Si aucune date de commande spécifiée, utiliser la période actuelle
+            if (!dateCommande.HasValue)
+            {
+                int periodeActuelle = DateTime.Now.Month;
+                bool disponible1 = plat.UnePeriode.NumPeriode == periodeActuelle;
+                System.Diagnostics.Debug.WriteLine($"Plat {plat.NomPlat} : Période {plat.UnePeriode.NumPeriode} vs Actuelle {periodeActuelle} = {(disponible1 ? "INCLUS" : "EXCLU")}");
+                return disponible1;
+            }
+
+            // NOUVEAU : Vérifier si la date de commande permet d'accéder à cette période
+            int moisCommande = dateCommande.Value.Month;
+            int anneeCommande = dateCommande.Value.Year;
+            int moisPeriode = plat.UnePeriode.NumPeriode;
+
+            // Créer la date du 1er du mois de la période
+            DateTime debutPeriode = new DateTime(anneeCommande, moisPeriode, 1);
+
+            // Si la période est dans le passé par rapport à l'année de commande, prendre l'année suivante
+            if (moisPeriode < DateTime.Now.Month && anneeCommande == DateTime.Now.Year)
+            {
+                debutPeriode = new DateTime(anneeCommande + 1, moisPeriode, 1);
+            }
+
+            bool disponible = dateCommande.Value >= debutPeriode.AddDays(-30); // 30 jours avant le début de la période
+
+            System.Diagnostics.Debug.WriteLine($"Plat {plat.NomPlat} : Période {moisPeriode}, Date commande {dateCommande.Value:dd/MM/yyyy}, Début période {debutPeriode:dd/MM/yyyy} = {(disponible ? "INCLUS" : "EXCLU")}");
+
+            return disponible;
+        }
+
+        // NOUVEAU : Calculer la date minimale de retrait selon les périodes des plats dans le panier
+        private DateTime CalculerDateMinimaleRetraitAvecPeriodes()
+        {
+            DateTime dateMinimale = DateTime.Today.AddDays(1);
+
+            // Prendre en compte le délai de préparation maximum
+            int delaiMaxPreparation = CalculerDelaiPreparationMax();
+            if (delaiMaxPreparation > 0)
+            {
+                dateMinimale = DateTime.Today.AddDays(delaiMaxPreparation);
+            }
+
+            // NOUVEAU : Prendre en compte les périodes des plats
+            if (LignesDeLaCommande != null && LignesDeLaCommande.Any())
+            {
+                foreach (var ligne in LignesDeLaCommande)
+                {
+                    if (ligne.UnPlat?.UnePeriode != null)
+                    {
+                        int moisPeriode = ligne.UnPlat.UnePeriode.NumPeriode;
+                        int anneeActuelle = DateTime.Now.Year;
+
+                        // Si la période est dans le passé, prendre l'année suivante
+                        if (moisPeriode < DateTime.Now.Month)
+                        {
+                            anneeActuelle++;
+                        }
+
+                        DateTime debutPeriode = new DateTime(anneeActuelle, moisPeriode, 1);
+
+                        if (debutPeriode > dateMinimale)
+                        {
+                            dateMinimale = debutPeriode;
+                            System.Diagnostics.Debug.WriteLine($"Date minimale mise à jour pour plat {ligne.UnPlat.NomPlat} (période {moisPeriode}) : {dateMinimale:dd/MM/yyyy}");
+                        }
+                    }
+                }
+            }
+
+            return dateMinimale;
+        }
+
         // Configuration du ComboBox des catégories (inchangé)
         private void ConfigurerComboBoxCategories()
         {
@@ -120,7 +201,7 @@ namespace SIBILIATP11.UserControl
             System.Diagnostics.Debug.WriteLine($"Catégories configurées : {categoriesAvecTous.Count - 1}");
         }
 
-        // NOUVEAU : Configuration du ComboBox des sous-catégories
+        // Configuration du ComboBox des sous-catégories
         private void ConfigurerComboBoxSousCategories()
         {
             var sousCategoriesAvecTous = new List<object>();
@@ -142,7 +223,7 @@ namespace SIBILIATP11.UserControl
             System.Diagnostics.Debug.WriteLine($"Sous-catégories configurées : {sousCategoriesAvecTous.Count - 1}");
         }
 
-        // NOUVEAU : Mise à jour des sous-catégories selon la catégorie sélectionnée
+        // Mise à jour des sous-catégories selon la catégorie sélectionnée
         private void MettreAJourSousCategories()
         {
             if (cbCategorie.SelectedValue == null)
@@ -194,24 +275,19 @@ namespace SIBILIATP11.UserControl
             }
         }
 
+        // MODIFIÉ : Utilise la nouvelle méthode de calcul avec périodes
         private void ConfigurerDatePickerRetrait()
         {
             if (dateRetrait != null)
             {
-                DateTime dateMinimale = DateTime.Today.AddDays(1);
-
-                int delaiMaxPreparation = CalculerDelaiPreparationMax();
-
-                if (delaiMaxPreparation > 0)
-                {
-                    dateMinimale = DateTime.Today.AddDays(delaiMaxPreparation);
-                }
+                DateTime dateMinimale = CalculerDateMinimaleRetraitAvecPeriodes();
 
                 dateRetrait.DisplayDateStart = dateMinimale;
 
                 if (!dateRetrait.SelectedDate.HasValue || dateRetrait.SelectedDate.Value < dateMinimale)
                 {
                     dateRetrait.SelectedDate = dateMinimale;
+                    System.Diagnostics.Debug.WriteLine($"Date de retrait mise à jour : {dateMinimale:dd/MM/yyyy}");
                 }
             }
         }
@@ -253,12 +329,19 @@ namespace SIBILIATP11.UserControl
             ConfigurerDatePickerRetrait();
         }
 
-        // MODIFIÉ : Filtre prenant en compte catégorie ET sous-catégorie
+        // MODIFIÉ : Filtre flexible selon la date de commande sélectionnée
         private bool RechercheMotClefPlat(object obj)
         {
             Plat unPlat = obj as Plat;
             if (unPlat == null)
                 return false;
+
+            // MODIFIÉ : Filtre par période selon la date de commande sélectionnée
+            DateTime? dateCommande = dpDateCommande?.SelectedDate;
+            if (!EstDisponibleSelonPeriodeEtDate(unPlat, dateCommande))
+            {
+                return false; // Exclusion si pas disponible pour cette date
+            }
 
             // Filtre par texte (nom du plat)
             bool correspondTexte = true;
@@ -293,7 +376,7 @@ namespace SIBILIATP11.UserControl
                 }
             }
 
-            // NOUVEAU : Filtre par sous-catégorie
+            // Filtre par sous-catégorie
             bool correspondSousCategorie = true;
             if (cbSousCategorie.SelectedValue != null)
             {
@@ -311,13 +394,13 @@ namespace SIBILIATP11.UserControl
                 }
             }
 
-            // Filtre par date de disponibilité
+            // Filtre par date de disponibilité (délai de préparation)
             bool correspondDate = true;
             if (dpDateCommande != null && dpDateCommande.SelectedDate.HasValue)
             {
-                DateTime dateCommande = dpDateCommande.SelectedDate.Value;
+                DateTime dateCommandeValue = dpDateCommande.SelectedDate.Value;
                 DateTime dateAujourdhui = DateTime.Today;
-                int joursDisponibles = (dateCommande - dateAujourdhui).Days;
+                int joursDisponibles = (dateCommandeValue - dateAujourdhui).Days;
                 correspondDate = unPlat.DelaiPreparation <= joursDisponibles;
             }
 
@@ -339,7 +422,7 @@ namespace SIBILIATP11.UserControl
                 }
             }
 
-            // MODIFIÉ : Toutes les conditions doivent être vraies, y compris la sous-catégorie
+            // Toutes les conditions doivent être vraies
             return correspondTexte && correspondCategorie && correspondSousCategorie && correspondDate && correspondPrix;
         }
 
@@ -355,7 +438,7 @@ namespace SIBILIATP11.UserControl
         {
             recherche.Text = "";
             cbCategorie.SelectedIndex = 0;
-            cbSousCategorie.SelectedIndex = 0; // NOUVEAU
+            cbSousCategorie.SelectedIndex = 0;
             dpDateCommande.SelectedDate = DateTime.Today.AddDays(1);
             txtPrixMin.Text = "";
             txtPrixMax.Text = "";
@@ -401,9 +484,17 @@ namespace SIBILIATP11.UserControl
         {
             if (LaGestionCommande?.LesPlats != null && LaGestionCommande.LesPlats.Any())
             {
-                double prixMin = LaGestionCommande.LesPlats.Min(p => p.PrixUnitaire);
-                double prixMax = LaGestionCommande.LesPlats.Max(p => p.PrixUnitaire);
-                double prixMoyen = LaGestionCommande.LesPlats.Average(p => p.PrixUnitaire);
+                DateTime? dateCommande = dpDateCommande?.SelectedDate;
+                var platsDisponibles = LaGestionCommande.LesPlats.Where(p => EstDisponibleSelonPeriodeEtDate(p, dateCommande)).ToList();
+
+                if (platsDisponibles.Any())
+                {
+                    double prixMin = platsDisponibles.Min(p => p.PrixUnitaire);
+                    double prixMax = platsDisponibles.Max(p => p.PrixUnitaire);
+                    double prixMoyen = platsDisponibles.Average(p => p.PrixUnitaire);
+
+                    System.Diagnostics.Debug.WriteLine($"Stats plats disponibles - Min: {prixMin:F2}€, Max: {prixMax:F2}€, Moyenne: {prixMoyen:F2}€");
+                }
             }
         }
 
@@ -436,6 +527,10 @@ namespace SIBILIATP11.UserControl
                     {
                         plat.UneSousCategorie.Read();
                     }
+                    if (plat.UnePeriode != null)
+                    {
+                        plat.UnePeriode.Read();
+                    }
                 }
             }
         }
@@ -451,7 +546,7 @@ namespace SIBILIATP11.UserControl
                 plats.ItemsSource = LaGestionCommande.LesPlats;
                 plats.Items.Filter = RechercheMotClefPlat;
                 ConfigurerComboBoxCategories();
-                ConfigurerComboBoxSousCategories(); // NOUVEAU
+                ConfigurerComboBoxSousCategories();
                 ConfigurerDatePicker();
                 ConfigurerDatePickerRetrait();
 
@@ -462,7 +557,7 @@ namespace SIBILIATP11.UserControl
 
             recherche.TextChanged += Recherche_TextChanged;
             cbCategorie.SelectionChanged += CbCategorie_SelectionChanged;
-            cbSousCategorie.SelectionChanged += CbSousCategorie_SelectionChanged; // NOUVEAU
+            cbSousCategorie.SelectionChanged += CbSousCategorie_SelectionChanged;
 
             if (dpDateCommande != null)
                 dpDateCommande.SelectedDateChanged += DpDateCommande_SelectedDateChanged;
@@ -480,11 +575,10 @@ namespace SIBILIATP11.UserControl
 
         private void CbCategorie_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            MettreAJourSousCategories(); // NOUVEAU : Met à jour les sous-catégories
+            MettreAJourSousCategories();
             RefreshFilter();
         }
 
-        // NOUVEAU : Gestionnaire pour le changement de sous-catégorie
         private void CbSousCategorie_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (cbSousCategorie.SelectedValue != null)
@@ -503,9 +597,11 @@ namespace SIBILIATP11.UserControl
             RefreshFilter();
         }
 
+        // MODIFIÉ : Refiltrer quand la date change
         private void DpDateCommande_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             RefreshFilter();
+            System.Diagnostics.Debug.WriteLine($"Date de commande changée : {dpDateCommande.SelectedDate?.ToString("dd/MM/yyyy") ?? "Aucune"}");
         }
 
         private void TxtPrix_TextChanged(object sender, TextChangedEventArgs e)
@@ -534,6 +630,7 @@ namespace SIBILIATP11.UserControl
             RefreshFilter();
         }
 
+        // MODIFIÉ : Mettre à jour la date de retrait quand on ajoute un plat
         private void AjouterPlat_Click(object sender, RoutedEventArgs e)
         {
             if ((sender as Button)?.DataContext is Plat platSelectionne)
@@ -556,7 +653,19 @@ namespace SIBILIATP11.UserControl
                 }
 
                 CalculerPrixTotal();
+
+                // NOUVEAU : Mettre à jour la date de retrait en fonction des périodes des plats
                 ConfigurerDatePickerRetrait();
+
+                // Afficher un message informatif si la date de retrait a été mise à jour
+                if (platSelectionne.UnePeriode != null)
+                {
+                    int moisPeriode = platSelectionne.UnePeriode.NumPeriode;
+                    string[] noms_mois = {"", "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+                                         "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"};
+
+                    System.Diagnostics.Debug.WriteLine($"Plat de {noms_mois[moisPeriode]} ajouté au panier. Date de retrait mise à jour.");
+                }
             }
         }
 
@@ -665,7 +774,7 @@ namespace SIBILIATP11.UserControl
             {
                 LignesDeLaCommande.Remove(ligneASupprimer);
                 CalculerPrixTotal();
-                ConfigurerDatePickerRetrait();
+                ConfigurerDatePickerRetrait(); // NOUVEAU : Recalculer la date minimale après suppression
             }
         }
     }
