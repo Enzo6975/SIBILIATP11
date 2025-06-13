@@ -16,78 +16,166 @@
     mc:Ignorable="d">
 
     <Window.Resources>
-        <Style x:Key="CustomTabControl" TargetType="TabControl">
+        <Style x:Key="NavigationButtonStyle" TargetType="Button">
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="TabControl">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="20*"/>
-                                <ColumnDefinition Width="80*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <TabPanel Grid.Column="0" 
-                                      IsItemsHost="True" 
-                                      Background="Transparent"/>
-
-                            <ContentPresenter Grid.Column="1" 
-                                              ContentSource="SelectedContent"/>
-                        </Grid>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            x:Name="BorderButton"
+                            MinWidth="120"
+                            Margin="3,0"
+                            Padding="15,10"
+                            Background="#D60511"
+                            CornerRadius="8,8,0,0">
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Foreground="{TemplateBinding Foreground}"
+                                Text="{TemplateBinding Content}"
+                                TextAlignment="Center"
+                                TextWrapping="Wrap" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Tag" Value="Selected">
+                                <Setter TargetName="BorderButton" Property="Background" Value="White" />
+                                <Setter Property="Foreground" Value="#E30613" />
+                                <Setter Property="FontWeight" Value="Bold" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="BorderButton" Property="Background" Value="#F0F0F0" />
+                                <Setter Property="Foreground" Value="#E30613" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
         </Style>
     </Window.Resources>
 
     <Grid x:Name="LaGrid">
         <Grid.RowDefinitions>
-            <RowDefinition Height="20*" />
-            <RowDefinition Height="70*" />
-            <RowDefinition Height="10*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="20*" />
-            <ColumnDefinition Width="80*" />
-        </Grid.ColumnDefinitions>
 
-        <Border Grid.Row="0" Grid.Column="1" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,0,0,2">
-            <Grid>
-                <Image Margin="20" Source="/logo-sibilia.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
-                <Rectangle Height="4" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Fill="#E30613" />
-            </Grid>
-        </Border>
+        <!--  Header avec navigation  -->
+        <Border
+            Grid.Row="0"
+            Background="#E30613"
+            BorderBrush="#D60511"
+            BorderThickness="0,0,0,3">
+            <Grid Height="90">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <!--  Connexion  -->
+                    <ColumnDefinition Width="*" />
+                    <!--  Navigation  -->
+                    <ColumnDefinition Width="Auto" />
+                    <!--  Logo  -->
+                    <ColumnDefinition Width="Auto" />
+                    <!--  Déconnexion  -->
+                </Grid.ColumnDefinitions>
 
-        <Border x:Name="BorderLateral" Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Background="#E30613">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <Border x:Name="Border1" Grid.Row="0" Background="#D60511" Margin="0,0,0,10">
-                    <StackPanel Margin="15,20">
-                        <Ellipse Width="60" Height="60" Margin="0,0,0,15" Fill="White"/>
-                        <TextBlock x:Name="TxtBlockConnexion" FontSize="12" FontWeight="Bold" Foreground="White" 
-                                   LineHeight="16" Text="Connecté en tant que -&#x0a;Enzo Pagès" 
-                                   TextAlignment="Center" TextWrapping="Wrap" />
+                <!--  Informations de connexion  -->
+                <Border
+                    Grid.Column="0"
+                    Margin="0,0,15,0"
+                    Background="#D60511"
+                    CornerRadius="0,0,15,0">
+                    <StackPanel Margin="20,10" Orientation="Horizontal">
+                        <Ellipse
+                            Width="40"
+                            Height="40"
+                            Margin="0,0,15,0"
+                            VerticalAlignment="Center"
+                            Fill="White" />
+                        <TextBlock
+                            x:Name="TxtBlockConnexion"
+                            VerticalAlignment="Center"
+                            FontSize="11"
+                            FontWeight="Bold"
+                            Foreground="White"
+                            Text="Connecté en tant que&#x0a;Enzo Pagès"
+                            TextWrapping="Wrap" />
                     </StackPanel>
                 </Border>
 
-                <Border Grid.Row="2" Margin="0,10,0,0" Background="#D60511">
-                    <Button x:Name="ButDeconnexion" Margin="15" Padding="15,10" Background="Transparent" 
-                            BorderBrush="White" BorderThickness="2" Click="ButDeconnexion_Click" 
-                            Content="🚪 DÉCONNEXION" Cursor="Hand" FontSize="12" FontWeight="Bold" 
-                            Foreground="White">
+                <!--  Navigation avec boutons  -->
+                <StackPanel
+                    Grid.Column="1"
+                    Margin="20,0,20,0"
+                    VerticalAlignment="Bottom"
+                    Orientation="Horizontal">
+                    <Button
+                        x:Name="BtnCreerCommande"
+                        Click="BtnCreerCommande_Click"
+                        Content="📝 CRÉER UNE COMMANDE"
+                        Style="{StaticResource NavigationButtonStyle}" />
+                    <Button
+                        x:Name="BtnVoirCommandes"
+                        Click="BtnVoirCommandes_Click"
+                        Content="👁️ VOIR LES COMMANDES"
+                        Style="{StaticResource NavigationButtonStyle}"
+                        Tag="Selected" />
+                    <Button
+                        x:Name="BtnCreerPlat"
+                        Click="BtnCreerPlat_Click"
+                        Content="🍽️ CRÉER UN PLAT"
+                        Style="{StaticResource NavigationButtonStyle}" />
+                    <Button
+                        x:Name="BtnClients"
+                        Click="BtnClients_Click"
+                        Content="👥 CLIENTS"
+                        Style="{StaticResource NavigationButtonStyle}" />
+                </StackPanel>
+
+                <!--  Logo  -->
+                <Border
+                    Grid.Column="2"
+                    Margin="15,10"
+                    Padding="15,5"
+                    Background="White"
+                    CornerRadius="8">
+                    <Image
+                        Height="50"
+                        RenderOptions.BitmapScalingMode="HighQuality"
+                        Source="/logo-sibilia.png"
+                        Stretch="Uniform" />
+                </Border>
+
+                <!--  Bouton déconnexion  -->
+                <Border
+                    Grid.Column="3"
+                    Margin="15,0,20,0"
+                    VerticalAlignment="Center">
+                    <Button
+                        x:Name="ButDeconnexion"
+                        Padding="12,8"
+                        Background="Transparent"
+                        BorderBrush="White"
+                        BorderThickness="1.5"
+                        Click="ButDeconnexion_Click"
+                        Content="🚪 DÉCONNEXION"
+                        Cursor="Hand"
+                        FontSize="10"
+                        FontWeight="Bold"
+                        Foreground="White">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="Button">
-                                            <Border Background="{TemplateBinding Background}" 
-                                                    BorderBrush="{TemplateBinding BorderBrush}" 
-                                                    BorderThickness="{TemplateBinding BorderThickness}" 
-                                                    CornerRadius="8">
+                                            <Border
+                                                Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                CornerRadius="6">
                                                 <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                             </Border>
                                             <ControlTemplate.Triggers>
@@ -106,28 +194,28 @@
             </Grid>
         </Border>
 
-        <TabControl x:Name="MainTabControl" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
-                    Style="{StaticResource CustomTabControl}">
-
-            <TabItem x:Name="TabCreerCommande" Header="📝 CRÉER UNE COMMANDE" 
-                     Style="{StaticResource SidebarTabItemStyle}">
-                <uc:CreerCommande x:Name="CreerCommande" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-            </TabItem>
-
-            <TabItem x:Name="TabVoirCommandes" Header="👁️ VOIR LES COMMANDES" 
-                     Style="{StaticResource SidebarTabItemStyle}" IsSelected="True">
-                <uc:VoirCommandes x:Name="VoirCommandes" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-            </TabItem>
-
-            <TabItem x:Name="TabCreerPlat" Header="🍽️ CRÉER UN PLAT" 
-                     Style="{StaticResource SidebarTabItemStyle}">
-                <uc:CreerPlat x:Name="CreerPlat" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-            </TabItem>
-
-            <TabItem x:Name="TabClients" Header="👥 CLIENTS" 
-                     Style="{StaticResource SidebarTabItemStyle}">
-                <uc:VoirClient x:Name="VoirClient" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-            </TabItem>
-        </TabControl>
+        <!--  Zone de contenu pour les UserControls  -->
+        <Grid x:Name="ContentGrid" Grid.Row="1">
+            <uc:CreerCommande
+                x:Name="CreerCommande"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Visibility="Collapsed" />
+            <uc:VoirCommandes
+                x:Name="VoirCommandes"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Visibility="Visible" />
+            <uc:CreerPlat
+                x:Name="CreerPlat"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Visibility="Collapsed" />
+            <uc:VoirClient
+                x:Name="VoirClient"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Visibility="Collapsed" />
+        </Grid>
     </Grid>
 </Window>

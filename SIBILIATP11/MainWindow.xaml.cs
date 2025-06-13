@@ -23,7 +23,6 @@ namespace SIBILIATP11
         {
             InitializeComponent();
             ChargeData();
-            MainTabControl.SelectionChanged += MainTabControl_SelectionChanged;
             Window_Loaded();
         }
 
@@ -55,6 +54,9 @@ namespace SIBILIATP11
                 EmployeConnecte = dialogwindowmc.EmployeConnecte;
                 MettreAJourAffichageConnexion();
                 this.Show();
+
+                // Initialiser l'affichage par défaut
+                InitialiserAffichageParDefaut();
             }
             else if (resultmc == false)
             {
@@ -62,18 +64,50 @@ namespace SIBILIATP11
             }
         }
 
+        private void InitialiserAffichageParDefaut()
+        {
+            try
+            {
+                // Trouver les contrôles par leur nom
+                var btnVoirCommandes = FindName("BtnVoirCommandes") as Button;
+
+                if (btnVoirCommandes != null)
+                {
+                    ShowUserControl("VoirCommandes");
+                    UpdateNavigationButtons(btnVoirCommandes);
+                }
+            }
+            catch (Exception ex)
+            {
+                // En cas d'erreur, ne pas planter l'application
+                System.Diagnostics.Debug.WriteLine($"Erreur initialisation: {ex.Message}");
+            }
+        }
+
         private void MettreAJourAffichageConnexion()
         {
-            if (EmployeConnecte != null)
+            try
             {
-                string nomRole = ObtenirNomRole(EmployeConnecte.UnRole.NumRole);
-                TxtBlockConnexion.Text = $"Connecté en tant que -\n{EmployeConnecte.PrenomEmploye} {EmployeConnecte.NomEmploye}\n({nomRole})";
+                var txtBlockConnexion = FindName("TxtBlockConnexion") as TextBlock;
+
+                if (txtBlockConnexion != null)
+                {
+                    if (EmployeConnecte != null)
+                    {
+                        string nomRole = ObtenirNomRole(EmployeConnecte.UnRole.NumRole);
+                        txtBlockConnexion.Text = $"Connecté en tant que -\n{EmployeConnecte.PrenomEmploye} {EmployeConnecte.NomEmploye}\n({nomRole})";
+                    }
+                    else
+                    {
+                        txtBlockConnexion.Text = "Connecté en tant que -\nUtilisateur inconnu";
+                    }
+                }
+
                 GererVisibiliteElements();
             }
-            else
+            catch (Exception ex)
             {
-                TxtBlockConnexion.Text = "Connecté en tant que -\nUtilisateur inconnu";
-                GererVisibiliteElements();
+                System.Diagnostics.Debug.WriteLine($"Erreur affichage connexion: {ex.Message}");
             }
         }
 
@@ -89,47 +123,132 @@ namespace SIBILIATP11
 
         private void GererVisibiliteElements()
         {
-            if (EmployeConnecte != null && EmployeConnecte.UnRole.NumRole == 1)
+            try
             {
-                TabCreerPlat.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                TabCreerPlat.Visibility = Visibility.Collapsed;
+                var btnCreerPlat = FindName("BtnCreerPlat") as Button;
+                var creerPlat = FindName("CreerPlat") as UserControl.CreerPlat;
 
-                if (TabCreerPlat.IsSelected)
+                if (btnCreerPlat != null)
                 {
-                    TabVoirCommandes.IsSelected = true;
+                    if (EmployeConnecte != null && EmployeConnecte.UnRole.NumRole == 1)
+                    {
+                        // Responsable : accès à tous les boutons
+                        btnCreerPlat.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        // Vendeur : masquer le bouton "Créer un plat"
+                        btnCreerPlat.Visibility = Visibility.Collapsed;
+
+                        // Si l'utilisateur était sur "Créer un plat", le rediriger
+                        if (creerPlat != null && creerPlat.Visibility == Visibility.Visible)
+                        {
+                            ShowUserControl("VoirCommandes");
+                            var btnVoirCommandes = FindName("BtnVoirCommandes") as Button;
+                            if (btnVoirCommandes != null)
+                                UpdateNavigationButtons(btnVoirCommandes);
+                        }
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur gestion visibilité: {ex.Message}");
+            }
         }
 
-        private void MainTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        #region Navigation par boutons
+
+        private void BtnCreerCommande_Click(object sender, RoutedEventArgs e)
         {
-            if (e.Source != MainTabControl) return;
+            ShowUserControl("CreerCommande");
+            UpdateNavigationButtons(sender as Button);
+        }
 
-            CreerCommande.Visibility = Visibility.Collapsed;
-            VoirCommandes.Visibility = Visibility.Collapsed;
-            CreerPlat.Visibility = Visibility.Collapsed;
-            VoirClient.Visibility = Visibility.Collapsed;
+        private void BtnVoirCommandes_Click(object sender, RoutedEventArgs e)
+        {
+            ShowUserControl("VoirCommandes");
+            UpdateNavigationButtons(sender as Button);
+        }
 
-            if (MainTabControl.SelectedItem == TabCreerCommande)
+        private void BtnCreerPlat_Click(object sender, RoutedEventArgs e)
+        {
+            ShowUserControl("CreerPlat");
+            UpdateNavigationButtons(sender as Button);
+        }
+
+        private void BtnClients_Click(object sender, RoutedEventArgs e)
+        {
+            ShowUserControl("VoirClient");
+            UpdateNavigationButtons(sender as Button);
+        }
+
+        private void ShowUserControl(string controlName)
+        {
+            try
             {
-                CreerCommande.Visibility = Visibility.Visible;
+                // Trouver les contrôles par leur nom
+                var creerCommande = FindName("CreerCommande") as FrameworkElement;
+                var voirCommandes = FindName("VoirCommandes") as FrameworkElement;
+                var creerPlat = FindName("CreerPlat") as FrameworkElement;
+                var voirClient = FindName("VoirClient") as FrameworkElement;
+
+                // Masquer tous les UserControls
+                if (creerCommande != null) creerCommande.Visibility = Visibility.Collapsed;
+                if (voirCommandes != null) voirCommandes.Visibility = Visibility.Collapsed;
+                if (creerPlat != null) creerPlat.Visibility = Visibility.Collapsed;
+                if (voirClient != null) voirClient.Visibility = Visibility.Collapsed;
+
+                // Afficher le UserControl demandé
+                switch (controlName)
+                {
+                    case "CreerCommande":
+                        if (creerCommande != null) creerCommande.Visibility = Visibility.Visible;
+                        break;
+                    case "VoirCommandes":
+                        if (voirCommandes != null) voirCommandes.Visibility = Visibility.Visible;
+                        break;
+                    case "CreerPlat":
+                        if (creerPlat != null) creerPlat.Visibility = Visibility.Visible;
+                        break;
+                    case "VoirClient":
+                        if (voirClient != null) voirClient.Visibility = Visibility.Visible;
+                        break;
+                }
             }
-            else if (MainTabControl.SelectedItem == TabVoirCommandes)
+            catch (Exception ex)
             {
-                VoirCommandes.Visibility = Visibility.Visible;
-            }
-            else if (MainTabControl.SelectedItem == TabCreerPlat)
-            {
-                CreerPlat.Visibility = Visibility.Visible;
-            }
-            else if (MainTabControl.SelectedItem == TabClients)
-            {
-                VoirClient.Visibility = Visibility.Visible;
+                System.Diagnostics.Debug.WriteLine($"Erreur affichage UserControl: {ex.Message}");
             }
         }
+
+        private void UpdateNavigationButtons(Button selectedButton)
+        {
+            try
+            {
+                // Trouver tous les boutons de navigation
+                var btnCreerCommande = FindName("BtnCreerCommande") as Button;
+                var btnVoirCommandes = FindName("BtnVoirCommandes") as Button;
+                var btnCreerPlat = FindName("BtnCreerPlat") as Button;
+                var btnClients = FindName("BtnClients") as Button;
+
+                // Retirer la sélection de tous les boutons
+                if (btnCreerCommande != null) btnCreerCommande.Tag = null;
+                if (btnVoirCommandes != null) btnVoirCommandes.Tag = null;
+                if (btnCreerPlat != null) btnCreerPlat.Tag = null;
+                if (btnClients != null) btnClients.Tag = null;
+
+                // Marquer le bouton sélectionné
+                if (selectedButton != null)
+                    selectedButton.Tag = "Selected";
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur mise à jour boutons: {ex.Message}");
+            }
+        }
+
+        #endregion
 
         private void ButDeconnexion_Click(object sender, RoutedEventArgs e)
         {

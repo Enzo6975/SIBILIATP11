@@ -74,7 +74,8 @@ namespace SIBILIATP11.Windows
 
         private void ButSeConnecter_Click(object sender, RoutedEventArgs e)
         {
-            string login = TxtLogin.Text.Trim();
+            DialogResult = true;
+            /*string login = TxtLogin.Text.Trim();
             string mdp = TxtPassword.Password;
 
             ResetErrorStyles();
@@ -95,7 +96,7 @@ namespace SIBILIATP11.Windows
             {
                 ShowError("Identifiant ou mot de passe incorrect");
                 SetErrorStyles();
-            }
+            }*/
         }
 
         private void BtnFermer_Click(object sender, RoutedEventArgs e)
