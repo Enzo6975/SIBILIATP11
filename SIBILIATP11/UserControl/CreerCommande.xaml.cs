@@ -1,4 +1,5 @@
 ﻿using SIBILIATP11.Classe;
+using SIBILIATP11.Windows;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,8 +23,33 @@ namespace SIBILIATP11.UserControl
     public partial class CreerCommande : System.Windows.Controls.UserControl, INotifyPropertyChanged
     {
         private GestionCommande LaGestionCommande { get; set; }
-        public Commande CommandeEnCours { get; set; }
+
+        private Commande _commandeEnCours;
+        public Commande CommandeEnCours
+        {
+            get { return _commandeEnCours; }
+            set
+            {
+                _commandeEnCours = value;
+                OnPropertyChanged(nameof(CommandeEnCours));
+                OnPropertyChanged(nameof(NomClientAffiche));
+            }
+        }
+
         public ObservableCollection<Contient> LignesDeLaCommande { get; set; }
+
+        // Propriété pour afficher le nom du client sélectionné
+        public string NomClientAffiche
+        {
+            get
+            {
+                if (CommandeEnCours?.UnClient != null)
+                {
+                    return $"{CommandeEnCours.UnClient.PrenomClient} {CommandeEnCours.UnClient.NomClient}";
+                }
+                return "Aucun client sélectionné";
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -35,7 +61,7 @@ namespace SIBILIATP11.UserControl
             CommandeEnCours = new Commande
             {
                 DateCommande = DateTime.Now,
-                UnClient = LaGestionCommande?.LesClients?.FirstOrDefault(),
+                UnClient = null, // Pas de client par défaut
                 UnEmploye = LaGestionCommande?.LesEmploye?.FirstOrDefault()
             };
 
@@ -117,12 +143,13 @@ namespace SIBILIATP11.UserControl
             CommandeEnCours = new Commande
             {
                 DateCommande = DateTime.Now,
-                UnClient = LaGestionCommande?.LesClients?.FirstOrDefault(),
+                UnClient = null, // Remettre à null lors de la réinitialisation
                 UnEmploye = LaGestionCommande?.LesEmploye?.FirstOrDefault()
             };
 
             OnPropertyChanged(nameof(CommandeEnCours));
             OnPropertyChanged(nameof(LignesDeLaCommande));
+            OnPropertyChanged(nameof(NomClientAffiche));
         }
 
         private bool RechercheMotClefPlat(object obj)
@@ -420,7 +447,34 @@ namespace SIBILIATP11.UserControl
 
         private void selectionClient_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                // Ouvrir la fenêtre de sélection de client
+                WindowSelectionnerClient fenetreSelection = new WindowSelectionnerClient()
+                {
+                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                    Owner = Window.GetWindow(this)
+                };
 
+                // Afficher la fenêtre en mode modal
+                bool? result = fenetreSelection.ShowDialog();
+
+                // Si un client a été sélectionné
+                if (result == true && fenetreSelection.ClientSelectionne != null)
+                {
+                    CommandeEnCours.UnClient = fenetreSelection.ClientSelectionne;
+                    OnPropertyChanged(nameof(CommandeEnCours));
+                    OnPropertyChanged(nameof(NomClientAffiche));
+
+                    MessageBox.Show($"Client sélectionné : {fenetreSelection.ClientSelectionne.PrenomClient} {fenetreSelection.ClientSelectionne.NomClient}",
+                        "Client sélectionné", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erreur lors de la sélection du client : {ex.Message}",
+                    "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

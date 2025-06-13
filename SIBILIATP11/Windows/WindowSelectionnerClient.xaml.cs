@@ -22,6 +22,7 @@ namespace SIBILIATP11.Windows
     {
         public ObservableCollection<Client> ClientsList { get; set; }
         private List<Client> _allClients; // Liste complète pour la recherche
+        public Client ClientSelectionne { get; private set; }
 
         public WindowSelectionnerClient()
         {
@@ -33,6 +34,9 @@ namespace SIBILIATP11.Windows
 
             // Le DataContext est lié à ClientsList (comme dans le code original)
             this.DataContext = ClientsList;
+
+            // Ajouter l'événement de double-clic sur la DataGrid
+            clients.MouseDoubleClick += Clients_MouseDoubleClick;
         }
 
         private void LoadClients()
@@ -128,6 +132,37 @@ namespace SIBILIATP11.Windows
                         clients.ScrollIntoView(newClient);
                     }
                 }
+            }
+        }
+
+        private void ValiderSelection(object sender, RoutedEventArgs e)
+        {
+            if (clients.SelectedItem is Client clientSelectionne)
+            {
+                ClientSelectionne = clientSelectionne;
+                this.DialogResult = true;
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Veuillez sélectionner un client.", "Aucune sélection",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void AnnulerSelection(object sender, RoutedEventArgs e)
+        {
+            ClientSelectionne = null;
+            this.DialogResult = false;
+            this.Close();
+        }
+
+        private void Clients_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            // Vérifier que le double-clic est sur une ligne de données
+            if (clients.SelectedItem is Client)
+            {
+                ValiderSelection(sender, e);
             }
         }
 

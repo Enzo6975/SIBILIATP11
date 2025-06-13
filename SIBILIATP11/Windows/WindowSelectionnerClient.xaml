@@ -7,12 +7,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Sélectionner un Client"
     Width="800"
-    Height="500"
+    Height="550"
     mc:Ignorable="d">
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <!--  Barre de recherche et boutons  -->
@@ -72,12 +73,13 @@
             x:Name="clients"
             Grid.Row="1"
             Height="350"
-            Margin="30,0,30,30"
+            Margin="30,0,30,10"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             AutoGenerateColumns="False"
             IsReadOnly="True"
-            ItemsSource="{Binding .}">
+            ItemsSource="{Binding .}"
+            SelectionMode="Single">
             <DataGrid.Columns>
                 <DataGridTextColumn
                     Width="50"
@@ -109,5 +111,55 @@
                     Header="Ville" />
             </DataGrid.Columns>
         </DataGrid>
+
+        <!--  Boutons de validation  -->
+        <Border
+            Grid.Row="2"
+            Margin="30,10,30,30"
+            Padding="10"
+            Background="#F9F9F9"
+            BorderBrush="#E0E0E0"
+            BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!--  Instructions  -->
+                <TextBlock
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    FontStyle="Italic"
+                    Foreground="Gray"
+                    Text="Double-cliquez sur un client ou sélectionnez-le et cliquez sur 'Sélectionner'" />
+
+                <!--  Bouton Annuler  -->
+                <Button
+                    x:Name="btnAnnuler"
+                    Grid.Column="1"
+                    Width="100"
+                    Height="35"
+                    Margin="10,0"
+                    Background="#808080"
+                    Click="AnnulerSelection"
+                    Content="Annuler"
+                    FontWeight="Bold"
+                    Foreground="White" />
+
+                <!--  Bouton Sélectionner  -->
+                <Button
+                    x:Name="btnSelectionner"
+                    Grid.Column="2"
+                    Width="120"
+                    Height="35"
+                    Background="#FFFD2828"
+                    Click="ValiderSelection"
+                    Content="Sélectionner"
+                    FontWeight="Bold"
+                    Foreground="White" />
+            </Grid>
+        </Border>
     </Grid>
 </Window>
