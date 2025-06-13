@@ -1,0 +1,53 @@
+﻿<Window x:Class="SIBILIATP11.Windows.WindowModifierClient"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SIBILIATP11.Windows"
+        mc:Ignorable="d"
+        Title="Modifier un Client" 
+        Width="800"
+        Height="500">
+    <Grid>
+        <Label Content="Modifier un client" Background="#FFFD2828" FontSize="30" Foreground="White" FontWeight="Bold" VerticalAlignment="Top" />
+
+        <StackPanel x:Name="StackPanelModifierClient" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200">
+            <Label Content="Numéro Client" HorizontalAlignment="Left"/>
+            <TextBox x:Name="txtBoxNumClient" TextWrapping="Wrap" Width="200" 
+                     Text="{Binding NumClient, UpdateSourceTrigger=PropertyChanged}" 
+                     IsReadOnly="True" Background="#F0F0F0"/>
+
+            <Label Content="Nom" HorizontalAlignment="Left"/>
+            <TextBox x:Name="txtBoxNomClient" TextWrapping="Wrap" Width="200" 
+                     Text="{Binding NomClient, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Label Content="Prénom"/>
+            <TextBox x:Name="txtBoxPrenomClient" TextWrapping="Wrap" Width="200" 
+                     Text="{Binding PrenomClient, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Label Content="Téléphone"/>
+            <TextBox x:Name="txtBoxTelClient" TextWrapping="Wrap" Width="200" 
+                     Text="{Binding Tel, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Label Content="Adresse"/>
+            <TextBox x:Name="txtBoxAdresseClient" TextWrapping="Wrap" Width="200" 
+                     Text="{Binding AdresseRue, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Label Content="Code Postal"/>
+            <TextBox x:Name="txtBoxCodePostalClient" TextWrapping="Wrap" Width="200" 
+                     Text="{Binding AdresseCP, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Label Content="Ville"/>
+            <TextBox x:Name="txtBoxVilleClient" TextWrapping="Wrap" Width="200" 
+                     Text="{Binding AdresseVille, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Button x:Name="butValiderModification" Content="Valider" HorizontalAlignment="Center" Width="80" 
+                    Margin="0,30,0,0" Background="#FF4CAF50" Foreground="White" FontWeight="Bold"
+                    Click="ButValiderModification_Click"/>
+
+            <Button x:Name="butAnnulerModification" Content="Annuler" HorizontalAlignment="Center" Width="80" 
+                    Margin="0,10,0,0" Background="#FFF44336" Foreground="White" FontWeight="Bold"
+                    Click="ButAnnulerModification_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

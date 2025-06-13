@@ -28,12 +28,10 @@ namespace SIBILIATP11.Windows
             {
                 Employe e = new Employe();
                 tousLesEmployes = e.FindAll();
-
-                foreach (var employe in tousLesEmployes)
+                foreach (Employe employe in tousLesEmployes)
                 {
                     employe.Read();
                 }
-
                 utilisateurs = tousLesEmployes.ToDictionary(emp => emp.Login, emp => emp.Password);
             }
             catch (Exception ex)
@@ -50,25 +48,22 @@ namespace SIBILIATP11.Windows
 
         private void SetErrorStyles()
         {
-            var loginParent = TxtLogin.Parent as Border;
+            Border loginParent = TxtLogin.Parent as Border;
             if (loginParent != null)
             {
                 loginParent.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF6B6B"));
             }
-
             PasswordBorder.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF6B6B"));
         }
 
         private void ResetErrorStyles()
         {
             ErrorBorder.Visibility = Visibility.Collapsed;
-
-            var loginParent = TxtLogin.Parent as Border;
+            Border loginParent = TxtLogin.Parent as Border;
             if (loginParent != null)
             {
                 loginParent.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0E0E0"));
             }
-
             PasswordBorder.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0E0E0"));
         }
 
@@ -76,15 +71,12 @@ namespace SIBILIATP11.Windows
         {
             string login = TxtLogin.Text.Trim();
             string mdp = TxtPassword.Password;
-
             ResetErrorStyles();
-
             if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(mdp))
             {
                 ShowError("Veuillez remplir tous les champs");
                 return;
             }
-
             if (utilisateurs.ContainsKey(login) && utilisateurs[login] == mdp)
             {
                 EmployeConnecte = tousLesEmployes.FirstOrDefault(emp => emp.Login == login);

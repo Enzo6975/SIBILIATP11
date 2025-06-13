@@ -9,9 +9,9 @@ namespace SIBILIATP11.UserControl
 {
     public partial class DetailCommande : System.Windows.Controls.UserControl, INotifyPropertyChanged
     {
-        private Commande _commandeEnCours;
-        private ObservableCollection<Contient> _lignesDeLaCommande;
-        private GestionCommande _laGestionCommande;
+        private Commande commandeEnCours;
+        private ObservableCollection<Contient> lignesDeLaCommande;
+        private GestionCommande laGestionCommande;
 
         public DetailCommande()
         {
@@ -22,12 +22,12 @@ namespace SIBILIATP11.UserControl
 
         public Commande CommandeEnCours
         {
-            get { return _commandeEnCours; }
+            get { return commandeEnCours; }
             set
             {
-                if (_commandeEnCours != value)
+                if (commandeEnCours != value)
                 {
-                    _commandeEnCours = value;
+                    commandeEnCours = value;
                     OnPropertyChanged(nameof(CommandeEnCours));
                     OnPropertyChanged(nameof(NombreArticles));
                 }
@@ -36,12 +36,12 @@ namespace SIBILIATP11.UserControl
 
         public ObservableCollection<Contient> LignesDeLaCommande
         {
-            get { return _lignesDeLaCommande; }
+            get { return lignesDeLaCommande; }
             set
             {
-                if (_lignesDeLaCommande != value)
+                if (lignesDeLaCommande != value)
                 {
-                    _lignesDeLaCommande = value;
+                    lignesDeLaCommande = value;
                     OnPropertyChanged(nameof(LignesDeLaCommande));
                     OnPropertyChanged(nameof(NombreArticles));
                 }
@@ -50,12 +50,12 @@ namespace SIBILIATP11.UserControl
 
         public GestionCommande LaGestionCommande
         {
-            get { return _laGestionCommande; }
+            get { return laGestionCommande; }
             set
             {
-                if (_laGestionCommande != value)
+                if (laGestionCommande != value)
                 {
-                    _laGestionCommande = value;
+                    laGestionCommande = value;
                     OnPropertyChanged(nameof(LaGestionCommande));
                 }
             }
@@ -144,20 +144,16 @@ namespace SIBILIATP11.UserControl
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-
             try
             {
                 CommandeEnCours.Create();
-
-                foreach (var ligne in LignesDeLaCommande)
+                foreach (Contient ligne in LignesDeLaCommande)
                 {
                     ligne.UneCommande = CommandeEnCours;
                     ligne.Create();
                 }
-
                 MessageBox.Show("Commande validée avec succès !", "Succès",
                     MessageBoxButton.OK, MessageBoxImage.Information);
-
                 LignesDeLaCommande.Clear();
                 CommandeEnCours = null;
             }

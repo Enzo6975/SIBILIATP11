@@ -28,7 +28,6 @@ namespace SIBILIATP11.Windows
 
         private void RetourToSelectionnerClient()
         {
-            // Fermer cette fenêtre et retourner à la fenêtre parent
             this.DialogResult = false;
             this.Close();
         }
@@ -43,7 +42,6 @@ namespace SIBILIATP11.Windows
                     bindingExpression?.UpdateSource();
                 }
             }
-
             if (string.IsNullOrWhiteSpace(ClientEnEdition.NomClient) ||
                 string.IsNullOrWhiteSpace(ClientEnEdition.PrenomClient) ||
                 string.IsNullOrWhiteSpace(ClientEnEdition.Tel) ||
@@ -54,15 +52,11 @@ namespace SIBILIATP11.Windows
                 MessageBox.Show("Veuillez remplir tous les champs requis.", "Erreur de saisie", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-
             try
             {
                 int newNumClient = ClientEnEdition.Create();
                 ClientEnEdition.NumClient = newNumClient;
-
                 MessageBox.Show($"Client '{ClientEnEdition.NomClient} {ClientEnEdition.PrenomClient}' créé avec succès ! Numéro : {ClientEnEdition.NumClient}", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                // Indiquer que la création a réussi et fermer la fenêtre
                 this.DialogResult = true;
                 this.Close();
             }

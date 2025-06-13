@@ -7,36 +7,39 @@
 
     <Application.Resources>
         <Style x:Key="SidebarTabControlStyle" TargetType="TabControl">
-            <Setter Property="Background" Value="#E30613"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="TabStripPlacement" Value="Left"/>
+            <Setter Property="Background" Value="#E30613" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="TabStripPlacement" Value="Left" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TabControl">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="3*" />
                             </Grid.ColumnDefinitions>
 
                             <Border Grid.Column="0" Background="#E30613">
-                                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                                    <TabPanel x:Name="HeaderPanel" 
-                                              IsItemsHost="True" 
-                                              Background="Transparent"
-                                              Margin="5,10"/>
+                                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                                    <TabPanel
+                                        x:Name="HeaderPanel"
+                                        Margin="5,10"
+                                        Background="Transparent"
+                                        IsItemsHost="True" />
                                 </ScrollViewer>
                             </Border>
 
-                            <Border Grid.Column="1" 
-                                    Background="White" 
-                                    BorderBrush="#E0E0E0" 
-                                    BorderThickness="1" 
-                                    CornerRadius="8" 
-                                    Margin="5">
-                                <ContentPresenter x:Name="PART_SelectedContentHost"
-                                                  ContentSource="SelectedContent"
-                                                  Margin="10"/>
+                            <Border
+                                Grid.Column="1"
+                                Margin="5"
+                                Background="White"
+                                BorderBrush="#E0E0E0"
+                                BorderThickness="1"
+                                CornerRadius="8">
+                                <ContentPresenter
+                                    x:Name="PART_SelectedContentHost"
+                                    Margin="10"
+                                    ContentSource="SelectedContent" />
                             </Border>
                         </Grid>
                     </ControlTemplate>
@@ -45,65 +48,54 @@
         </Style>
 
         <Style x:Key="SidebarTabItemStyle" TargetType="TabItem">
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="White"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Margin" Value="0,2"/>
-            <Setter Property="Height" Value="60"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="FontSize" Value="11"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="White" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Margin" Value="0,2" />
+            <Setter Property="Height" Value="60" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TabItem">
-                        <Border x:Name="Border"
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="8"
-                                Margin="{TemplateBinding Margin}">
-                            <ContentPresenter x:Name="ContentSite"
-                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                              ContentSource="Header"/>
+                        <Border
+                            x:Name="Border"
+                            Margin="{TemplateBinding Margin}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="8">
+                            <ContentPresenter
+                                x:Name="ContentSite"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                ContentSource="Header" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="Border" Property="Background" Value="White"/>
-                                <Setter Property="Foreground" Value="#E30613"/>
-                                <Setter TargetName="Border" Property="BorderBrush" Value="#E30613"/>
-                                <Setter TargetName="Border" Property="BorderThickness" Value="2"/>
+                                <Setter TargetName="Border" Property="Background" Value="White" />
+                                <Setter Property="Foreground" Value="#E30613" />
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#E30613" />
+                                <Setter TargetName="Border" Property="BorderThickness" Value="2" />
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Border" Property="Background" Value="White"/>
-                                <Setter Property="Foreground" Value="#E30613"/>
+                                <Setter TargetName="Border" Property="Background" Value="White" />
+                                <Setter Property="Foreground" Value="#E30613" />
                             </Trigger>
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
-                                    <Condition Property="IsMouseOver" Value="True"/>
-                                    <Condition Property="IsSelected" Value="True"/>
+                                    <Condition Property="IsMouseOver" Value="True" />
+                                    <Condition Property="IsSelected" Value="True" />
                                 </MultiTrigger.Conditions>
-                                <Setter TargetName="Border" Property="Background" Value="#F0F0F0"/>
+                                <Setter TargetName="Border" Property="Background" Value="#F0F0F0" />
                             </MultiTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-        </Style>
-
-        <Style TargetType="TabItem">
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="Background" Value="#FFE30613" />
-            <Setter Property="BorderBrush" Value="#FFE30613" />
-            <Style.Triggers>
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Foreground" Value="#000000" />
-                    <Setter Property="Background" Value="#FFFD2828" />
-                    <Setter Property="FontWeight" Value="Bold" />
-                </Trigger>
-            </Style.Triggers>
         </Style>
     </Application.Resources>
 </Application>
