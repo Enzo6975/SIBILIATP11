@@ -106,11 +106,12 @@
                 VerticalAlignment="Center"
                 FontWeight="SemiBold"
                 Text="Date commande :" />
-            <DatePicker
-                x:Name="dpDateCommande"
+            <TextBox
+                x:Name="txtDateCommande"
                 Grid.Column="1"
-                VerticalAlignment="Center"
-                />
+                Background="#F0F0F0"
+                Foreground="Gray"
+                IsReadOnly="True" />
         </Grid>
 
         <Grid Grid.Row="5" Margin="0,5">

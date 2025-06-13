@@ -75,17 +75,6 @@ namespace SIBILIATP11.Classe
             }
             catch (Exception ex)
             {
-                this.LesClients = new ObservableCollection<Client>();
-                this.LesCommandes = new ObservableCollection<Commande>();
-                this.LesPlats = new ObservableCollection<Plat>();
-                this.LesContients = new ObservableCollection<Contient>();
-                this.LesEmploye = new List<Employe>();
-                this.LesCategories = new List<Categorie>();
-                this.LesPeriodes = new List<Periode>();
-                this.LesRoles = new List<Role>();
-                this.LesSousCategories = new List<SousCategorie>();
-
-                throw;
             }
         }
 
