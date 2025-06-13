@@ -44,15 +44,15 @@
                         VerticalAlignment="Center"
                         TextChanged="inputClient_TextChanged" />
                     <Button
-    x:Name="btnClearFilter"
-    Grid.Column="2"
-    Margin="10,0,0,0"
-    Click="btnClearFilter_Click"
-    Width="25"
-    Height="25"
-    Content="✕"
-    ToolTip="Effacer la recherche"
-    FontWeight="Bold" />
+                        x:Name="btnClearFilter"
+                        Grid.Column="2"
+                        Width="25"
+                        Height="25"
+                        Margin="10,0,0,0"
+                        Click="btnClearFilter_Click"
+                        Content="✕"
+                        FontWeight="Bold"
+                        ToolTip="Effacer la recherche" />
 
                 </Grid>
             </StackPanel>

@@ -147,56 +147,175 @@ namespace SIBILIATP11.UserControl
 
                 if (resultat == true)
                 {
-                    CollectionViewSource.GetDefaultView(dgCommandes.ItemsSource).Refresh();
-                    ChargerPlatsCommande();
+                    // Recharger les données depuis la base
+                    RechargerDonnees();
+
+                    // Rafraîchir l'affichage
+                    RafraichirAffichage();
                 }
             }
             catch (Exception ex)
             {
+                MessageBox.Show($"Erreur lors de la modification : {ex.Message}", "Erreur",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void btnDel_Click(object sender, RoutedEventArgs e)
         {
             if (dgCommandes.SelectedItem == null)
+            {
+                MessageBox.Show("Veuillez sélectionner une commande à supprimer.", "Aucune sélection",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
+            }
 
             Commande commande = dgCommandes.SelectedItem as Commande;
 
-            int nbPlatsCommande = 0;
-            if (LaGestionCommande.LesContients != null)
+            try
             {
-                nbPlatsCommande = LaGestionCommande.LesContients
-                    .Count(c => c.UneCommande.NumCommande == commande.NumCommande);
-            }
-
-            string messageConfirmation = $"Supprimer la commande #{commande.NumCommande} ?\n" +
-                                       $"Client: {commande.UnClient?.NomClient} {commande.UnClient?.PrenomClient}\n" +
-                                       $"Date: {commande.DateCommande:dd/MM/yyyy}\n" +
-                                       $"Montant: {commande.PrixTotal:F2} €";
-
-            if (nbPlatsCommande > 0)
-            {
-                messageConfirmation += $"\n({nbPlatsCommande} plat(s) seront supprimés)";
-            }
-
-            MessageBoxResult result = MessageBox.Show(messageConfirmation, "Confirmation",
-                MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (result == MessageBoxResult.Yes)
-            {
-                try
+                // Compter les plats de la commande
+                int nbPlatsCommande = 0;
+                if (LaGestionCommande.LesContients != null)
                 {
-                    commande.Delete();
-                    LaGestionCommande.LesCommandes.Remove(commande);
+                    nbPlatsCommande = LaGestionCommande.LesContients
+                        .Count(c => c.UneCommande.NumCommande == commande.NumCommande);
+                }
 
+                // Message de confirmation détaillé
+                string messageConfirmation = $"Supprimer définitivement la commande #{commande.NumCommande} ?\n\n" +
+                                           $"Client: {commande.UnClient?.NomClient} {commande.UnClient?.PrenomClient}\n" +
+                                           $"Date: {commande.DateCommande:dd/MM/yyyy}\n" +
+                                           $"Montant: {commande.PrixTotal:F2} €\n";
+
+                if (nbPlatsCommande > 0)
+                {
+                    messageConfirmation += $"\n⚠️ {nbPlatsCommande} plat(s) seront également supprimés.\n";
+                }
+
+                messageConfirmation += "\nCette action est irréversible !";
+
+                MessageBoxResult result = MessageBox.Show(messageConfirmation, "Confirmation de suppression",
+                    MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    // Supprimer d'abord tous les contenus (plats) de la commande
+                    var contentsASupprimer = LaGestionCommande.LesContients
+                        .Where(c => c.UneCommande.NumCommande == commande.NumCommande)
+                        .ToList();
+
+                    System.Diagnostics.Debug.WriteLine($"Suppression de {contentsASupprimer.Count} contenus pour la commande {commande.NumCommande}");
+
+                    foreach (var contient in contentsASupprimer)
+                    {
+                        try
+                        {
+                            contient.Delete(); // Supprimer de la base de données
+                            LaGestionCommande.LesContients.Remove(contient); // Supprimer de la collection
+                            System.Diagnostics.Debug.WriteLine($"Contenu supprimé : {contient.UnPlat?.NomPlat}");
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Erreur suppression contenu : {ex.Message}");
+                        }
+                    }
+
+                    // Ensuite supprimer la commande elle-même
+                    System.Diagnostics.Debug.WriteLine($"Suppression de la commande {commande.NumCommande}");
+
+                    commande.Delete(); // Supprimer de la base de données
+                    LaGestionCommande.LesCommandes.Remove(commande); // Supprimer de la collection
+
+                    System.Diagnostics.Debug.WriteLine("Suppression réussie, rafraîchissement de l'affichage");
+
+                    // Recharger complètement les données pour être sûr
+                    RechargerDonnees();
+
+                    // Rafraîchir l'affichage
+                    RafraichirAffichage();
+
+                    // Vider les détails
+                    ViderDetailsCommande();
+
+                    // Message de succès
+                    MessageBox.Show($"La commande #{commande.NumCommande} a été supprimée avec succès.", "Suppression réussie",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                string errorMessage = $"Erreur lors de la suppression de la commande :\n{ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"Erreur suppression commande : {ex.Message}");
+                MessageBox.Show(errorMessage, "Erreur de suppression",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void RechargerDonnees()
+        {
+            try
+            {
+                // Recharger toutes les données depuis la base
+                LaGestionCommande.RechargerDonnees();
+
+                System.Diagnostics.Debug.WriteLine($"Données rechargées : {LaGestionCommande.LesCommandes.Count} commandes");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur rechargement données : {ex.Message}");
+            }
+        }
+
+        private void RafraichirAffichage()
+        {
+            try
+            {
+                // Mettre à jour la source de données de la DataGrid
+                dgCommandes.ItemsSource = null;
+                dgCommandes.ItemsSource = LaGestionCommande.LesCommandes;
+
+                // Réappliquer le filtre
+                dgCommandes.Items.Filter = RechercheMotClefCommande;
+
+                // Forcer le rafraîchissement
+                if (dgCommandes.ItemsSource != null)
+                {
                     CollectionViewSource.GetDefaultView(dgCommandes.ItemsSource).Refresh();
-                    ChargerPlatsCommande();
                 }
-                catch (Exception ex)
-                {
-                }
+
+                System.Diagnostics.Debug.WriteLine("Affichage rafraîchi");
             }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur rafraîchissement affichage : {ex.Message}");
+            }
+        }
+
+        private void ViderDetailsCommande()
+        {
+            try
+            {
+                // Vider les détails de la commande
+                platsCommandeSelectionnee.Clear();
+                dgPlatsCommande.ItemsSource = null;
+                txtDetailCommande.Text = "Sélectionnez une commande pour voir les détails";
+
+                // Désélectionner dans la DataGrid
+                dgCommandes.SelectedItem = null;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur vidage détails : {ex.Message}");
+            }
+        }
+
+        // Méthode publique pour recharger depuis l'extérieur (appelée par MainWindow)
+        public void RafraichirDepuisExterieur()
+        {
+            RechargerDonnees();
+            RafraichirAffichage();
+            ViderDetailsCommande();
         }
     }
 }
